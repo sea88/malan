@@ -4,7 +4,8 @@
 #define CHECK_ABORT_EVERY 100000
 
 
-#define RCPP_XPTR_2ND_ARG true // ensures that finaliser is called
+//#define RCPP_XPTR_2ND_ARG true // ensures that finaliser is called
+#define RCPP_XPTR_2ND_ARG false // do not call finalisers, I guess we live with some memory leaks for now...!!!
 
 class Individual;
 class Pedigree;

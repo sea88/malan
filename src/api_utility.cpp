@@ -124,7 +124,7 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
   int pid_f = (i->get_father() != nullptr) ? i->get_father()->get_pid() : -1;
   std::vector<Individual*>* children = i->get_children();
   
-  Rcpp::Rcout << "  " << i->get_pid() << " with father " << pid_f << " and";
+  Rcpp::Rcout << "  pid = " << i->get_pid() << " with father pid = " << pid_f << " and";
   
   if (children->size() == 0) {
     Rcpp::Rcout << " no children" << std::endl;
@@ -134,7 +134,7 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
     for (auto child : *children) {    
       std::vector<Individual*>* child_children = child->get_children();
       
-      Rcpp::Rcout << "  " << child->get_pid() << " with father " << pid_f << " and " <<  child_children->size() << " children" << std::endl;
+      Rcpp::Rcout << "    pid = " << child->get_pid() << " with father pid = " << pid_f << " and " <<  child_children->size() << " children" << std::endl;
     }
   }
 }
@@ -160,6 +160,7 @@ std::map<int, int> meioses_distribution(Rcpp::XPtr<Individual> individual) {
 */
 
 
+/*
 //' @export
 // [[Rcpp::export]]
 std::map<int, std::map<int, int> > meioses_generation_distribution_OLD(Rcpp::XPtr<Individual> individual, int generation_upper_bound = -1) {  
@@ -183,6 +184,7 @@ std::map<int, std::map<int, int> > meioses_generation_distribution_OLD(Rcpp::XPt
   
   return tab;
 }
+*/
 
 //' @export
 // [[Rcpp::export]]

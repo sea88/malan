@@ -67,11 +67,6 @@ print_individual <- function(individual) {
 }
 
 #' @export
-meioses_generation_distribution_OLD <- function(individual, generation_upper_bound = -1L) {
-    .Call('malan_meioses_generation_distribution_OLD', PACKAGE = 'malan', individual, generation_upper_bound)
-}
-
-#' @export
 meioses_generation_distribution <- function(individual, generation_upper_bound = -1L) {
     .Call('malan_meioses_generation_distribution', PACKAGE = 'malan', individual, generation_upper_bound)
 }
