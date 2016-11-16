@@ -141,14 +141,27 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// meioses_distribution
-std::map<int, int> meioses_distribution(Rcpp::XPtr<Individual> individual);
-RcppExport SEXP malan_meioses_distribution(SEXP individualSEXP) {
+// meioses_generation_distribution_OLD
+std::map<int, std::map<int, int> > meioses_generation_distribution_OLD(Rcpp::XPtr<Individual> individual, int generation_upper_bound);
+RcppExport SEXP malan_meioses_generation_distribution_OLD(SEXP individualSEXP, SEXP generation_upper_boundSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
-    rcpp_result_gen = Rcpp::wrap(meioses_distribution(individual));
+    Rcpp::traits::input_parameter< int >::type generation_upper_bound(generation_upper_boundSEXP);
+    rcpp_result_gen = Rcpp::wrap(meioses_generation_distribution_OLD(individual, generation_upper_bound));
+    return rcpp_result_gen;
+END_RCPP
+}
+// meioses_generation_distribution
+IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound);
+RcppExport SEXP malan_meioses_generation_distribution(SEXP individualSEXP, SEXP generation_upper_boundSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    Rcpp::traits::input_parameter< int >::type generation_upper_bound(generation_upper_boundSEXP);
+    rcpp_result_gen = Rcpp::wrap(meioses_generation_distribution(individual, generation_upper_bound));
     return rcpp_result_gen;
 END_RCPP
 }

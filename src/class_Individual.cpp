@@ -9,8 +9,9 @@
 Individual
 ==========================================
 */
-Individual::Individual(int pid) {
+Individual::Individual(int pid, int generation) {
   m_pid = pid;
+  m_generation = generation;
   
   m_children = new std::vector<Individual*>();
 }
@@ -21,6 +22,10 @@ Individual::~Individual() {
 
 int Individual::get_pid() const {
   return m_pid;
+}
+
+int Individual::get_generation() const {
+  return m_generation;
 }
 
 void Individual::add_child(Individual* child) {

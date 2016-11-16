@@ -3,6 +3,9 @@
 
 #define CHECK_ABORT_EVERY 100000
 
+
+#define RCPP_XPTR_2ND_ARG true // ensures that finaliser is called
+
 class Individual;
 class Pedigree;
 class Population;

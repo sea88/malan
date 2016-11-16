@@ -140,6 +140,7 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
 }
 
 
+/*
 //' @export
 // [[Rcpp::export]]
 std::map<int, int> meioses_distribution(Rcpp::XPtr<Individual> individual) {  
@@ -155,6 +156,74 @@ std::map<int, int> meioses_distribution(Rcpp::XPtr<Individual> individual) {
   } 
   
   return tab;
+}
+*/
+
+
+//' @export
+// [[Rcpp::export]]
+std::map<int, std::map<int, int> > meioses_generation_distribution_OLD(Rcpp::XPtr<Individual> individual, int generation_upper_bound = -1) {  
+  Individual* i = individual;
+  
+  Pedigree* ped = i->get_pedigree();
+  std::vector<Individual*>* family = ped->get_all_individuals();
+  std::map<int, std::map<int, int> > tab;
+  
+  for (auto dest : *family) {    
+    int generation = dest->get_generation();
+    
+    if (generation_upper_bound != -1 && generation > generation_upper_bound) {
+      continue;
+    }
+    
+    int dist = i->meiosis_dist_tree(dest);
+
+    (tab[generation])[dist] += 1;    
+  } 
+  
+  return tab;
+}
+
+//' @export
+// [[Rcpp::export]]
+IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound = -1) {  
+  Individual* i = individual;
+  
+  Pedigree* ped = i->get_pedigree();
+  std::vector<Individual*>* family = ped->get_all_individuals();
+  std::map<int, std::map<int, int> > tab;
+  
+  for (auto dest : *family) {    
+    int generation = dest->get_generation();
+    
+    if (generation_upper_bound != -1 && generation > generation_upper_bound) {
+      continue;
+    }
+    
+    int dist = i->meiosis_dist_tree(dest);
+
+    (tab[generation])[dist] += 1;    
+  }
+  
+  int row = 0;
+  for (auto const& x1 : tab) {
+    for (auto const& x2 : x1.second) {
+      ++row;
+    }
+  }
+  IntegerMatrix res(row, 3);
+  colnames(res) = CharacterVector::create("generation", "meioses", "count");
+  row = 0;
+  for (auto const& x1 : tab) {
+    for (auto const& x2 : x1.second) {
+      res(row, 0) = x1.first;
+      res(row, 1) = x2.first;
+      res(row, 2) = x2.second;
+      ++row;    
+    }
+  }
+  
+  return res;
 }
 
 

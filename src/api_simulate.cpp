@@ -27,8 +27,6 @@ List sample_geneology(size_t population_size, size_t generations, bool progress 
   
   Progress progress_bar(generations, progress);
   
-  
-  
   IntegerMatrix individual_pids;
   IntegerMatrix father_pids;
   IntegerMatrix father_indices;
@@ -42,23 +40,31 @@ List sample_geneology(size_t population_size, size_t generations, bool progress 
     std::fill(individual_pids.begin(), individual_pids.end(), NA_INTEGER);
     std::fill(father_pids.begin(), father_pids.end(), NA_INTEGER);
     std::fill(father_indices.begin(), father_indices.end(), NA_INTEGER);
-  
   }
   
   
   std::unordered_map<int, Individual*>* population_map = new std::unordered_map<int, Individual*>(); // pid's are garanteed to be unique
   Population* population = new Population(population_map);
+  Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG);
+  population_xptr.attr("class") = CharacterVector::create("malan_population", "externalptr");
+  
   
   int individual_id = 1;
   std::vector<Individual*> end_generation(population_size);
+  List end_generation_individuals(population_size);
 
   // Current generation: set-up
   for (size_t i = 0; i < population_size; ++i) {
-    Individual* indv = new Individual(individual_id++);
+    Individual* indv = new Individual(individual_id++, 0);
     end_generation[i] = indv;    
     (*population_map)[indv->get_pid()] = indv;
     
-    individual_pids(i, 0) = indv->get_pid();
+    if (verbose_result) {
+      individual_pids(i, 0) = indv->get_pid();
+    }
+    
+    Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
+    end_generation_individuals[i] = indv_xptr;
   }
   progress_bar.increment();
   
@@ -70,6 +76,8 @@ List sample_geneology(size_t population_size, size_t generations, bool progress 
   
   // now, find out who the fathers to the children are
   for (size_t generation = 1; generation < generations; ++generation) {
+    //Rcpp::Rcerr << "Generation " << generation << std::endl;
+    
     // clear
     for (size_t i = 0; i < population_size; ++i) { // necessary?
       fathers_generation[i] = nullptr;
@@ -87,16 +95,19 @@ List sample_geneology(size_t population_size, size_t generations, bool progress 
       
       // if this is the father's first child, create the father
       if (fathers_generation[father_i] == nullptr) {
-        Individual* father = new Individual(individual_id++);
+        Individual* father = new Individual(individual_id++, generation);
         fathers_generation[father_i] = father;
         (*population_map)[father->get_pid()] = father;      
         
-        //individual_pids(i, generation) = father->get_pid();
-        individual_pids(father_i, generation) = father->get_pid();
+        if (verbose_result) {
+          individual_pids(father_i, generation) = father->get_pid();
+        }
       }
       
-      father_pids(i, generation-1) = fathers_generation[father_i]->get_pid();
-      father_indices(i, generation-1) = father_i + 1; // 1 to get R's 1-indexed
+      if (verbose_result) {
+        father_pids(i, generation-1) = fathers_generation[father_i]->get_pid();
+        father_indices(i, generation-1) = father_i + 1; // 1 to get R's 1-indexed
+      }      
       
       children_generation[i]->set_father(fathers_generation[father_i]);
       fathers_generation[father_i]->add_child(children_generation[i]);
@@ -114,11 +125,9 @@ List sample_geneology(size_t population_size, size_t generations, bool progress 
     }
   }
   
-  Rcpp::XPtr<Population> population_xptr(population, true);
-  population_xptr.attr("class") = CharacterVector::create("malan_population", "externalptr");
-  
   List res;
   res["population"] = population_xptr;
+  res["end_generation_individuals"] = end_generation_individuals;
   
   if (verbose_result) {
     res["individual_pids"] = individual_pids;

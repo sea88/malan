@@ -17,6 +17,10 @@ Population::~Population() {
   std::unordered_map<int, Individual*> pop = *m_population;
   
   for (auto it = pop.begin(); it != pop.end(); ++it) {
+    if (it->second == nullptr) {
+      continue;
+    }
+    
     delete (it->second);
   }
   

@@ -67,8 +67,13 @@ print_individual <- function(individual) {
 }
 
 #' @export
-meioses_distribution <- function(individual) {
-    .Call('malan_meioses_distribution', PACKAGE = 'malan', individual)
+meioses_generation_distribution_OLD <- function(individual, generation_upper_bound = -1L) {
+    .Call('malan_meioses_generation_distribution_OLD', PACKAGE = 'malan', individual, generation_upper_bound)
+}
+
+#' @export
+meioses_generation_distribution <- function(individual, generation_upper_bound = -1L) {
+    .Call('malan_meioses_generation_distribution', PACKAGE = 'malan', individual, generation_upper_bound)
 }
 
 print_pedigree <- function(ped) {

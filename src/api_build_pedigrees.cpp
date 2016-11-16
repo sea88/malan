@@ -33,8 +33,7 @@ Rcpp::XPtr< std::vector<Pedigree*> > build_pedigrees(Rcpp::XPtr<Population> popu
   //std::cout << "Starts giving pedigrees ids..." << std::endl;
 
   std::vector<Pedigree*>* pedigrees = new std::vector<Pedigree*>();
-  Rcpp::XPtr< std::vector<Pedigree*> > res(pedigrees, true);
-  //Rcpp::XPtr< std::vector<Pedigree*> > res(pedigrees, false);
+  Rcpp::XPtr< std::vector<Pedigree*> > res(pedigrees, RCPP_XPTR_2ND_ARG);
   res.attr("class") = CharacterVector::create("malan_pedigreelist", "externalptr");
 
   int pedigree_id = 1;

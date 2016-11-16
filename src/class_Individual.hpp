@@ -7,6 +7,7 @@ private:
   int m_pid; 
   int m_birth_year = 0;
   bool m_is_alive = false;
+  int m_generation = -1;
   
   std::vector<Individual*>* m_children = nullptr;
   Individual* m_father = nullptr;
@@ -25,9 +26,10 @@ private:
   void father_haplotype_mutate(double mutation_rate);
   
 public:
-  Individual(int pid);
+  Individual(int pid, int m_generation);
   ~Individual();
   int get_pid() const;
+  int get_generation() const;
   void add_child(Individual* child);
   void set_father(Individual* i);
   Individual* get_father() const;
