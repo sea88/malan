@@ -42,6 +42,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pedigree_populate_father_haplotypes
+void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, NumericVector mutation_rates);
+RcppExport SEXP malan_pedigree_populate_father_haplotypes(SEXP pedSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type ped(pedSEXP);
+    Rcpp::traits::input_parameter< int >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    pedigree_populate_father_haplotypes(ped, loci, mutation_rates);
+    return R_NilValue;
+END_RCPP
+}
+// pedigrees_all_populate_father_haplotypes
+void pedigrees_all_populate_father_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, NumericVector mutation_rates, bool progress);
+RcppExport SEXP malan_pedigrees_all_populate_father_haplotypes(SEXP pedigreesSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP, SEXP progressSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< int >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    pedigrees_all_populate_father_haplotypes(pedigrees, loci, mutation_rates, progress);
+    return R_NilValue;
+END_RCPP
+}
+// pedigree_get_father_haplotypes_pids
+List pedigree_get_father_haplotypes_pids(Rcpp::XPtr<Population> population, IntegerVector pids);
+RcppExport SEXP malan_pedigree_get_father_haplotypes_pids(SEXP populationSEXP, SEXP pidsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type pids(pidsSEXP);
+    rcpp_result_gen = Rcpp::wrap(pedigree_get_father_haplotypes_pids(population, pids));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_individual
 Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid);
 RcppExport SEXP malan_get_individual(SEXP populationSEXP, SEXP pidSEXP) {

@@ -17,6 +17,21 @@ sample_geneology <- function(population_size, generations, progress = TRUE, verb
     .Call('malan_sample_geneology', PACKAGE = 'malan', population_size, generations, progress, verbose_result)
 }
 
+#' @export
+pedigree_populate_father_haplotypes <- function(ped, loci, mutation_rates) {
+    invisible(.Call('malan_pedigree_populate_father_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
+}
+
+#' @export
+pedigrees_all_populate_father_haplotypes <- function(pedigrees, loci, mutation_rates, progress = TRUE) {
+    invisible(.Call('malan_pedigrees_all_populate_father_haplotypes', PACKAGE = 'malan', pedigrees, loci, mutation_rates, progress))
+}
+
+#' @export
+pedigree_get_father_haplotypes_pids <- function(population, pids) {
+    .Call('malan_pedigree_get_father_haplotypes_pids', PACKAGE = 'malan', population, pids)
+}
+
 get_individual <- function(population, pid) {
     .Call('malan_get_individual', PACKAGE = 'malan', population, pid)
 }

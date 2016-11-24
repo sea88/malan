@@ -23,7 +23,7 @@ private:
   std::vector<int> m_father_haplotype;
   bool m_father_haplotype_set = false;
   bool m_father_haplotype_mutated = false;
-  void father_haplotype_mutate(double mutation_rate);
+  void father_haplotype_mutate(std::vector<double>& mutation_rates);
   
 public:
   Individual(int pid, int m_generation);
@@ -59,6 +59,6 @@ public:
   bool is_father_haplotype_set() const;
   void set_father_haplotype(std::vector<int> h);
   std::vector<int> get_father_haplotype() const;
-  void pass_haplotype_to_children(bool recursive, double mutation_rate);
+  void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
 };
 

@@ -17,6 +17,6 @@ public:
   std::vector<Individual*>* get_all_individuals() const;
   std::vector< std::pair<Individual*, Individual*>* >* get_relations() const;
   
-  void populate_father_haplotypes(int loci, double mutation_rate);
+  void populate_father_haplotypes(int loci, std::vector<double>& mutation_rates);
 };
 

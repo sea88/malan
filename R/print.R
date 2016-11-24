@@ -111,13 +111,22 @@ plot_with_haplotypes <-
     
     x_pids <- get_pids_in_pedigree(x)
     haps <- pedigree_get_father_haplotypes_pids(population, x_pids)
-    haps_str <- unlist(lapply(haps, paste0, collapse = ","))
     
+    #haps_str <- unlist(lapply(haps, paste0, collapse = ","))
+    #haps_str <- unlist(lapply(haps, function(h) {
+    #  paste0(h, collapse = ",")
+    #}))
+    haps_str <- unlist(lapply(haps, function(h) {
+      paste0(strwrap(paste0(h, collapse = " "), width = 15), collapse = "\n")
+      #paste0(h, collapse = ",")
+    }))
+        
     g <- pedigree_as_igraph(x)
-    igraph::plot.igraph(g, vertex.label = haps_str)
+    #igraph::plot.igraph(g, vertex.label = haps_str)
+    igraph::plot.igraph(g, vertex.label = haps_str, vertex.label.cex = 0.75, layout = igraph::layout_as_tree(graph = g))
     
     return(invisible(NULL))
     #eturn(g)
   }
   
-  
+

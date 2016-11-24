@@ -54,7 +54,7 @@ std::vector< std::pair<Individual*, Individual*>* >* Pedigree::get_relations() c
 
 
 
-void Pedigree::populate_father_haplotypes(int loci, double mutation_rate) {
+void Pedigree::populate_father_haplotypes(int loci, std::vector<double>& mutation_rates) {
   /* FIXME: Exploits tree */
   Individual* root = nullptr;
   bool root_set = false;
@@ -79,7 +79,7 @@ void Pedigree::populate_father_haplotypes(int loci, double mutation_rate) {
   std::vector<int> h(loci); // initialises to 0, 0, ..., 0
   
   root->set_father_haplotype(h);
-  root->pass_haplotype_to_children(true, mutation_rate);
+  root->pass_haplotype_to_children(true, mutation_rates);
 }
 
 
