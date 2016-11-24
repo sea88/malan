@@ -53,6 +53,16 @@ meioses_generation_distribution <- function(individual, generation_upper_bound_i
     .Call('malan_meioses_generation_distribution', PACKAGE = 'malan', individual, generation_upper_bound_in_result)
 }
 
+#' @export
+population_size_generation <- function(population, generation_upper_bound_in_result = -1L) {
+    .Call('malan_population_size_generation', PACKAGE = 'malan', population, generation_upper_bound_in_result)
+}
+
+#' @export
+pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result = -1L) {
+    .Call('malan_pedigree_size_generation', PACKAGE = 'malan', pedigree, generation_upper_bound_in_result)
+}
+
 #' Get number of pedigrees
 #' 
 #' @export

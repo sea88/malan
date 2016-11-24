@@ -119,6 +119,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// population_size_generation
+int population_size_generation(Rcpp::XPtr<Population> population, int generation_upper_bound_in_result);
+RcppExport SEXP malan_population_size_generation(SEXP populationSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
+    Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
+    rcpp_result_gen = Rcpp::wrap(population_size_generation(population, generation_upper_bound_in_result));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pedigree_size_generation
+int pedigree_size_generation(Rcpp::XPtr<Pedigree> pedigree, int generation_upper_bound_in_result);
+RcppExport SEXP malan_pedigree_size_generation(SEXP pedigreeSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type pedigree(pedigreeSEXP);
+    Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
+    rcpp_result_gen = Rcpp::wrap(pedigree_size_generation(pedigree, generation_upper_bound_in_result));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigrees_count
 int pedigrees_count(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
 RcppExport SEXP malan_pedigrees_count(SEXP pedigreesSEXP) {
