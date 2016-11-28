@@ -13,8 +13,8 @@ build_pedigrees <- function(population, progress = TRUE) {
 }
 
 #' @export
-sample_geneology <- function(population_size, generations, progress = TRUE, verbose_result = FALSE) {
-    .Call('malan_sample_geneology', PACKAGE = 'malan', population_size, generations, progress, verbose_result)
+sample_geneology <- function(population_size, generations, progress = TRUE, individuals_generations_return = 2L, verbose_result = FALSE) {
+    .Call('malan_sample_geneology', PACKAGE = 'malan', population_size, generations, progress, individuals_generations_return, verbose_result)
 }
 
 #' @export

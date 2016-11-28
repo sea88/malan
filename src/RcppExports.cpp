@@ -29,16 +29,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_geneology
-List sample_geneology(size_t population_size, int generations, bool progress, bool verbose_result);
-RcppExport SEXP malan_sample_geneology(SEXP population_sizeSEXP, SEXP generationsSEXP, SEXP progressSEXP, SEXP verbose_resultSEXP) {
+List sample_geneology(size_t population_size, int generations, bool progress, int individuals_generations_return, bool verbose_result);
+RcppExport SEXP malan_sample_geneology(SEXP population_sizeSEXP, SEXP generationsSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP, SEXP verbose_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< size_t >::type population_size(population_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type generations(generationsSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    Rcpp::traits::input_parameter< int >::type individuals_generations_return(individuals_generations_returnSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose_result(verbose_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geneology(population_size, generations, progress, verbose_result));
+    rcpp_result_gen = Rcpp::wrap(sample_geneology(population_size, generations, progress, individuals_generations_return, verbose_result));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -18,7 +18,7 @@ int sample_person(size_t population_size) {
 // @param generations -1 for simulate to 1 founder, else simulate this number of generations
 //' @export
 // [[Rcpp::export]]
-List sample_geneology(size_t population_size, int generations, bool progress = true, bool verbose_result = false) {
+List sample_geneology(size_t population_size, int generations, bool progress = true, int individuals_generations_return = 2, bool verbose_result = false) {
   if (population_size <= 1) {
     Rcpp::stop("Please specify population_size > 1");
   }
@@ -65,7 +65,7 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
   int individual_id = 1;
   std::vector<Individual*> end_generation(population_size);
   List end_generation_individuals(population_size);
-  List last_three_generations_individuals;
+  List last_k_generations_individuals;
 
   // Current generation: set-up
   if (verbose_result) {
@@ -90,7 +90,10 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
     
     Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
     end_generation_individuals[i] = indv_xptr;
-    last_three_generations_individuals.push_back(indv_xptr);
+    
+    if (individuals_generations_return >= 0) {
+      last_k_generations_individuals.push_back(indv_xptr);
+    }
   }
   if (verbose_result) {
     if (simulate_fixed_number_generations == false) {
@@ -152,10 +155,10 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
         }
         
         new_founders_left++;
-        
-        if (generation <= 2) {
+
+        if (generation <= individuals_generations_return) {
           Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
-          last_three_generations_individuals.push_back(father_xptr);
+          last_k_generations_individuals.push_back(father_xptr);
         }
       }
       
@@ -233,7 +236,8 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
   res["generations"] = generation;
   res["founders"] = founders_left;
   res["end_generation_individuals"] = end_generation_individuals;
-  
+  res["individuals_generations"] = last_k_generations_individuals;
+
   if (verbose_result) {
     res["individual_pids"] = individual_pids;
     res["father_pids"] = father_pids;
