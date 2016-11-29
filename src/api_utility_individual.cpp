@@ -20,6 +20,13 @@ Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid
   return res;
 }
 
+
+//' @export
+// [[Rcpp::export]]
+int get_pid(Rcpp::XPtr<Individual> individual) {  
+  return individual->get_pid();
+}
+
 //' @export
 // [[Rcpp::export]]
 void print_individual(Rcpp::XPtr<Individual> individual) {  

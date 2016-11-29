@@ -68,15 +68,14 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// pedigree_get_father_haplotypes_pids
-List pedigree_get_father_haplotypes_pids(Rcpp::XPtr<Population> population, IntegerVector pids);
-RcppExport SEXP malan_pedigree_get_father_haplotypes_pids(SEXP populationSEXP, SEXP pidsSEXP) {
+// pedigree_get_father_haplotype
+std::vector<int> pedigree_get_father_haplotype(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP malan_pedigree_get_father_haplotype(SEXP individualSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type pids(pidsSEXP);
-    rcpp_result_gen = Rcpp::wrap(pedigree_get_father_haplotypes_pids(population, pids));
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(pedigree_get_father_haplotype(individual));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -89,6 +88,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
     Rcpp::traits::input_parameter< int >::type pid(pidSEXP);
     rcpp_result_gen = Rcpp::wrap(get_individual(population, pid));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_pid
+int get_pid(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP malan_get_pid(SEXP individualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_pid(individual));
     return rcpp_result_gen;
 END_RCPP
 }

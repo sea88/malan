@@ -28,12 +28,17 @@ pedigrees_all_populate_father_haplotypes <- function(pedigrees, loci, mutation_r
 }
 
 #' @export
-pedigree_get_father_haplotypes_pids <- function(population, pids) {
-    .Call('malan_pedigree_get_father_haplotypes_pids', PACKAGE = 'malan', population, pids)
+pedigree_get_father_haplotype <- function(individual) {
+    .Call('malan_pedigree_get_father_haplotype', PACKAGE = 'malan', individual)
 }
 
 get_individual <- function(population, pid) {
     .Call('malan_get_individual', PACKAGE = 'malan', population, pid)
+}
+
+#' @export
+get_pid <- function(individual) {
+    .Call('malan_get_pid', PACKAGE = 'malan', individual)
 }
 
 #' @export

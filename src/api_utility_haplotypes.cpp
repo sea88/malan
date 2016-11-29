@@ -50,17 +50,8 @@ void pedigrees_all_populate_father_haplotypes(Rcpp::XPtr< std::vector<Pedigree*>
 
 //' @export
 // [[Rcpp::export]]
-List pedigree_get_father_haplotypes_pids(Rcpp::XPtr<Population> population, IntegerVector pids) {  
- 
-  size_t N = pids.size();
-  List haps(N);
-  
-  for (size_t i = 0; i < N; ++i) {
-    Individual* indv = population->get_individual(pids[i]);
-    haps(i) = indv->get_father_haplotype();
-  }
-  
-  return haps;
+std::vector<int> pedigree_get_father_haplotype(Rcpp::XPtr<Individual> individual) {
+  return individual->get_father_haplotype();
 }
 
 
