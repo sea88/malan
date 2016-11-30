@@ -79,6 +79,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// count_father_haplotype_occurrences_individuals
+int count_father_haplotype_occurrences_individuals(const List individuals, const Rcpp::IntegerVector haplotype);
+RcppExport SEXP malan_count_father_haplotype_occurrences_individuals(SEXP individualsSEXP, SEXP haplotypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const List >::type individuals(individualsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_father_haplotype_occurrences_individuals(individuals, haplotype));
+    return rcpp_result_gen;
+END_RCPP
+}
+// count_father_haplotype_occurrences_pedigree
+int count_father_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::IntegerVector haplotype, int generation_upper_bound_in_result);
+RcppExport SEXP malan_count_father_haplotype_occurrences_pedigree(SEXP pedigreeSEXP, SEXP haplotypeSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type pedigree(pedigreeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
+    Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_father_haplotype_occurrences_pedigree(pedigree, haplotype, generation_upper_bound_in_result));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_individual
 Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid);
 RcppExport SEXP malan_get_individual(SEXP populationSEXP, SEXP pidSEXP) {

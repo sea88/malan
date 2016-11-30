@@ -32,6 +32,16 @@ pedigree_get_father_haplotype <- function(individual) {
     .Call('malan_pedigree_get_father_haplotype', PACKAGE = 'malan', individual)
 }
 
+#' @export
+count_father_haplotype_occurrences_individuals <- function(individuals, haplotype) {
+    .Call('malan_count_father_haplotype_occurrences_individuals', PACKAGE = 'malan', individuals, haplotype)
+}
+
+#' @export
+count_father_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
+    .Call('malan_count_father_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
+}
+
 get_individual <- function(population, pid) {
     .Call('malan_get_individual', PACKAGE = 'malan', population, pid)
 }

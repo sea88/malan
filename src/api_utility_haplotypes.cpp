@@ -55,3 +55,60 @@ std::vector<int> pedigree_get_father_haplotype(Rcpp::XPtr<Individual> individual
 }
 
 
+//' @export
+// [[Rcpp::export]]
+int count_father_haplotype_occurrences_individuals(const List individuals, const Rcpp::IntegerVector haplotype) {
+  int n = individuals.size();
+  int loci = haplotype.size();
+  int count = 0;
+  
+  std::vector<int> h = Rcpp::as< std::vector<int> >(haplotype);
+  
+  for (int i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    std::vector<int> indv_h = indv->get_father_haplotype();
+    
+    if (indv_h.size() != loci) {
+      Rcpp::stop("haplotype and indv_h did not have same number of loci");
+    }
+    
+    if (indv_h == h) {
+      count += 1;
+    }
+  }
+  
+  return count;
+}
+
+
+//' @export
+// [[Rcpp::export]]
+int count_father_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::IntegerVector haplotype, int generation_upper_bound_in_result = -1) {
+  int loci = haplotype.size();
+  int count = 0;
+  
+  std::vector<int> h = Rcpp::as< std::vector<int> >(haplotype);
+
+  std::vector<Individual*>* family = pedigree->get_all_individuals();
+  
+  for (auto dest : *family) {    
+    int generation = dest->get_generation();
+    
+    if (generation_upper_bound_in_result != -1 && generation > generation_upper_bound_in_result) {
+      continue;
+    }
+    
+    std::vector<int> dest_h = dest->get_father_haplotype();
+    
+    if (dest_h.size() != loci) {
+      Rcpp::stop("haplotype and indv_h did not have same number of loci");
+    }
+    
+    if (dest_h == h) {
+      count += 1;
+    }    
+  }
+  
+  return count;
+}
+
