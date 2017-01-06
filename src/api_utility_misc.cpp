@@ -9,7 +9,7 @@
 
 //[[Rcpp::export]]
 void malan_test() {
-  Rcout << "mikl was here 1324" << std::endl;
+  Rcpp::Rcout << "mikl was here 1324" << std::endl;
 }
 
 //[[Rcpp::export]]
