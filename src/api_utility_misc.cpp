@@ -20,7 +20,7 @@ int pop_size(Rcpp::XPtr<Population> population) {
 
 //' @export
 // [[Rcpp::export]]
-IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound_in_result = -1) {  
+Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound_in_result = -1) {  
   Individual* i = individual;
   
   Pedigree* ped = i->get_pedigree();
@@ -45,8 +45,8 @@ IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual,
       ++row;
     }
   }
-  IntegerMatrix res(row, 3);
-  colnames(res) = CharacterVector::create("generation", "meioses", "count");
+  Rcpp::IntegerMatrix res(row, 3);
+  colnames(res) = Rcpp::CharacterVector::create("generation", "meioses", "count");
   row = 0;
   for (auto const& x1 : tab) {
     for (auto const& x2 : x1.second) {
