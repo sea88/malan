@@ -46,7 +46,7 @@ Rcpp::XPtr<Pedigree> get_pedigree(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees
   
   //Rcpp::XPtr<Pedigree> res(p, true);
   Rcpp::XPtr<Pedigree> res(p, false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
-  res.attr("class") = CharacterVector::create("malan_pedigree", "externalptr");
+  res.attr("class") = Rcpp::CharacterVector::create("malan_pedigree", "externalptr");
   
   return res;
 }
@@ -74,12 +74,12 @@ void print_pedigree(Rcpp::XPtr<Pedigree> ped) {
 //' 
 //' @export
 // [[Rcpp::export]]
-IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped) {  
+Rcpp::IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped) {  
   Pedigree* p = ped;
   
   std::vector<Individual*>* inds = p->get_all_individuals();
   
-  IntegerVector res(inds->size());
+  Rcpp::IntegerVector res(inds->size());
   int i = 0;
   for (auto ind : *inds) {   
     res(i) = ind->get_pid();
@@ -90,12 +90,12 @@ IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped) {
 }
 
 //[[Rcpp::export]]
-CharacterMatrix get_pedigree_edgelist(Rcpp::XPtr<Pedigree> ped) {  
+Rcpp::CharacterMatrix get_pedigree_edgelist(Rcpp::XPtr<Pedigree> ped) {  
   Pedigree* p = ped;
   
   std::vector< std::pair<Individual*, Individual*>* >* rels = p->get_relations();
   
-  CharacterMatrix edgelist(rels->size(), 2);
+  Rcpp::CharacterMatrix edgelist(rels->size(), 2);
   int i = 0;
   
   for (auto pair: *rels) {
@@ -112,12 +112,12 @@ CharacterMatrix get_pedigree_edgelist(Rcpp::XPtr<Pedigree> ped) {
 //' 
 //' @export
 // [[Rcpp::export]]
-List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped) {  
+Rcpp::List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped) {  
   Pedigree* p = ped;
   
   std::vector<Individual*>* inds = p->get_all_individuals();
   
-  CharacterVector nodes(inds->size());
+  Rcpp::CharacterVector nodes(inds->size());
   
   int i = 0;
   for (auto individual : *inds) {
@@ -125,7 +125,7 @@ List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped) {
     ++i;
   }
   
-  List ret;
+  Rcpp::List ret;
   ret["nodes"] = nodes;
   ret["edgelist"] = get_pedigree_edgelist(ped);
   
