@@ -10,7 +10,7 @@
 
 //' @export
 // [[Rcpp::export]]
-void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, NumericVector mutation_rates) {  
+void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates) {  
   Pedigree* p = ped;
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
 
@@ -23,7 +23,7 @@ void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Num
 
 //' @export
 // [[Rcpp::export]]
-void pedigrees_all_populate_father_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, NumericVector mutation_rates, bool progress = true) {
+void pedigrees_all_populate_father_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, Rcpp::NumericVector mutation_rates, bool progress = true) {
   std::vector<Pedigree*> peds = (*pedigrees);
   
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
@@ -57,7 +57,7 @@ std::vector<int> pedigree_get_father_haplotype(Rcpp::XPtr<Individual> individual
 
 //' @export
 // [[Rcpp::export]]
-int count_father_haplotype_occurrences_individuals(const List individuals, const Rcpp::IntegerVector haplotype) {
+int count_father_haplotype_occurrences_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype) {
   int n = individuals.size();
   int loci = haplotype.size();
   int count = 0;

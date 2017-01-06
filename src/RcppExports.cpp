@@ -44,25 +44,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // pedigree_populate_father_haplotypes
-void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, NumericVector mutation_rates);
+void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates);
 RcppExport SEXP malan_pedigree_populate_father_haplotypes(SEXP pedSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type ped(pedSEXP);
     Rcpp::traits::input_parameter< int >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
     pedigree_populate_father_haplotypes(ped, loci, mutation_rates);
     return R_NilValue;
 END_RCPP
 }
 // pedigrees_all_populate_father_haplotypes
-void pedigrees_all_populate_father_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, NumericVector mutation_rates, bool progress);
+void pedigrees_all_populate_father_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, Rcpp::NumericVector mutation_rates, bool progress);
 RcppExport SEXP malan_pedigrees_all_populate_father_haplotypes(SEXP pedigreesSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
     Rcpp::traits::input_parameter< int >::type loci(lociSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
     pedigrees_all_populate_father_haplotypes(pedigrees, loci, mutation_rates, progress);
     return R_NilValue;
@@ -80,12 +80,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // count_father_haplotype_occurrences_individuals
-int count_father_haplotype_occurrences_individuals(const List individuals, const Rcpp::IntegerVector haplotype);
+int count_father_haplotype_occurrences_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype);
 RcppExport SEXP malan_count_father_haplotype_occurrences_individuals(SEXP individualsSEXP, SEXP haplotypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List >::type individuals(individualsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
     rcpp_result_gen = Rcpp::wrap(count_father_haplotype_occurrences_individuals(individuals, haplotype));
     return rcpp_result_gen;
