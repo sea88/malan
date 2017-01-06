@@ -39,7 +39,7 @@ void pedigrees_all_populate_father_haplotypes(Rcpp::XPtr< std::vector<Pedigree*>
     peds.at(i)->populate_father_haplotypes(loci, mut_rates);
     
      if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
-      stop("Aborted.");
+      Rcpp::stop("Aborted.");
     }
     
     if (progress) {
