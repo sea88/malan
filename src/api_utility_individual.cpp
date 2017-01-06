@@ -15,7 +15,7 @@ Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid
   Individual* ind = population->get_individual(pid);
   //Rcpp::XPtr<Individual> res(ind, true);
   Rcpp::XPtr<Individual> res(ind, false); // do NOT delete individual when not used any more, it still exists in pedigree and population etc.!
-  res.attr("class") = CharacterVector::create("malan_individual", "externalptr");
+  res.attr("class") = Rcpp::CharacterVector::create("malan_individual", "externalptr");
   
   return res;
 }
@@ -57,7 +57,7 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
 Rcpp::XPtr<Pedigree> get_pedigree_from_individual(Rcpp::XPtr<Individual> individual) {  
   Individual* i = individual;  
   Rcpp::XPtr<Pedigree> res(i->get_pedigree(), false); // do NOT delete pedigree when not used any more, it still exists in list of pedigrees etc.!
-  res.attr("class") = CharacterVector::create("malan_pedigree", "externalptr");
+  res.attr("class") = Rcpp::CharacterVector::create("malan_pedigree", "externalptr");
   
   return res;
 }
@@ -66,11 +66,11 @@ Rcpp::XPtr<Pedigree> get_pedigree_from_individual(Rcpp::XPtr<Individual> individ
 //' 
 //' @export
 // [[Rcpp::export]]
-IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, IntegerVector pids) {  
+Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) {  
   std::unordered_map<int, Individual*> pop = *(population->get_population());
   
   int N = pids.size();
-  IntegerVector pedigree_ids(N);
+  Rcpp::IntegerVector pedigree_ids(N);
   
   for (int i = 0; i < N; ++i) {
     Individual* ind = population->get_individual(pids[i]);
