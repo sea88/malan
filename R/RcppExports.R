@@ -38,6 +38,11 @@ count_father_haplotype_occurrences_individuals <- function(individuals, haplotyp
 }
 
 #' @export
+meiosis_dist_father_haplotype_matches_individuals <- function(suspect, individuals) {
+    .Call('malan_meiosis_dist_father_haplotype_matches_individuals', PACKAGE = 'malan', suspect, individuals)
+}
+
+#' @export
 count_father_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
     .Call('malan_count_father_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
 }

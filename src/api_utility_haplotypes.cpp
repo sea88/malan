@@ -80,6 +80,37 @@ int count_father_haplotype_occurrences_individuals(const Rcpp::List individuals,
   return count;
 }
 
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector meiosis_dist_father_haplotype_matches_individuals(const Rcpp::XPtr<Individual> suspect, const Rcpp::List individuals) {
+  std::vector<int> h = suspect->get_father_haplotype();
+  
+  int n = individuals.size();
+  int loci = h.size();
+  Rcpp::IntegerVector meiosis_dists;
+  
+  for (int i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    std::vector<int> indv_h = indv->get_father_haplotype();
+    
+    if (indv_h.size() != loci) {
+      Rcpp::stop("haplotype and indv_h did not have same number of loci");
+    }
+    
+    if (indv_h == h) {
+      int dist = suspect->meiosis_dist_tree(indv);
+      
+      if (dist == -1) {
+        meiosis_dists.push_back(R_PosInf);        
+      } else {    
+        meiosis_dists.push_back(dist);
+      }
+    }
+  }
+  
+  return meiosis_dists;
+}
+
 
 //' @export
 // [[Rcpp::export]]

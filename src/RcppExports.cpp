@@ -91,6 +91,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// meiosis_dist_father_haplotype_matches_individuals
+Rcpp::IntegerVector meiosis_dist_father_haplotype_matches_individuals(const Rcpp::XPtr<Individual> suspect, const Rcpp::List individuals);
+RcppExport SEXP malan_meiosis_dist_father_haplotype_matches_individuals(SEXP suspectSEXP, SEXP individualsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::XPtr<Individual> >::type suspect(suspectSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
+    rcpp_result_gen = Rcpp::wrap(meiosis_dist_father_haplotype_matches_individuals(suspect, individuals));
+    return rcpp_result_gen;
+END_RCPP
+}
 // count_father_haplotype_occurrences_pedigree
 int count_father_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::IntegerVector haplotype, int generation_upper_bound_in_result);
 RcppExport SEXP malan_count_father_haplotype_occurrences_pedigree(SEXP pedigreeSEXP, SEXP haplotypeSEXP, SEXP generation_upper_bound_in_resultSEXP) {
@@ -149,13 +161,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_pedigree_id_from_pid
-IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, IntegerVector pids);
+Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids);
 RcppExport SEXP malan_get_pedigree_id_from_pid(SEXP populationSEXP, SEXP pidsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type pids(pidsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pids(pidsSEXP);
     rcpp_result_gen = Rcpp::wrap(get_pedigree_id_from_pid(population, pids));
     return rcpp_result_gen;
 END_RCPP
@@ -181,7 +193,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // meioses_generation_distribution
-IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound_in_result);
+Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound_in_result);
 RcppExport SEXP malan_meioses_generation_distribution(SEXP individualSEXP, SEXP generation_upper_bound_in_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -272,7 +284,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_pids_in_pedigree
-IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped);
+Rcpp::IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped);
 RcppExport SEXP malan_get_pids_in_pedigree(SEXP pedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -283,7 +295,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_pedigree_edgelist
-CharacterMatrix get_pedigree_edgelist(Rcpp::XPtr<Pedigree> ped);
+Rcpp::CharacterMatrix get_pedigree_edgelist(Rcpp::XPtr<Pedigree> ped);
 RcppExport SEXP malan_get_pedigree_edgelist(SEXP pedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -294,7 +306,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_pedigree_as_graph
-List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped);
+Rcpp::List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped);
 RcppExport SEXP malan_get_pedigree_as_graph(SEXP pedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
