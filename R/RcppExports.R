@@ -18,6 +18,16 @@ sample_geneology <- function(population_size, generations, progress = TRUE, indi
 }
 
 #' @export
+sample_person_weighted <- function(population_size, fathers_prob_cum, fathers_perm) {
+    .Call('malan_sample_person_weighted', PACKAGE = 'malan', population_size, fathers_prob_cum, fathers_perm)
+}
+
+#' @export
+sample_geneology_variance <- function(population_size, generations, gamma_parameter_shape, gamma_parameter_scale, progress = TRUE, individuals_generations_return = 2L, verbose_result = FALSE) {
+    .Call('malan_sample_geneology_variance', PACKAGE = 'malan', population_size, generations, gamma_parameter_shape, gamma_parameter_scale, progress, individuals_generations_return, verbose_result)
+}
+
+#' @export
 pedigree_get_father_haplotypes_pids <- function(population, pids) {
     .Call('malan_pedigree_get_father_haplotypes_pids', PACKAGE = 'malan', population, pids)
 }

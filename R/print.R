@@ -98,7 +98,8 @@ plot.malan_pedigree <-
     if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
     
     g <- pedigree_as_igraph(x)    
-    igraph::plot.igraph(g)
+    #igraph::plot.igraph(g)
+    igraph::plot.igraph(g, layout = igraph::layout_as_tree(graph = g))
     
     return(invisible(NULL))
     #eturn(g)
