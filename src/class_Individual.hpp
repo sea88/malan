@@ -49,6 +49,8 @@ public:
   
   int meiosis_dist_tree(Individual* dest) const;
   
+  std::vector<Individual*> calculate_path_to(Individual* dest) const;
+  
   void dijkstra_reset();
   void dijkstra_tick_distance(int step);
   void dijkstra_set_distance_if_less(int dist);
@@ -60,5 +62,7 @@ public:
   void set_father_haplotype(std::vector<int> h);
   std::vector<int> get_father_haplotype() const;
   void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
+  
+  int get_father_haplotype_L1(Individual* dest) const;
 };
 

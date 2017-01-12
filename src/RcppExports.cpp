@@ -43,6 +43,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pedigree_get_father_haplotypes_pids
+Rcpp::List pedigree_get_father_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids);
+RcppExport SEXP malan_pedigree_get_father_haplotypes_pids(SEXP populationSEXP, SEXP pidsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pids(pidsSEXP);
+    rcpp_result_gen = Rcpp::wrap(pedigree_get_father_haplotypes_pids(population, pids));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigree_populate_father_haplotypes
 void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates);
 RcppExport SEXP malan_pedigree_populate_father_haplotypes(SEXP pedSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP) {
@@ -100,6 +112,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::XPtr<Individual> >::type suspect(suspectSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
     rcpp_result_gen = Rcpp::wrap(meiosis_dist_father_haplotype_matches_individuals(suspect, individuals));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists
+Rcpp::IntegerMatrix pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result);
+RcppExport SEXP malan_pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists(SEXP suspectSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::XPtr<Individual> >::type suspect(suspectSEXP);
+    Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
+    rcpp_result_gen = Rcpp::wrap(pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists(suspect, generation_upper_bound_in_result));
     return rcpp_result_gen;
 END_RCPP
 }

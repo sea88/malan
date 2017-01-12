@@ -106,7 +106,7 @@ void Individual::dijkstra_reset() {
 void Individual::dijkstra_tick_distance(int step) {
   m_dijkstra_distance += step;
 }
-
+  
 void Individual::dijkstra_set_distance_if_less(int dist) {
   if (m_dijkstra_distance < dist) {
     m_dijkstra_distance = dist;
@@ -130,7 +130,7 @@ bool Individual::dijkstra_was_visited() const {
 void Individual::meiosis_dist_tree_internal(Individual* dest, int* dist) const {
   if (this->get_pid() == dest->get_pid()) {
     //FIXME: Heavily relies on it being a tree, hence there is only one path connecting every pair of nodes
-    *dist = dest->dijkstra_get_distance();
+    *dist = dest->dijkstra_get_distance();    
     return;
   }
   
@@ -142,13 +142,11 @@ void Individual::meiosis_dist_tree_internal(Individual* dest, int* dist) const {
   dest->dijkstra_tick_distance(1);
   int m = dest->dijkstra_get_distance();
   
-  // FIXME: If not tree, then distance must be somehow checked if shorter and then adjusted
-  
   Individual* father = dest->get_father();
   if (father != nullptr) {  
     //tree: ok
     father->dijkstra_tick_distance(m);
-
+    
     // general? FIXME Correct?
     //father->dijkstra_set_distance_if_less(m);
     
@@ -185,12 +183,13 @@ int Individual::meiosis_dist_tree(Individual* dest) const {
     return -1;
   }
   
+  // At this point, the individuals this and dest belong to same pedigree
+    
   std::vector<Individual*>* inds = this->get_pedigree()->get_all_individuals();
   for (auto child : *inds) {
     child->dijkstra_reset();
   }
-  
-  // At this point, the individuals this and dest belong to same pedigree
+
   int dist = 0;
   this->meiosis_dist_tree_internal(dest, &dist);
   return dist;
@@ -204,13 +203,13 @@ FIXME mutation_model?
 */
 void Individual::father_haplotype_mutate(std::vector<double>& mutation_rates) {
   if (!m_father_haplotype_set) {
-    Rcpp::stop("Father haplotype not set yet, so cannot mutate");
+    throw std::invalid_argument("Father haplotype not set yet, so cannot mutate");
   }
   if (m_father_haplotype.size() != mutation_rates.size()) {
-    Rcpp::stop("Number of loci specified in haplotype must equal number of mutation rates specified");
+    throw std::invalid_argument("Number of loci specified in haplotype must equal number of mutation rates specified");
   }
   if (m_father_haplotype_mutated) {
-    Rcpp::stop("Father haplotype already set and mutated");
+    throw std::invalid_argument("Father haplotype already set and mutated");
   }
   
   
@@ -248,4 +247,78 @@ void Individual::pass_haplotype_to_children(bool recursive, std::vector<double>&
     }
   }
 }
+
+int Individual::get_father_haplotype_L1(Individual* dest) const {
+  std::vector<int> h_this = this->get_father_haplotype();
+  std::vector<int> h_dest = dest->get_father_haplotype();
+  
+  if (h_this.size() != h_dest.size()) {
+    Rcpp::Rcout << "this pid = " << this->get_pid() << " has haplotype with " << h_this.size() << " loci" << std::endl;
+    Rcpp::Rcout << "dest pid = " << dest->get_pid() << " has haplotype with " << h_dest.size() << " loci" << std::endl;
+    throw std::invalid_argument("h_this.size() != h_dest.size()");
+  }
+  
+  int d = 0;
+  for (size_t i = 0; i < h_this.size(); ++i) {
+    d += abs(h_this[i] - h_dest[i]);
+  }
+  
+  return d;
+}
+
+
+
+std::vector<Individual*> Individual::calculate_path_to(Individual* dest) const {
+  if (!(this->pedigree_is_set())) {
+    throw std::invalid_argument("!(this->pedigree_is_set())");
+  }
+  
+  if (dest == nullptr) {
+    throw std::invalid_argument("dest is NULL");
+  }
+  
+  if (!(dest->pedigree_is_set())) {
+    throw std::invalid_argument("!(dest->pedigree_is_set())");
+  }
+  
+  if (this->get_pedigree_id() != dest->get_pedigree_id()) {
+    std::vector<Individual*> empty_vec;
+    return empty_vec;
+  }
+  
+  // At this point, the individuals this and dest belong to same pedigree
+  
+  Individual* root = this->get_pedigree()->get_root();
+  
+  std::vector<Individual*> path_this, path_dest;
+
+  if (!find_path_from_root_to_dest(root, path_this, this)) {
+    Rcpp::Rcout << "this pid = " << this->get_pid() << std::endl;  
+    throw std::invalid_argument("Could not find path between root and this");
+  }
+  
+  if (!find_path_from_root_to_dest(root, path_dest, dest)) {
+    Rcpp::Rcout << "dest pid = " << dest->get_pid() << std::endl;
+    throw std::invalid_argument("Could not find path between root and dest");
+  }
+  
+  int LCA_index = 0;
+  for (LCA_index = 0; LCA_index < path_this.size() && LCA_index < path_dest.size(); LCA_index++) {
+    if (path_this[LCA_index]->get_pid() != path_dest[LCA_index]->get_pid()) {
+      break;
+    }
+  }
+  
+  if (LCA_index == 0) {
+    throw std::invalid_argument("LCA_index cannot be 0");
+  }
+  
+  std::vector<Individual*> path_result;
+  path_result.push_back(path_this[LCA_index - 1]); // LCA = path_this[LCA_index - 1] == path_dest[LCA_index - 1]
+  path_result.insert(path_result.end(), path_this.begin() + LCA_index, path_this.end());
+  path_result.insert(path_result.end(), path_dest.begin() + LCA_index, path_dest.end());
+  
+  return path_result;
+}
+
 

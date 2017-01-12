@@ -129,4 +129,31 @@ plot_with_haplotypes <-
     #eturn(g)
   }
   
+#' @export  
+plot_with_haplotypes_mark_pids <-
+  function(x, population, mark_pids = NULL, ...) {
+    if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
+    
+    x_pids <- get_pids_in_pedigree(x)
+    haps <- pedigree_get_father_haplotypes_pids(population, x_pids)
+    
+    haps_str <- unlist(lapply(seq_along(haps), function(h_i) {
+      h <- haps[[h_i]]
+      paste0(strwrap(paste0(x_pids[h_i], ":", paste0(h, collapse = " ")), width = 15), collapse = "\n")
+    }))
+    
+    vertex_colors <- rep("orange", length(haps_str))
+    if (!is.null(mark_pids)) {
+      vertex_colors[x_pids %in% mark_pids] <- "red"
+    }
+    
+    g <- pedigree_as_igraph(x)
+    igraph::V(g)$color <- vertex_colors
+    igraph::plot.igraph(g, vertex.label = haps_str, vertex.label.cex = 0.75, layout = igraph::layout_as_tree(graph = g))
+    
+    return(invisible(NULL))
+    #eturn(g)
+  }
+  
+
 

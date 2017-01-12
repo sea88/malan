@@ -18,6 +18,11 @@ sample_geneology <- function(population_size, generations, progress = TRUE, indi
 }
 
 #' @export
+pedigree_get_father_haplotypes_pids <- function(population, pids) {
+    .Call('malan_pedigree_get_father_haplotypes_pids', PACKAGE = 'malan', population, pids)
+}
+
+#' @export
 pedigree_populate_father_haplotypes <- function(ped, loci, mutation_rates) {
     invisible(.Call('malan_pedigree_populate_father_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
 }
@@ -40,6 +45,11 @@ count_father_haplotype_occurrences_individuals <- function(individuals, haplotyp
 #' @export
 meiosis_dist_father_haplotype_matches_individuals <- function(suspect, individuals) {
     .Call('malan_meiosis_dist_father_haplotype_matches_individuals', PACKAGE = 'malan', suspect, individuals)
+}
+
+#' @export
+pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists <- function(suspect, generation_upper_bound_in_result = -1L) {
+    .Call('malan_pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists', PACKAGE = 'malan', suspect, generation_upper_bound_in_result)
 }
 
 #' @export

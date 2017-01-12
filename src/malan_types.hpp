@@ -11,6 +11,8 @@ class Individual;
 class Pedigree;
 class Population;
 
+#include "helper_Individual.hpp"
+
 #include "class_Individual.hpp"
 #include "class_Pedigree.hpp"
 #include "class_Population.hpp"
