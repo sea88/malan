@@ -156,7 +156,7 @@ List sample_geneology_variance(size_t population_size, int generations,
     
     // get each father a probability (to introduce increased variability in number of children)
     NumericVector fathers_prob_tmpl = Rcpp::rgamma(population_size, gamma_parameter_shape, gamma_parameter_scale);
-    Rcpp::Rcout << "mean[fathers_prob_tmpl] = " << Rcpp::mean(fathers_prob_tmpl) << ", var[fathers_prob_tmpl] = " << Rcpp::var(fathers_prob_tmpl) << std::endl;
+    //Rcpp::Rcout << "mean[fathers_prob_tmpl] = " << Rcpp::mean(fathers_prob_tmpl) << ", var[fathers_prob_tmpl] = " << Rcpp::var(fathers_prob_tmpl) << std::endl;
     fathers_prob_tmpl = fathers_prob_tmpl / sum(fathers_prob_tmpl);    
     arma::vec fathers_prob(fathers_prob_tmpl.begin(), fathers_prob_tmpl.size(), false); // false means no copy
     arma::uvec fathers_prob_perm = arma::sort_index(fathers_prob, "descend"); //descending sort of index
