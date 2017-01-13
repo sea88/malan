@@ -12,6 +12,14 @@ build_pedigrees <- function(population, progress = TRUE) {
     .Call('malan_build_pedigrees', PACKAGE = 'malan', population, progress)
 }
 
+#' @import Rcpp
+#' @import RcppProgress
+#' @import RcppArmadillo
+#' @import igraph
+#' @import tibble
+#' @importFrom graphics  par
+#' @importFrom methods is
+#' @importFrom utils head
 #' @export
 sample_geneology <- function(population_size, generations, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L, verbose_result = FALSE) {
     .Call('malan_sample_geneology', PACKAGE = 'malan', population_size, generations, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, verbose_result)
