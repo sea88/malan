@@ -1,6 +1,8 @@
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]
+// [[Rcpp::depends(RcppArmadillo)]]
+
 #include <progress.hpp>
 
 #include "malan_types.hpp"
@@ -8,22 +10,37 @@
 using namespace Rcpp;
 
 
-
-// Number in {0, 1, ..., population_size - 1}: perfect for 0-indexed
-int sample_person(size_t population_size) {
-  return R::runif(0, 1)*((double)population_size);
-}
-
-
+// based on sample_geneology
 // @param generations -1 for simulate to 1 founder, else simulate this number of generations
 //' @export
 // [[Rcpp::export]]
-List sample_geneology(size_t population_size, int generations, bool progress = true, int individuals_generations_return = 2, bool verbose_result = false) {
+List sample_geneology(size_t population_size, int generations, 
+  double gamma_parameter_shape = 7, double gamma_parameter_scale = 7, 
+  bool enable_gamma_variance_extension = false,
+  bool progress = true, int individuals_generations_return = 2, bool verbose_result = false) {
+  
   if (population_size <= 1) {
     Rcpp::stop("Please specify population_size > 1");
   }
   if (generations < -1 || generations == 0) {
     Rcpp::stop("Please specify generations as -1 (for simulation to 1 founder) or > 0");
+  }
+
+  if (enable_gamma_variance_extension) {
+    if (gamma_parameter_shape <= 0.0) {
+      Rcpp::stop("gamma_parameter_shape must be > 0.0");
+    }
+    if (gamma_parameter_scale <= 0.0) {
+      Rcpp::stop("gamma_parameter_scale must be > 0.0");
+    }
+  }
+
+  WFRandomFather wf_random_father(population_size);
+  GammaVarianceRandomFather gamma_variance_father(population_size, gamma_parameter_shape, gamma_parameter_scale);  
+  SimulateChooseFather* choose_father = &wf_random_father;
+  
+  if (enable_gamma_variance_extension) {
+    choose_father = &gamma_variance_father;
   }
   
   bool simulate_fixed_number_generations = (generations == -1) ? false : true;
@@ -133,6 +150,7 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
       std::fill(father_indices_tmp_vec.begin(), father_indices_tmp_vec.end(), NA_INTEGER);
     }
     
+    choose_father->update_state_new_generation();
     
     // now, run through children to pick each child's father
     for (size_t i = 0; i < population_size; ++i) {
@@ -142,7 +160,8 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
       }
       
       // child [i] in [generation-1]/children_generation has father [father_i] in [generation]/fathers_generation
-      int father_i = sample_person(population_size);
+      //int father_i = sample_person_weighted(population_size, fathers_prob, fathers_prob_perm);
+      int father_i = choose_father->get_father_i();
       
       // if this is the father's first child, create the father
       if (fathers_generation[father_i] == nullptr) {
@@ -230,11 +249,11 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
     }
   }
   
-  
   List res;
   res["population"] = population_xptr;
   res["generations"] = generation;
   res["founders"] = founders_left;
+  res["type"] = (enable_gamma_variance_extension) ? "GammaVariation" : "SimpleWF";  
   res["end_generation_individuals"] = end_generation_individuals;
   res["individuals_generations"] = last_k_generations_individuals;
 
@@ -246,6 +265,4 @@ List sample_geneology(size_t population_size, int generations, bool progress = t
   
   return res;
 }
-
-
 

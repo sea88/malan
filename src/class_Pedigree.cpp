@@ -1,6 +1,6 @@
 #include "malan_types.hpp"
 
-#include <Rcpp.h> // FIXME: Avoid Rcpp here? Only in api_* files?
+#include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
 
 /*
 ==========================================

@@ -30,36 +30,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_geneology
-List sample_geneology(size_t population_size, int generations, bool progress, int individuals_generations_return, bool verbose_result);
-RcppExport SEXP malan_sample_geneology(SEXP population_sizeSEXP, SEXP generationsSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP, SEXP verbose_resultSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< size_t >::type population_size(population_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type generations(generationsSEXP);
-    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
-    Rcpp::traits::input_parameter< int >::type individuals_generations_return(individuals_generations_returnSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose_result(verbose_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geneology(population_size, generations, progress, individuals_generations_return, verbose_result));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sample_person_weighted
-int sample_person_weighted(size_t population_size, arma::vec& fathers_prob_cum, arma::uvec& fathers_perm);
-RcppExport SEXP malan_sample_person_weighted(SEXP population_sizeSEXP, SEXP fathers_prob_cumSEXP, SEXP fathers_permSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< size_t >::type population_size(population_sizeSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type fathers_prob_cum(fathers_prob_cumSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type fathers_perm(fathers_permSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_person_weighted(population_size, fathers_prob_cum, fathers_perm));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sample_geneology_variance
-List sample_geneology_variance(size_t population_size, int generations, double gamma_parameter_shape, double gamma_parameter_scale, bool progress, int individuals_generations_return, bool verbose_result);
-RcppExport SEXP malan_sample_geneology_variance(SEXP population_sizeSEXP, SEXP generationsSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP, SEXP verbose_resultSEXP) {
+List sample_geneology(size_t population_size, int generations, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int individuals_generations_return, bool verbose_result);
+RcppExport SEXP malan_sample_geneology(SEXP population_sizeSEXP, SEXP generationsSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP, SEXP verbose_resultSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -67,10 +39,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type generations(generationsSEXP);
     Rcpp::traits::input_parameter< double >::type gamma_parameter_shape(gamma_parameter_shapeSEXP);
     Rcpp::traits::input_parameter< double >::type gamma_parameter_scale(gamma_parameter_scaleSEXP);
+    Rcpp::traits::input_parameter< bool >::type enable_gamma_variance_extension(enable_gamma_variance_extensionSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
     Rcpp::traits::input_parameter< int >::type individuals_generations_return(individuals_generations_returnSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose_result(verbose_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geneology_variance(population_size, generations, gamma_parameter_shape, gamma_parameter_scale, progress, individuals_generations_return, verbose_result));
+    rcpp_result_gen = Rcpp::wrap(sample_geneology(population_size, generations, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, verbose_result));
     return rcpp_result_gen;
 END_RCPP
 }
