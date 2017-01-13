@@ -47,11 +47,6 @@ void create_father_update_simulation_state(
 //' @import Rcpp
 //' @import RcppProgress
 //' @import RcppArmadillo
-//' @import igraph
-//' @import tibble
-//' @importFrom graphics  par
-//' @importFrom methods is
-//' @importFrom utils head
 //' @export
 // [[Rcpp::export]]
 List sample_geneology(size_t population_size, 
