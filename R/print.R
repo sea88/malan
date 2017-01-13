@@ -106,6 +106,43 @@ plot.malan_pedigree <-
   }
   
 #' @export  
+plot_pedigrees <-
+  function(pedigrees, ...) {
+    peds_gs <- lapply(1L:pedigrees_count(pedigrees), function(i) pedigree_as_igraph(pedigrees[[i]]))
+    
+    big_graph <- do.call(igraph::union, peds_gs)
+
+    #http://stackoverflow.com/questions/15558218/draw-multiple-discrete-networks-in-r-using-igraph
+    
+    roots <- sapply(lapply(peds_gs, igraph::topological.sort), head, n = 1)
+    coords <- mapply(FUN = igraph::layout.reingold.tilford, peds_gs, root = roots, SIMPLIFY = FALSE)
+    
+    ## Put the graphs side by side, roots on the top
+    width <- sapply(coords, function(x) { r <- range(x[, 1]); r[2] - r[1] })
+    gap <- 0.5
+    shift <- c(0, cumsum(width[-length(width)] + gap))
+    ncoords <- mapply(FUN=function(mat, shift) {
+      mat[,1] <- mat[,1] - min(mat[,1]) + shift
+      mat[,2] <- mat[,2] - max(mat[,2])
+      mat
+    }, coords, shift, SIMPLIFY=FALSE)
+    
+    ## Put together the coordinates for the original graph,
+    ## based on the names of the vertices
+    lay <- matrix(0, ncol = 2, nrow = igraph::vcount(big_graph))
+    for (i in seq_along(peds_gs)) {
+      lay[match(igraph::V(peds_gs[[i]])$name, igraph::V(big_graph)$name),] <- ncoords[[i]]
+    }
+    
+    ## Plot everything
+    par(mar=c(0,0,0,0))
+    igraph::plot.igraph(big_graph, layout = lay)
+    
+    return(invisible(NULL))
+    #eturn(g)
+  }
+
+#' @export  
 plot_with_haplotypes <-
   function(x, population, ...) {
     if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")

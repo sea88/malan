@@ -10,14 +10,50 @@
 using namespace Rcpp;
 
 
+void create_father_update_simulation_state(
+  int father_i, 
+  int* individual_id, 
+  int generation, 
+  int individuals_generations_return,
+  std::vector<Individual*>& fathers_generation, 
+  std::unordered_map<int, Individual*>* population_map, 
+  IntegerVector& individual_pids_tmp_vec,
+  bool verbose_result,
+  int* new_founders_left,
+  List& last_k_generations_individuals) {  
+  
+  Individual* father = new Individual(*individual_id, generation);
+  (*individual_id) = (*individual_id) + 1;
+  
+  fathers_generation[father_i] = father;
+  (*population_map)[father->get_pid()] = father;
+  
+  if (verbose_result) {
+    individual_pids_tmp_vec[father_i] = father->get_pid();
+  }
+  
+  (*new_founders_left) = (*new_founders_left) + 1;
+
+  if (generation <= individuals_generations_return) {
+    Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
+    last_k_generations_individuals.push_back(father_xptr);
+  }  
+}
+
+
+
 // based on sample_geneology
 // @param generations -1 for simulate to 1 founder, else simulate this number of generations
 //' @export
 // [[Rcpp::export]]
-List sample_geneology(size_t population_size, int generations, 
+List sample_geneology(size_t population_size, 
+  int generations,
+  int extra_generations_full = 0,  
   double gamma_parameter_shape = 7, double gamma_parameter_scale = 7, 
   bool enable_gamma_variance_extension = false,
-  bool progress = true, int individuals_generations_return = 2, bool verbose_result = false) {
+  bool progress = true, 
+  int individuals_generations_return = 2,   
+  bool verbose_result = false) {
   
   if (population_size <= 1) {
     Rcpp::stop("Please specify population_size > 1");
@@ -165,20 +201,9 @@ List sample_geneology(size_t population_size, int generations,
       
       // if this is the father's first child, create the father
       if (fathers_generation[father_i] == nullptr) {
-        Individual* father = new Individual(individual_id++, generation);
-        fathers_generation[father_i] = father;
-        (*population_map)[father->get_pid()] = father;      
-        
-        if (verbose_result) {
-          individual_pids_tmp_vec[father_i] = father->get_pid();
-        }
-        
-        new_founders_left++;
-
-        if (generation <= individuals_generations_return) {
-          Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
-          last_k_generations_individuals.push_back(father_xptr);
-        }
+        create_father_update_simulation_state(father_i, &individual_id, generation, 
+              individuals_generations_return, fathers_generation, population_map, individual_pids_tmp_vec, verbose_result,
+              &new_founders_left, last_k_generations_individuals);
       }
       
       if (verbose_result) {
@@ -188,6 +213,20 @@ List sample_geneology(size_t population_size, int generations,
       
       children_generation[i]->set_father(fathers_generation[father_i]);
       fathers_generation[father_i]->add_child(children_generation[i]);
+    }
+    
+    // create additional fathers (without children) if needed:
+    if (generation <= extra_generations_full) {
+      for (size_t father_i = 0; father_i < population_size; ++father_i) {
+        if (fathers_generation[father_i] != nullptr) {
+          continue;
+        }        
+        
+        // create father, no children etc.
+        create_father_update_simulation_state(father_i, &individual_id, generation, 
+              individuals_generations_return, fathers_generation, population_map, individual_pids_tmp_vec, verbose_result,
+              &new_founders_left, last_k_generations_individuals);
+      }      
     }
     
     // verbose result
