@@ -60,6 +60,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// individuals_get_father_haplotypes
+Rcpp::IntegerMatrix individuals_get_father_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
+RcppExport SEXP malan_individuals_get_father_haplotypes(SEXP individualsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ListOf< Rcpp::XPtr<Individual> > >::type individuals(individualsSEXP);
+    rcpp_result_gen = Rcpp::wrap(individuals_get_father_haplotypes(individuals));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigree_populate_father_haplotypes
 void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates);
 RcppExport SEXP malan_pedigree_populate_father_haplotypes(SEXP pedSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP) {

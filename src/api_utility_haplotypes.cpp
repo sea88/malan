@@ -24,6 +24,42 @@ Rcpp::List pedigree_get_father_haplotypes_pids(Rcpp::XPtr<Population> population
  
 //' @export
 // [[Rcpp::export]]
+Rcpp::IntegerMatrix individuals_get_father_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {   
+  size_t n = individuals.size();
+ 
+  if (n <= 0) {
+    Rcpp::IntegerMatrix empty_haps(0, 0);
+    return empty_haps;
+  }
+ 
+  size_t loci = individuals[0]->get_father_haplotype().size();
+
+  if (loci <= 0) {
+    Rcpp::stop("Expected > 0 loci");
+    Rcpp::IntegerMatrix empty_haps(0, 0);
+    return empty_haps;
+  }
+
+  Rcpp::IntegerMatrix haps(n, loci);
+
+  for (size_t i = 0; i < n; ++i) {
+    std::vector<int> hap = individuals[i]->get_father_haplotype();
+
+    if (hap.size() != loci) {
+      Rcpp::stop("Expected > 0 loci for all haplotypes");
+      Rcpp::IntegerMatrix empty_haps(0, 0);
+      return empty_haps;
+    }
+    
+    Rcpp::IntegerVector h = Rcpp::wrap(hap);
+    haps(i, Rcpp::_) = h;
+  }
+
+  return haps;
+}
+
+//' @export
+// [[Rcpp::export]]
 void pedigree_populate_father_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates) {  
   Pedigree* p = ped;
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);

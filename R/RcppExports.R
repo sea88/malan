@@ -26,6 +26,11 @@ pedigree_get_father_haplotypes_pids <- function(population, pids) {
 }
 
 #' @export
+individuals_get_father_haplotypes <- function(individuals) {
+    .Call('malan_individuals_get_father_haplotypes', PACKAGE = 'malan', individuals)
+}
+
+#' @export
 pedigree_populate_father_haplotypes <- function(ped, loci, mutation_rates) {
     invisible(.Call('malan_pedigree_populate_father_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
 }
