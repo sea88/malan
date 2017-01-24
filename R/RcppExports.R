@@ -21,6 +21,11 @@ sample_geneology <- function(population_size, generations, extra_generations_ful
 }
 
 #' @export
+indices_in_mixture <- function(haplotypes, H1, H2) {
+    .Call('malan_indices_in_mixture', PACKAGE = 'malan', haplotypes, H1, H2)
+}
+
+#' @export
 pedigree_get_father_haplotypes_pids <- function(population, pids) {
     .Call('malan_pedigree_get_father_haplotypes_pids', PACKAGE = 'malan', population, pids)
 }

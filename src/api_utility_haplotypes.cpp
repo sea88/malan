@@ -9,17 +9,80 @@
 
 //' @export
 // [[Rcpp::export]]
+Rcpp::List indices_in_mixture(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2) { 
+  size_t N = haplotypes.nrow();
+  
+  Rcpp::List res;
+  
+  if (N == 0) {
+    return res;
+  }
+
+  // mainly count wanted, but indices are good for debuggin
+  Rcpp::IntegerVector res_in_mixture;
+  Rcpp::IntegerVector res_H1;
+  Rcpp::IntegerVector res_H2;
+  
+  size_t loci = haplotypes.ncol();
+
+  for (size_t i = 0; i < N; ++i) {
+    Rcpp::IntegerVector h = haplotypes(i, Rcpp::_);
+    
+    bool in_mixture = true;
+    bool match_H1 = true; // faster than Rcpp equal/all sugar 
+    bool match_H2 = true;
+    
+    for (size_t locus = 0; locus < loci; ++locus) {
+      if (in_mixture && (h[locus] != H1[locus]) && (h[locus] != H2[locus])) {
+        in_mixture = false;
+      }
+      
+      if (match_H1 && (h[locus] != H1[locus])) {
+        match_H1 = false;
+      }
+      
+      if (match_H2 && (h[locus] != H2[locus])) {
+        match_H2 = false;
+      }
+      
+      // if neither have a chance, just stop
+      if (!in_mixture && !match_H1 && !match_H2) {
+        break;
+      }
+    }
+    
+    if (in_mixture) {
+      res_in_mixture.push_back(i + 1); // R indexing
+    }
+    
+    if (match_H1) {
+      res_H1.push_back(i + 1); // R indexing
+    }
+    
+    if (match_H2) {
+      res_H2.push_back(i + 1); // R indexing
+    }
+  }
+  
+  res["in_mixture"] = res_in_mixture;
+  res["match_H1"] = res_H1;
+  res["match_H2"] = res_H2;
+
+  return res;
+}
+
+//' @export
+// [[Rcpp::export]]
 Rcpp::List pedigree_get_father_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) {  
- 
- size_t N = pids.size();
- Rcpp::List haps(N);
- 
- for (size_t i = 0; i < N; ++i) {
-   Individual* indv = population->get_individual(pids[i]);
-   haps(i) = indv->get_father_haplotype();
- }
- 
- return haps;
+  size_t N = pids.size();
+  Rcpp::List haps(N);
+
+  for (size_t i = 0; i < N; ++i) {
+    Individual* indv = population->get_individual(pids[i]);
+    haps(i) = indv->get_father_haplotype();
+  }
+
+  return haps;
 }
  
 //' @export

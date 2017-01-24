@@ -48,6 +48,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// indices_in_mixture
+Rcpp::List indices_in_mixture(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2);
+RcppExport SEXP malan_indices_in_mixture(SEXP haplotypesSEXP, SEXP H1SEXP, SEXP H2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type haplotypes(haplotypesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type H1(H1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type H2(H2SEXP);
+    rcpp_result_gen = Rcpp::wrap(indices_in_mixture(haplotypes, H1, H2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigree_get_father_haplotypes_pids
 Rcpp::List pedigree_get_father_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids);
 RcppExport SEXP malan_pedigree_get_father_haplotypes_pids(SEXP populationSEXP, SEXP pidsSEXP) {
