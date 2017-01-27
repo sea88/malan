@@ -19,10 +19,10 @@ set.seed(1)
 
 # Population simulation
 
-Now, a population is simulated (hiding progress information):
+A standard Wright-Fisher population can be simulated (hiding progress information) as follows:
 
 ```{r}
-sim_res <- sample_geneology(population_size = 10L, generations = 10L, progress = FALSE)
+sim_res <- sample_geneology(population_size = 10, generations = 10, progress = FALSE)
 ```
 
 ## Building the pedigrees
@@ -36,7 +36,7 @@ pedigrees_count(pedigrees)
 pedigrees_table(pedigrees)
 pedigree_size(pedigrees[[1]])
 pedigree_size(pedigrees[[2]])
-#pedigree_size(pedigrees[[3L]]) # error as there are only 2 pedigrees
+#pedigree_size(pedigrees[[3]]) # error as there are only 2 pedigrees
 ```
 
 The pedigrees can be plotted all at once:
@@ -145,7 +145,7 @@ Let's try to simulate a larger population with 3 full generations (the additiona
 ```{r}
 set.seed(1)
 sim_res <- sample_geneology(population_size = 1e3, 
-                            generations = 100, 
+                            generations = 200, 
                             extra_generations_full = 2,
                             individuals_generations_return = 2, # default value
                             progress = FALSE)
@@ -250,17 +250,137 @@ table(L1_max)
 mean(L1_max == 0)
 ```
 
+## Mixtures
 
+Draw true contributors:
+
+```{r}
+set.seed(100)
+U_indices <- sample.int(n = length(live_individuals), size = 2, replace = FALSE)
+H1 <- get_haplotype(live_individuals[[U_indices[1]]])
+H2 <- get_haplotype(live_individuals[[U_indices[2]]])
+```
+
+View haplotypes:
+
+```{r}
+rbind(H1, H2)
+```
+
+Now, find those haplotype in live individuals (those haplotypes are in `haps` from before) that are included in (or compatible with) the mixture:
+
+```{r}
+mixres <- indices_in_mixture(haplotypes = haps, H1 = H1, H2 = H2)
+mixres
+```
+
+Compare with matches:
+
+```{r}
+length(mixres$match_H1)
+count_haplotype_occurrences_individuals(individuals = live_individuals, haplotype = H1)
+
+length(mixres$match_H2)
+count_haplotype_occurrences_individuals(individuals = live_individuals, haplotype = H2)
+```
+
+In mixture that are not H1 and not H2:
+```{r}
+H1_or_H2_hap_indices <- c(mixres$match_H1, mixres$match_H2)
+others_indices <- setdiff(mixres$in_mixture, H1_or_H2_hap_indices)
+length(others_indices)
+```
+
+Inspect these these (only unique ones):
+
+```{r}
+others_haps <- haps[others_indices, ]
+others_haps[!duplicated(others_haps), ]
+```
+
+Compared with true contributors:
+
+```{r}
+rbind(H1, H2)
+```
 
 # Other functions
 
-[To appear...]
-
 ## Variance in number of children
 
-[To appear...]
+Let $\alpha$ be the parameter of a symmetric Dirichlet distribution specifying each man's probability to be the father of an arbitrary male in the next generation. When $\alpha=5$, a man's relative probability to be the father has 95\% probability to lie between 0.32 and 2.05, compared with a constant 1 under the standard Wright-Fisher model and the standard deviation in the number of male offspring per man is 1.10 (standard Wright-Fisher = 1).
 
-## Mixtures
+This symmetric Dirichlet distribution is implemented by drawing father (unscaled) probabilities from a Gamma distribution with parameters shape and scale that are then normalised to sum to 1. To obtain a symmetric Dirichlet distribution with parameter $\alpha$, the shape must be $\alpha$ and scale $1/\alpha$. This is simulated as follows (note the `enable_gamma_variance_extension` parameter):
+
+```{r}
+dirichlet_alpha <- 5
+
+set.seed(1)
+sim_res <- sample_geneology(population_size = 10, 
+                            generations = 10, 
+                            enable_gamma_variance_extension = TRUE,
+                            gamma_parameter_shape = dirichlet_alpha,
+                            gamma_parameter_scale = 1 / dirichlet_alpha,
+                            progress = FALSE)
+pedigrees <- build_pedigrees(sim_res$population, progress = FALSE)
+```
+
+```{r}
+plot(pedigrees)
+```
+
+Let us verify the claim that the standard deviation in the number of male offspring per man is 1.10. The easiest way is to get information about father id's, which is done by asking for a `verbose_result`:
+
+```{r}
+N <- 10000
+
+set.seed(1)
+sim_res <- sample_geneology(population_size = N, 
+                            generations = 2, 
+                            extra_generations_full = 2,
+                            enable_gamma_variance_extension = TRUE,
+                            gamma_parameter_shape = dirichlet_alpha,
+                            gamma_parameter_scale = 1/dirichlet_alpha,
+                            progress = FALSE, verbose_result = TRUE)
+
+tbl_fathers_with_children <- table(sim_res$father_pids[, 1])
+tbl_fathers_no_children <- rep(0, N - length(tbl_fathers_with_children))
+
+number_of_children <- c(tbl_fathers_with_children, tbl_fathers_no_children)
+number_of_children <- as.numeric(number_of_children)
+
+mean(number_of_children)
+sd(number_of_children)
+```
 
 
-[To appear...]
+Let os get estimates in parallel:
+
+```{r}
+get_number_children <- function(N) {
+  sim_res <- sample_geneology(population_size = N, 
+                              generations = 2, 
+                              extra_generations_full = 2,
+                              enable_gamma_variance_extension = TRUE,
+                              gamma_parameter_shape = dirichlet_alpha,
+                              gamma_parameter_scale = 1 / dirichlet_alpha,
+                              progress = FALSE, verbose_result = TRUE)
+  
+  tbl_fathers_with_children <- table(sim_res$father_pids[, 1])
+  tbl_fathers_no_children <- rep(0, N - length(tbl_fathers_with_children))
+  
+  number_of_children <- c(tbl_fathers_with_children, tbl_fathers_no_children)
+  number_of_children <- as.numeric(number_of_children)
+  
+  return(number_of_children)
+}
+
+library(parallel)
+options(mc.cores = 3)
+RNGkind("L'Ecuyer-CMRG") # for mclapply
+set.seed(1)
+x <- mclapply(1:100, function(i) get_number_children(100))
+sds <- unlist(lapply(x, sd))
+mean(sds)
+```
+
