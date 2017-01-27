@@ -80,13 +80,13 @@ Individual* Pedigree::get_root() {
 }
 
 
-void Pedigree::populate_father_haplotypes(int loci, std::vector<double>& mutation_rates) {
+void Pedigree::populate_haplotypes(int loci, std::vector<double>& mutation_rates) {
   /* FIXME: Exploits tree */
   Individual* root = this->get_root();
   
   std::vector<int> h(loci); // initialises to 0, 0, ..., 0
   
-  root->set_father_haplotype(h);
+  root->set_haplotype(h);
   root->pass_haplotype_to_children(true, mutation_rates);
 }
 

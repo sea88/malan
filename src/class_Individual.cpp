@@ -201,46 +201,46 @@ int Individual::meiosis_dist_tree(Individual* dest) const {
 Father haplotype
 FIXME mutation_model?
 */
-void Individual::father_haplotype_mutate(std::vector<double>& mutation_rates) {
-  if (!m_father_haplotype_set) {
+void Individual::haplotype_mutate(std::vector<double>& mutation_rates) {
+  if (!m_haplotype_set) {
     throw std::invalid_argument("Father haplotype not set yet, so cannot mutate");
   }
-  if (m_father_haplotype.size() != mutation_rates.size()) {
+  if (m_haplotype.size() != mutation_rates.size()) {
     throw std::invalid_argument("Number of loci specified in haplotype must equal number of mutation rates specified");
   }
-  if (m_father_haplotype_mutated) {
+  if (m_haplotype_mutated) {
     throw std::invalid_argument("Father haplotype already set and mutated");
   }
   
   
-  for (int loc = 0; loc < m_father_haplotype.size(); ++loc) {
+  for (int loc = 0; loc < m_haplotype.size(); ++loc) {
     if (R::runif(0.0, 1.0) < mutation_rates[loc]) {
       if (R::runif(0.0, 1.0) < 0.5) {
-        m_father_haplotype[loc] = m_father_haplotype[loc] - 1;
+        m_haplotype[loc] = m_haplotype[loc] - 1;
       } else {
-        m_father_haplotype[loc] = m_father_haplotype[loc] + 1;
+        m_haplotype[loc] = m_haplotype[loc] + 1;
       }
     }
   }
 }
 
-bool Individual::is_father_haplotype_set() const {
-  return m_father_haplotype_set; 
+bool Individual::is_haplotype_set() const {
+  return m_haplotype_set; 
 }
 
-void Individual::set_father_haplotype(std::vector<int> h) {
-  m_father_haplotype = h;
-  m_father_haplotype_set = true;
+void Individual::set_haplotype(std::vector<int> h) {
+  m_haplotype = h;
+  m_haplotype_set = true;
 }
 
-std::vector<int> Individual::get_father_haplotype() const {
-  return m_father_haplotype;
+std::vector<int> Individual::get_haplotype() const {
+  return m_haplotype;
 }
 
 void Individual::pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates) {
   for (auto &child : (*m_children)) {
-    child->set_father_haplotype(m_father_haplotype);
-    child->father_haplotype_mutate(mutation_rates);
+    child->set_haplotype(m_haplotype);
+    child->haplotype_mutate(mutation_rates);
     
     if (recursive) {
       child->pass_haplotype_to_children(recursive, mutation_rates);
@@ -248,9 +248,9 @@ void Individual::pass_haplotype_to_children(bool recursive, std::vector<double>&
   }
 }
 
-int Individual::get_father_haplotype_L1(Individual* dest) const {
-  std::vector<int> h_this = this->get_father_haplotype();
-  std::vector<int> h_dest = dest->get_father_haplotype();
+int Individual::get_haplotype_L1(Individual* dest) const {
+  std::vector<int> h_this = this->get_haplotype();
+  std::vector<int> h_dest = dest->get_haplotype();
   
   if (h_this.size() != h_dest.size()) {
     Rcpp::Rcout << "this pid = " << this->get_pid() << " has haplotype with " << h_this.size() << " loci" << std::endl;

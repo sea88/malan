@@ -89,6 +89,26 @@ Rcpp::IntegerVector get_pids_in_pedigree(Rcpp::XPtr<Pedigree> ped) {
   return res;
 }
 
+//' get pids in pedigree
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::List get_haplotypes_in_pedigree(Rcpp::XPtr<Pedigree> ped) {  
+  Pedigree* p = ped;
+  
+  std::vector<Individual*>* inds = p->get_all_individuals();
+ 
+  size_t N = inds->size();
+  Rcpp::List haps(N); 
+  
+  for (size_t i = 0; i < N; ++i) {
+    Individual* indv = inds->at(i);
+    haps(i) = indv->get_haplotype();
+  }
+  
+  return haps;
+}
+
 //[[Rcpp::export]]
 Rcpp::CharacterMatrix get_pedigree_edgelist(Rcpp::XPtr<Pedigree> ped) {  
   Pedigree* p = ped;

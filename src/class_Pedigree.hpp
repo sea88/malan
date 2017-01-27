@@ -20,6 +20,6 @@ public:
   
   Individual* get_root();
   
-  void populate_father_haplotypes(int loci, std::vector<double>& mutation_rates);
+  void populate_haplotypes(int loci, std::vector<double>& mutation_rates);
 };
 

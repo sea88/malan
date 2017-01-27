@@ -39,12 +39,20 @@ print.malan_pedigreelist <-
     return(invisible(NULL))
   }
 
+stop_invalid_id <- function(id) {
+  if (length(id) != 1L || !is.numeric(id) || id <= 0L || round(id) != id) {
+    stop("Invalid id: ", id)
+  }
+}
   
 #' @export
 `[[.malan_pedigreelist` <- function(x, ...) {
   i <- ..1
-  if (length(i) != 1L || !is.integer(i) || i[1L] <= 0L || i > pedigrees_count(x)) {
-    stop("Wrong pedigree selected or invalid element selection criteria")
+  stop_invalid_id(i)
+  
+  #if (length(i) != 1L || !is.integer(i) || i[1L] <= 0L || i > pedigrees_count(x)) {
+  if (i > pedigrees_count(x)) {
+    stop("Wrong pedigree selected (not that many pedigrees exist)")
   }
   
   p <- get_pedigree(x, i - 1L) # -1 to go to 0-based indexing
@@ -54,14 +62,12 @@ print.malan_pedigreelist <-
 #' @export
 `[[.malan_population` <- function(x, ...) {
   pid <- ..1
-  if (length(pid) != 1L || !is.numeric(pid)) {
-    stop("Wrong individual selected or invalid element selection criteria")
-  }
+  stop_invalid_id(pid)
   
-  if (!is.integer(pid)) {
-    pid <- as.integer(pid)
-    warning("Converting to integer explicitely (remember L postfix)")
-  }
+  #if (!is.integer(pid)) {
+  #  pid <- as.integer(pid)
+  #  warning("Converting to integer explicitely (remember L postfix)")
+  #}
   
   p <- get_individual(x, pid)
   return(p)
@@ -76,6 +82,8 @@ print.malan_pedigree <-
     
     return(invisible(NULL))
   }
+  
+
 
 #' @importFrom igraph graph_from_data_frame plot.igraph union layout_as_tree layout.reingold.tilford vcount V
 #' @import tibble
@@ -97,22 +105,12 @@ pedigree_as_igraph <-
     return(g)
   }
 
-#' @export  
-plot.malan_pedigree <-
-  function(x, ...) {
-    if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
-    
-    g <- pedigree_as_igraph(x)    
-    #igraph::plot.igraph(g)
-    igraph::plot.igraph(g, layout = igraph::layout_as_tree(graph = g))
-    
-    return(invisible(NULL))
-    #eturn(g)
-  }
   
 #' @export  
-plot_pedigrees <-
-  function(pedigrees, ...) {
+#plot_pedigrees <-
+plot.malan_pedigreelist <-
+  function(x, ...) {
+    pedigrees <- x
     peds_gs <- lapply(1L:pedigrees_count(pedigrees), function(i) pedigree_as_igraph(pedigrees[[i]]))
     
     big_graph <- do.call(igraph::union, peds_gs)
@@ -140,59 +138,59 @@ plot_pedigrees <-
     }
     
     ## Plot everything
-    par(mar=c(0,0,0,0))
+    old_mar <- par("mar")
+    par(mar = c(0, 0, 0, 0))
     igraph::plot.igraph(big_graph, layout = lay)
-    
+    par(mar = old_mar)
+        
     return(invisible(NULL))
     #eturn(g)
   }
 
-#' @export  
-plot_with_haplotypes <-
-  function(x, population, ...) {
-    if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
-    
-    x_pids <- get_pids_in_pedigree(x)
-    haps <- pedigree_get_father_haplotypes_pids(population, x_pids)
-    
-    #haps_str <- unlist(lapply(haps, paste0, collapse = ","))
-    #haps_str <- unlist(lapply(haps, function(h) {
-    #  paste0(h, collapse = ",")
-    #}))
-    haps_str <- unlist(lapply(haps, function(h) {
-      paste0(strwrap(paste0(h, collapse = " "), width = 15), collapse = "\n")
-      #paste0(h, collapse = ",")
-    }))
-        
-    g <- pedigree_as_igraph(x)
-    #igraph::plot.igraph(g, vertex.label = haps_str)
-    igraph::plot.igraph(g, vertex.label = haps_str, vertex.label.cex = 0.75, layout = igraph::layout_as_tree(graph = g))
-    
-    return(invisible(NULL))
-    #eturn(g)
-  }
+
   
+
 #' @export  
-plot_with_haplotypes_mark_pids <-
-  function(x, population, mark_pids = NULL, ...) {
+plot.malan_pedigree <-
+  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, ...) {
     if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
     
     x_pids <- get_pids_in_pedigree(x)
-    haps <- pedigree_get_father_haplotypes_pids(population, x_pids)
     
-    haps_str <- unlist(lapply(seq_along(haps), function(h_i) {
-      h <- haps[[h_i]]
-      paste0(strwrap(paste0(x_pids[h_i], ":", paste0(h, collapse = " ")), width = 15), collapse = "\n")
-    }))
+    vertex_label <- rep("", length(x_pids))
     
-    vertex_colors <- rep("orange", length(haps_str))
+    if (ids) {
+      vertex_label <- x_pids
+    }
+    
+    if (haplotypes) {      
+      haps <- get_haplotypes_in_pedigree(x)
+      
+      vertex_label <- unlist(lapply(seq_along(haps), function(h_i) {
+        h <- haps[[h_i]]
+        prefix <- ""
+        
+        if (ids) {
+          prefix <- paste0(x_pids[h_i], ": ")
+        }
+        
+        paste0(strwrap(paste0(prefix, paste0(h, collapse = " ")), width = 15), collapse = "\n")
+      }))
+    }
+    
+    vertex_colors <- rep("orange", length(vertex_label))
     if (!is.null(mark_pids)) {
       vertex_colors[x_pids %in% mark_pids] <- "red"
     }
     
     g <- pedigree_as_igraph(x)
     igraph::V(g)$color <- vertex_colors
-    igraph::plot.igraph(g, vertex.label = haps_str, vertex.label.cex = 0.75, layout = igraph::layout_as_tree(graph = g))
+    
+    
+    old_mar <- par("mar")
+    par(mar = c(0, 0, 0, 0))        
+    igraph::plot.igraph(g, vertex.label = vertex_label, vertex.label.cex = 0.75, layout = igraph::layout_as_tree(graph = g))
+    par(mar = old_mar)
     
     return(invisible(NULL))
     #eturn(g)

@@ -26,50 +26,51 @@ indices_in_mixture <- function(haplotypes, H1, H2) {
 }
 
 #' @export
-pedigree_get_father_haplotypes_pids <- function(population, pids) {
-    .Call('malan_pedigree_get_father_haplotypes_pids', PACKAGE = 'malan', population, pids)
+pedigree_get_haplotypes_pids <- function(population, pids) {
+    .Call('malan_pedigree_get_haplotypes_pids', PACKAGE = 'malan', population, pids)
 }
 
 #' @export
-individuals_get_father_haplotypes <- function(individuals) {
-    .Call('malan_individuals_get_father_haplotypes', PACKAGE = 'malan', individuals)
+individuals_get_haplotypes <- function(individuals) {
+    .Call('malan_individuals_get_haplotypes', PACKAGE = 'malan', individuals)
 }
 
 #' @export
-pedigree_populate_father_haplotypes <- function(ped, loci, mutation_rates) {
-    invisible(.Call('malan_pedigree_populate_father_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
+pedigree_populate_haplotypes <- function(ped, loci, mutation_rates) {
+    invisible(.Call('malan_pedigree_populate_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
 }
 
 #' @export
-pedigrees_all_populate_father_haplotypes <- function(pedigrees, loci, mutation_rates, progress = TRUE) {
-    invisible(.Call('malan_pedigrees_all_populate_father_haplotypes', PACKAGE = 'malan', pedigrees, loci, mutation_rates, progress))
+pedigrees_all_populate_haplotypes <- function(pedigrees, loci, mutation_rates, progress = TRUE) {
+    invisible(.Call('malan_pedigrees_all_populate_haplotypes', PACKAGE = 'malan', pedigrees, loci, mutation_rates, progress))
 }
 
 #' @export
-pedigree_get_father_haplotype <- function(individual) {
-    .Call('malan_pedigree_get_father_haplotype', PACKAGE = 'malan', individual)
+get_haplotype <- function(individual) {
+    .Call('malan_get_haplotype', PACKAGE = 'malan', individual)
 }
 
 #' @export
-count_father_haplotype_occurrences_individuals <- function(individuals, haplotype) {
-    .Call('malan_count_father_haplotype_occurrences_individuals', PACKAGE = 'malan', individuals, haplotype)
+count_haplotype_occurrences_individuals <- function(individuals, haplotype) {
+    .Call('malan_count_haplotype_occurrences_individuals', PACKAGE = 'malan', individuals, haplotype)
 }
 
 #' @export
-meiosis_dist_father_haplotype_matches_individuals <- function(suspect, individuals) {
-    .Call('malan_meiosis_dist_father_haplotype_matches_individuals', PACKAGE = 'malan', suspect, individuals)
+meiosis_dist_haplotype_matches_individuals <- function(suspect, individuals) {
+    .Call('malan_meiosis_dist_haplotype_matches_individuals', PACKAGE = 'malan', suspect, individuals)
 }
 
 #' @export
-pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists <- function(suspect, generation_upper_bound_in_result = -1L) {
-    .Call('malan_pedigree_father_haplotype_matches_in_pedigree_meiosis_L1_dists', PACKAGE = 'malan', suspect, generation_upper_bound_in_result)
+pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists <- function(suspect, generation_upper_bound_in_result = -1L) {
+    .Call('malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists', PACKAGE = 'malan', suspect, generation_upper_bound_in_result)
 }
 
 #' @export
-count_father_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
-    .Call('malan_count_father_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
+count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
+    .Call('malan_count_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
 }
 
+#' @export
 get_individual <- function(population, pid) {
     .Call('malan_get_individual', PACKAGE = 'malan', population, pid)
 }
@@ -155,6 +156,13 @@ print_pedigree <- function(ped) {
 #' @export
 get_pids_in_pedigree <- function(ped) {
     .Call('malan_get_pids_in_pedigree', PACKAGE = 'malan', ped)
+}
+
+#' get pids in pedigree
+#' 
+#' @export
+get_haplotypes_in_pedigree <- function(ped) {
+    .Call('malan_get_haplotypes_in_pedigree', PACKAGE = 'malan', ped)
 }
 
 get_pedigree_edgelist <- function(ped) {

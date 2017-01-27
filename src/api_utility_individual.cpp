@@ -7,8 +7,8 @@
 
 #include "malan_types.hpp"
 
-
-//[[Rcpp::export]]
+//' @export
+// [[Rcpp::export]]
 Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid) {  
   Population* pop = population;
   
