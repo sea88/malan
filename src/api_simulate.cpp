@@ -9,7 +9,6 @@
 
 using namespace Rcpp;
 
-
 void create_father_update_simulation_state(
   int father_i, 
   int* individual_id, 
@@ -41,9 +40,64 @@ void create_father_update_simulation_state(
 }
 
 
-
-// based on sample_geneology
-// @param generations -1 for simulate to 1 founder, else simulate this number of generations
+//' Simulate a geneology.
+//' 
+//' This function simulates a geneology where the last generation has \code{population_size} individuals. 
+//' 
+//' By the backwards simulating process of the Wright-Fisher model, 
+//' individuals with no descendants in the end population are not simulated. 
+//' If for some reason additional full generations should be simulated, 
+//' the number can be specified via the \code{extra_generations_full} parameter.
+//' This can for example be useful if one wants to simulate the 
+//' final 3 generations although some of these may not get (male) children.
+//' 
+//' Let \eqn{\alpha} be the parameter of a symmetric Dirichlet distribution 
+//' specifying each man's probability to be the father of an arbitrary 
+//' male in the next generation. When \eqn{\alpha = 5}, a man's relative probability 
+//' to be the father has 95\% probability to lie between 0.32 and 2.05, compared with a 
+//' constant 1 under the standard Wright-Fisher model and the standard deviation in 
+//' the number of male offspring per man is 1.10 (standard Wright-Fisher = 1).
+//' 
+//' This symmetric Dirichlet distribution is implemented by drawing 
+//' father (unscaled) probabilities from a Gamma distribution with 
+//' parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale} 
+//' that are then normalised to sum to 1. 
+//' To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha}, 
+//' the following must be used:
+//' \eqn{\code{gamma_parameter_shape} = \alpha}
+//' and 
+//' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+//' 
+//' @param population_size The size of the population.
+//' @param generations The number of generations to simulate: 
+//'        \itemize{
+//'           \item -1 for simulate to 1 founder
+//'           \item else simulate this number of generations.
+//'        }
+//' @param extra_generations_full Additional full generations to be simulated.
+//' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.
+//' @param gamma_parameter_scale Parameter realted to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.
+//' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
+//' @param progress Show progress.
+//' @param individuals_generations_return How many generations back to return (pointers to) individuals for.
+//' @param verbose_result Verbose result.
+//' 
+//' @return A list with the following entries:
+//' \itemize{
+//'   \item \code{population}. An external pointer to the population.
+//'   \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
+//'   \item \code{founders}. Number of founders after the simulated \code{generations}.
+//'   \item \code{type}. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
+//'   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
+//'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
+//' }
+//' If \code{verbose_result} is true, then these additional components are also returned:
+//' \itemize{
+//'   \item \code{individual_pids}. A matrix with pid (person id) for each individual.
+//'   \item \code{father_pids}. A matrix with pid (person id) for each individual's father.
+//'   \item \code{father_indices}. A matrix with indices for fathers.
+//' }
+//' 
 //' @import Rcpp
 //' @import RcppProgress
 //' @import RcppArmadillo
@@ -295,7 +349,7 @@ List sample_geneology(size_t population_size,
   res["population"] = population_xptr;
   res["generations"] = generation;
   res["founders"] = founders_left;
-  res["type"] = (enable_gamma_variance_extension) ? "GammaVariation" : "SimpleWF";  
+  res["type"] = (enable_gamma_variance_extension) ? "GammaVariation" : "StandardWF";  
   res["end_generation_individuals"] = end_generation_individuals;
   res["individuals_generations"] = last_k_generations_individuals;
 
