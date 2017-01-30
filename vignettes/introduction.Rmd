@@ -7,6 +7,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(fig.width = 7)
+```
+
+
 First, the library is loaded:
 ```{r}
 library(malan)
@@ -72,6 +77,9 @@ indv <- get_individual(sim_res$population, 22)
 print_individual(indv)
 ```
 
+
+
+
 ## Run a mutation process
 
 ```{r}
@@ -116,6 +124,20 @@ sim_res <- sample_geneology(population_size = 10,
 pedigrees <- build_pedigrees(sim_res$population, progress = FALSE)
 plot(pedigrees)
 ```
+
+And to obtain the complete history, `extra_generations_full` is set to `generations`:
+
+```{r}
+set.seed(1)
+sim_res <- sample_geneology(population_size = 10, 
+                            generations = 5, 
+                            extra_generations_full = 10,
+                            progress = FALSE)
+pedigrees <- build_pedigrees(sim_res$population, progress = FALSE)
+plot(pedigrees)
+```
+
+Now, there are 10 individuals in all generations.
 
 ## Simulate to one founder
 
