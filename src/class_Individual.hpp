@@ -5,8 +5,6 @@
 class Individual {
 private:
   int m_pid; 
-  int m_birth_year = 0;
-  bool m_is_alive = false;
   int m_generation = -1;
   
   std::vector<Individual*>* m_children = nullptr;
@@ -40,13 +38,7 @@ public:
   int get_pedigree_id() const;
   
   void set_pedigree_id(int id, Pedigree* ped, int* pedigree_size);
-  
-  void set_alive_status(bool is_alive);
-  bool get_alive_status() const;  
 
-  void set_birth_year(int birth_year);
-  int get_birth_year() const;
-  
   int meiosis_dist_tree(Individual* dest) const;
   
   std::vector<Individual*> calculate_path_to(Individual* dest) const;

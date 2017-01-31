@@ -82,22 +82,6 @@ void Individual::set_pedigree_id(int id, Pedigree* ped, int* pedigree_size) {
   }
 }
 
-void Individual::set_alive_status(bool is_alive) {
-  m_is_alive = is_alive;
-}
-
-bool Individual::get_alive_status() const {
-  return m_is_alive;
-}
-
-void Individual::set_birth_year(int birth_year) {
-  m_birth_year = birth_year;
-}
-
-int Individual::get_birth_year() const {
-  return m_birth_year;
-}
-
 void Individual::dijkstra_reset() {
   m_dijkstra_visited = false;
   m_dijkstra_distance = 0;
