@@ -152,7 +152,7 @@ plot.malan_pedigreelist <-
 
 #' @export  
 plot.malan_pedigree <-
-  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, ...) {
+  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, node_color = "orange", mark_color = "red", ...) {
     if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
     
     x_pids <- get_pids_in_pedigree(x)
@@ -178,9 +178,9 @@ plot.malan_pedigree <-
       }))
     }
     
-    vertex_colors <- rep("orange", length(vertex_label))
+    vertex_colors <- rep(node_color, length(vertex_label))
     if (!is.null(mark_pids)) {
-      vertex_colors[x_pids %in% mark_pids] <- "red"
+      vertex_colors[x_pids %in% mark_pids] <- mark_color
     }
     
     g <- pedigree_as_igraph(x)
