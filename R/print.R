@@ -152,7 +152,7 @@ plot.malan_pedigreelist <-
 
 #' @export  
 plot.malan_pedigree <-
-  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, node_color = "orange", mark_color = "red", ...) {
+  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, node_color = "lightgray", mark_color = "orange", ...) {
     if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
     
     x_pids <- get_pids_in_pedigree(x)
