@@ -152,7 +152,7 @@ plot.malan_pedigreelist <-
 
 #' @export  
 plot.malan_pedigree <-
-  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, node_color = "lightgray", mark_color = "orange", ...) {
+  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, label_color = "black", node_color = "lightgray", mark_color = "orange", ...) {
     if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
     
     x_pids <- get_pids_in_pedigree(x)
@@ -189,7 +189,7 @@ plot.malan_pedigree <-
     
     old_mar <- par("mar")
     par(mar = c(0, 0, 0, 0))        
-    igraph::plot.igraph(g, vertex.label = vertex_label, vertex.label.cex = 0.75, layout = igraph::layout_as_tree(graph = g))
+    igraph::plot.igraph(g, vertex.label = vertex_label, vertex.label.cex = 0.75, vertex.label.color = label_color, layout = igraph::layout_as_tree(graph = g))
     par(mar = old_mar)
     
     return(invisible(NULL))
