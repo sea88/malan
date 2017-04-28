@@ -140,7 +140,7 @@ plot.malan_pedigreelist <-
     ## Plot everything
     old_mar <- par("mar")
     par(mar = c(0, 0, 0, 0))
-    igraph::plot.igraph(big_graph, layout = lay)
+    igraph::plot.igraph(big_graph, layout = lay, ...)
     par(mar = old_mar)
         
     return(invisible(NULL))
@@ -189,7 +189,12 @@ plot.malan_pedigree <-
     
     old_mar <- par("mar")
     par(mar = c(0, 0, 0, 0))        
-    igraph::plot.igraph(g, vertex.label = vertex_label, vertex.label.cex = 0.75, vertex.label.color = label_color, layout = igraph::layout_as_tree(graph = g))
+    igraph::plot.igraph(g, 
+                        vertex.label = vertex_label, 
+                        vertex.label.cex = 0.75, 
+                        vertex.label.color = label_color, 
+                        layout = igraph::layout_as_tree(graph = g),
+                        ...)
     par(mar = old_mar)
     
     return(invisible(NULL))
