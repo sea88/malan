@@ -219,6 +219,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// get_generation
+int get_generation(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP malan_get_generation(SEXP individualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_generation(individual));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_pedigree_from_individual
 Rcpp::XPtr<Pedigree> get_pedigree_from_individual(Rcpp::XPtr<Individual> individual);
 RcppExport SEXP malan_get_pedigree_from_individual(SEXP individualSEXP) {
@@ -416,6 +427,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"malan_get_individual", (DL_FUNC) &malan_get_individual, 2},
     {"malan_get_pid", (DL_FUNC) &malan_get_pid, 1},
     {"malan_print_individual", (DL_FUNC) &malan_print_individual, 1},
+    {"malan_get_generation", (DL_FUNC) &malan_get_generation, 1},
     {"malan_get_pedigree_from_individual", (DL_FUNC) &malan_get_pedigree_from_individual, 1},
     {"malan_get_pedigree_id_from_pid", (DL_FUNC) &malan_get_pedigree_id_from_pid, 2},
     {"malan_malan_test", (DL_FUNC) &malan_malan_test, 0},

@@ -210,6 +210,13 @@ print_individual <- function(individual) {
     invisible(.Call('malan_print_individual', PACKAGE = 'malan', individual))
 }
 
+#' Get individual's generations
+#' 
+#' @export
+get_generation <- function(individual) {
+    .Call('malan_get_generation', PACKAGE = 'malan', individual)
+}
+
 #' Get pedigree from individual
 #' 
 #' @export

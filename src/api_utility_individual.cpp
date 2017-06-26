@@ -50,6 +50,14 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
   }
 }
 
+//' Get individual's generations
+//' 
+//' @export
+// [[Rcpp::export]]
+int get_generation(Rcpp::XPtr<Individual> individual) {  
+  return individual->get_generation();
+}
+
 //' Get pedigree from individual
 //' 
 //' @export
