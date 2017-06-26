@@ -59,7 +59,7 @@ void create_father_update_simulation_state_varying_size(
   (*new_founders_left) = (*new_founders_left) + 1;
 
   if (generation <= individuals_generations_return) {
-    Rcpp::Rcout << "create_father_update_simulation_state_varying_size: generation = " << generation << "; individuals_generations_return = " << individuals_generations_return << std::endl;
+    //Rcpp::Rcout << "create_father_update_simulation_state_varying_size: generation = " << generation << "; individuals_generations_return = " << individuals_generations_return << std::endl;
     
     Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
     last_k_generations_individuals.push_back(father_xptr);
