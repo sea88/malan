@@ -48,6 +48,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sample_geneology_varying_size
+List sample_geneology_varying_size(IntegerVector population_sizes, int extra_generations_full, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int individuals_generations_return);
+RcppExport SEXP malan_sample_geneology_varying_size(SEXP population_sizesSEXP, SEXP extra_generations_fullSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type population_sizes(population_sizesSEXP);
+    Rcpp::traits::input_parameter< int >::type extra_generations_full(extra_generations_fullSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_parameter_shape(gamma_parameter_shapeSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_parameter_scale(gamma_parameter_scaleSEXP);
+    Rcpp::traits::input_parameter< bool >::type enable_gamma_variance_extension(enable_gamma_variance_extensionSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    Rcpp::traits::input_parameter< int >::type individuals_generations_return(individuals_generations_returnSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_geneology_varying_size(population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return));
+    return rcpp_result_gen;
+END_RCPP
+}
 // indices_in_mixture
 Rcpp::List indices_in_mixture(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2);
 RcppExport SEXP malan_indices_in_mixture(SEXP haplotypesSEXP, SEXP H1SEXP, SEXP H2SEXP) {
@@ -379,4 +396,46 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(get_pedigree_as_graph(ped));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"malan_wipe_pedigrees", (DL_FUNC) &malan_wipe_pedigrees, 1},
+    {"malan_build_pedigrees", (DL_FUNC) &malan_build_pedigrees, 2},
+    {"malan_sample_geneology", (DL_FUNC) &malan_sample_geneology, 9},
+    {"malan_sample_geneology_varying_size", (DL_FUNC) &malan_sample_geneology_varying_size, 7},
+    {"malan_indices_in_mixture", (DL_FUNC) &malan_indices_in_mixture, 3},
+    {"malan_pedigree_get_haplotypes_pids", (DL_FUNC) &malan_pedigree_get_haplotypes_pids, 2},
+    {"malan_individuals_get_haplotypes", (DL_FUNC) &malan_individuals_get_haplotypes, 1},
+    {"malan_pedigree_populate_haplotypes", (DL_FUNC) &malan_pedigree_populate_haplotypes, 3},
+    {"malan_pedigrees_all_populate_haplotypes", (DL_FUNC) &malan_pedigrees_all_populate_haplotypes, 4},
+    {"malan_get_haplotype", (DL_FUNC) &malan_get_haplotype, 1},
+    {"malan_count_haplotype_occurrences_individuals", (DL_FUNC) &malan_count_haplotype_occurrences_individuals, 2},
+    {"malan_meiosis_dist_haplotype_matches_individuals", (DL_FUNC) &malan_meiosis_dist_haplotype_matches_individuals, 2},
+    {"malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists", (DL_FUNC) &malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists, 2},
+    {"malan_count_haplotype_occurrences_pedigree", (DL_FUNC) &malan_count_haplotype_occurrences_pedigree, 3},
+    {"malan_get_individual", (DL_FUNC) &malan_get_individual, 2},
+    {"malan_get_pid", (DL_FUNC) &malan_get_pid, 1},
+    {"malan_print_individual", (DL_FUNC) &malan_print_individual, 1},
+    {"malan_get_pedigree_from_individual", (DL_FUNC) &malan_get_pedigree_from_individual, 1},
+    {"malan_get_pedigree_id_from_pid", (DL_FUNC) &malan_get_pedigree_id_from_pid, 2},
+    {"malan_malan_test", (DL_FUNC) &malan_malan_test, 0},
+    {"malan_pop_size", (DL_FUNC) &malan_pop_size, 1},
+    {"malan_meioses_generation_distribution", (DL_FUNC) &malan_meioses_generation_distribution, 2},
+    {"malan_population_size_generation", (DL_FUNC) &malan_population_size_generation, 2},
+    {"malan_pedigree_size_generation", (DL_FUNC) &malan_pedigree_size_generation, 2},
+    {"malan_pedigrees_count", (DL_FUNC) &malan_pedigrees_count, 1},
+    {"malan_pedigree_size", (DL_FUNC) &malan_pedigree_size, 1},
+    {"malan_pedigrees_table", (DL_FUNC) &malan_pedigrees_table, 1},
+    {"malan_get_pedigree", (DL_FUNC) &malan_get_pedigree, 2},
+    {"malan_print_pedigree", (DL_FUNC) &malan_print_pedigree, 1},
+    {"malan_get_pids_in_pedigree", (DL_FUNC) &malan_get_pids_in_pedigree, 1},
+    {"malan_get_haplotypes_in_pedigree", (DL_FUNC) &malan_get_haplotypes_in_pedigree, 1},
+    {"malan_get_pedigree_edgelist", (DL_FUNC) &malan_get_pedigree_edgelist, 1},
+    {"malan_get_pedigree_as_graph", (DL_FUNC) &malan_get_pedigree_as_graph, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_malan(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

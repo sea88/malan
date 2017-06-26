@@ -6,39 +6,9 @@
 #include <progress.hpp>
 
 #include "malan_types.hpp"
+#include "api_simulate.hpp"
 
 using namespace Rcpp;
-
-void create_father_update_simulation_state(
-  int father_i, 
-  int* individual_id, 
-  int generation, 
-  int individuals_generations_return,
-  std::vector<Individual*>& fathers_generation, 
-  std::unordered_map<int, Individual*>* population_map, 
-  IntegerVector& individual_pids_tmp_vec,
-  bool verbose_result,
-  int* new_founders_left,
-  List& last_k_generations_individuals) {  
-  
-  Individual* father = new Individual(*individual_id, generation);
-  (*individual_id) = (*individual_id) + 1;
-  
-  fathers_generation[father_i] = father;
-  (*population_map)[father->get_pid()] = father;
-  
-  if (verbose_result) {
-    individual_pids_tmp_vec[father_i] = father->get_pid();
-  }
-  
-  (*new_founders_left) = (*new_founders_left) + 1;
-
-  if (generation <= individuals_generations_return) {
-    Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
-    last_k_generations_individuals.push_back(father_xptr);
-  }  
-}
-
 
 //' Simulate a geneology.
 //' 
@@ -87,7 +57,8 @@ void create_father_update_simulation_state(
 //'   \item \code{population}. An external pointer to the population.
 //'   \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
 //'   \item \code{founders}. Number of founders after the simulated \code{generations}.
-//'   \item \code{type}. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
+//'   \item \code{growth_type}. Growth type model.
+//'   \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
 //'   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
 //'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
 //' }
@@ -112,8 +83,8 @@ List sample_geneology(size_t population_size,
   int individuals_generations_return = 2,   
   bool verbose_result = false) {
   
-  if (population_size <= 1) {
-    Rcpp::stop("Please specify population_size > 1");
+  if (population_size < 1) {
+    Rcpp::stop("Please specify population_size >= 1");
   }
   if (generations < -1 || generations == 0) {
     Rcpp::stop("Please specify generations as -1 (for simulation to 1 founder) or > 0");
@@ -210,7 +181,10 @@ List sample_geneology(size_t population_size,
       individual_pids_tmp.push_back(individual_pids_tmp_vec);
     }
   }
-  progress_bar.increment();
+  
+  if (progress) {
+    progress_bar.increment();
+  }
   
   // Next generation  
   //std::vector<Individual*>* children_generation = &end_generation;
@@ -349,7 +323,8 @@ List sample_geneology(size_t population_size,
   res["population"] = population_xptr;
   res["generations"] = generation;
   res["founders"] = founders_left;
-  res["type"] = (enable_gamma_variance_extension) ? "GammaVariation" : "StandardWF";  
+  res["growth_type"] = "ConstantPopulationSize";
+  res["sdo_type"] = (enable_gamma_variance_extension) ? "GammaVariation" : "StandardWF";  
   res["end_generation_individuals"] = end_generation_individuals;
   res["individuals_generations"] = last_k_generations_individuals;
 
