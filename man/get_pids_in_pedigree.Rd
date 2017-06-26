@@ -9,4 +9,3 @@ get_pids_in_pedigree(ped)
 \description{
 get pids in pedigree
 }
-

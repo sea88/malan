@@ -18,4 +18,3 @@ An object with class \code{malan_pedigreelist} (an internal list of external poi
 In a newly simulated population, each individual only knows its father and children. 
 Using this information, this function builds pedigrees.
 }
-

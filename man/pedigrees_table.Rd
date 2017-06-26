@@ -9,4 +9,3 @@ pedigrees_table(pedigrees)
 \description{
 Get distribution of pedigree sizes
 }
-

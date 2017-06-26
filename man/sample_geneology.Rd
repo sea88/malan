@@ -38,7 +38,8 @@ A list with the following entries:
   \item \code{population}. An external pointer to the population.
   \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
   \item \code{founders}. Number of founders after the simulated \code{generations}.
-  \item \code{type}. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
+  \item \code{growth_type}. Growth type model.
+  \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
 }
@@ -77,4 +78,3 @@ the following must be used:
 and 
 \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
 }
-

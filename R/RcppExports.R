@@ -87,12 +87,13 @@ sample_geneology <- function(population_size, generations, extra_generations_ful
     .Call('malan_sample_geneology', PACKAGE = 'malan', population_size, generations, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, verbose_result)
 }
 
-#' Simulate a geneology.
+#' Simulate a geneology with varying population size.
 #' 
-#' This function simulates a geneology where the last generation has \code{population_size} individuals. 
+#' This function simulates a geneology with varying population size specified
+#' by a vector of population sizes, one for each generation. 
 #' 
 #' By the backwards simulating process of the Wright-Fisher model, 
-#' individuals with no descendants in the end population are not simulated. 
+#' individuals with no descendants in the end population are not simulated 
 #' If for some reason additional full generations should be simulated, 
 #' the number can be specified via the \code{extra_generations_full} parameter.
 #' This can for example be useful if one wants to simulate the 
@@ -115,21 +116,17 @@ sample_geneology <- function(population_size, generations, extra_generations_ful
 #' and 
 #' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
 #' 
-#' @param population_size The size of the population.
-#' @param generations The number of generations to simulate: 
-#'        \itemize{
-#'           \item -1 for simulate to 1 founder
-#'           \item else simulate this number of generations.
-#'        }
+#' @param population_sizes The size of the population at each generation, g. 
+#'        population_sizes[g] is the population size at generation g.
+#'        The length of population_sizes is the number of generations being simulated.
 #' @param extra_generations_full Additional full generations to be simulated.
 #' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.
 #' @param gamma_parameter_scale Parameter realted to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.
 #' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
 #' @param progress Show progress.
 #' @param individuals_generations_return How many generations back to return (pointers to) individuals for.
-#' @param verbose_result Verbose result.
 #' 
-#' @return A list with the following entries:
+#' @return A malan_simulation / list with the following entries:
 #' \itemize{
 #'   \item \code{population}. An external pointer to the population.
 #'   \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.

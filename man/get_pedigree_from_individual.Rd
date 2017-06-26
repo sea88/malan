@@ -9,4 +9,3 @@ get_pedigree_from_individual(individual)
 \description{
 Get pedigree from individual
 }
-
