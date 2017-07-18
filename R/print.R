@@ -149,7 +149,7 @@ plot.malan_pedigreelist <-
 
 
   
-
+# mark_pids vector: use mark_color (with reuse)
 #' @export  
 plot.malan_pedigree <-
   function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, label_color = "black", node_color = "lightgray", mark_color = "orange", ...) {
@@ -180,7 +180,17 @@ plot.malan_pedigree <-
     
     vertex_colors <- rep(node_color, length(vertex_label))
     if (!is.null(mark_pids)) {
-      vertex_colors[x_pids %in% mark_pids] <- mark_color
+      #vertex_colors[x_pids %in% mark_pids] <- mark_color
+      
+      if (length(mark_color) == 1L) {
+        mark_color <- rep(mark_color, length(mark_pids))
+      } else if (length(mark_color) != length(mark_pids)) {
+        stop("Expected mark_color of length 1 or same length as mark_pids")
+      }
+      
+      for (m_id in seq_along(mark_pids)) {
+        vertex_colors[which(x_pids == mark_pids[m_id])] <- mark_color[m_id]
+      }
     }
     
     g <- pedigree_as_igraph(x)

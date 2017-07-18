@@ -249,6 +249,7 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(cons
   
   std::vector<int> meiosis_dists;
   std::vector<int> max_L1_dists;
+  std::vector<int> pids;
   
   // includes suspect by purpose
   for (auto dest : *family) { 
@@ -301,17 +302,19 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(cons
       
       meiosis_dists.push_back(meiosis_dist);
       max_L1_dists.push_back(max_L1);
+      pids.push_back(dest->get_pid());
     }
   }
   
   size_t n = meiosis_dists.size();
   
-  Rcpp::IntegerMatrix matches(n, 2);
-  colnames(matches) = Rcpp::CharacterVector::create("meioses", "max_L1");
+  Rcpp::IntegerMatrix matches(n, 3);
+  colnames(matches) = Rcpp::CharacterVector::create("meioses", "max_L1", "pid");
   
   for (size_t i = 0; i < n; ++i) {
     matches(i, 0) = meiosis_dists[i];
     matches(i, 1) = max_L1_dists[i];
+    matches(i, 2) = pids[i];
   }
   
   return matches;
