@@ -1,6 +1,8 @@
 ---
 title: "Introduction"
 output: rmarkdown::html_vignette
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author: Mikkel Meyer Andersen
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Introduction}
@@ -76,8 +78,6 @@ We can also print another individual (from the entire population):
 indv <- get_individual(sim_res$population, 22)
 print_individual(indv)
 ```
-
-
 
 
 ## Run a mutation process
@@ -405,4 +405,26 @@ x <- mclapply(1:100, function(i) get_number_children(100))
 sds <- unlist(lapply(x, sd))
 mean(sds)
 ```
+
+
+
+## Population growth
+
+Population growth can be simulated by specifying the population size at each generation by the `population_sizes` vector, where the length thus specifies the number of generations:
+
+```{r}
+set.seed(1)
+sim_res_growth <- sample_geneology_varying_size(population_sizes = c(10, 20, 10), extra_generations_full = 3, progress = FALSE)
+```
+
+Note how `extra_generations_full` was used to obtain all individuals in the generations (and not just those with descendants in the last two):
+
+```{r}
+pedigrees_growth <- build_pedigrees(sim_res_growth$population, progress = FALSE)
+```
+
+```{r}
+plot(pedigrees_growth)
+```
+
 
