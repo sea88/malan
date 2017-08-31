@@ -152,7 +152,7 @@ plot.malan_pedigreelist <-
 # mark_pids vector: use mark_color (with reuse)
 #' @export  
 plot.malan_pedigree <-
-  function(x, ids = TRUE, haplotypes = FALSE, mark_pids = NULL, label_color = "black", node_color = "lightgray", mark_color = "orange", ...) {
+  function(x, ids = TRUE, haplotypes = FALSE, locus_sep = " ", mark_pids = NULL, label_color = "black", node_color = "lightgray", mark_color = "orange", ...) {
     if (!is(x, "malan_pedigree")) stop("x must be a malan_pedigree object")
     
     x_pids <- get_pids_in_pedigree(x)
@@ -174,7 +174,7 @@ plot.malan_pedigree <-
           prefix <- paste0(x_pids[h_i], ": ")
         }
         
-        paste0(strwrap(paste0(prefix, paste0(h, collapse = " ")), width = 15), collapse = "\n")
+        paste0(strwrap(paste0(prefix, paste0(h, collapse = locus_sep)), width = 15), collapse = "\n")
       }))
     }
     
@@ -183,6 +183,7 @@ plot.malan_pedigree <-
       #vertex_colors[x_pids %in% mark_pids] <- mark_color
       
       if (length(mark_color) == 1L) {
+        #mark_color <- rep(mark_color, length(mark_pids))
         mark_color <- rep(mark_color, length(mark_pids))
       } else if (length(mark_color) != length(mark_pids)) {
         stop("Expected mark_color of length 1 or same length as mark_pids")
