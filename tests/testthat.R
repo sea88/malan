@@ -1,4 +1,4 @@
 library(testthat)
 library(malan)
 
-test_check("popr")
+test_check("malan")
