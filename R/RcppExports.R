@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 wipe_pedigrees <- function(pedigrees) {
-    invisible(.Call('malan_wipe_pedigrees', PACKAGE = 'malan', pedigrees))
+    invisible(.Call('_malan_wipe_pedigrees', PACKAGE = 'malan', pedigrees))
 }
 
 #' Build pedigrees from (individuals in) a population.
@@ -17,7 +17,7 @@ wipe_pedigrees <- function(pedigrees) {
 #' 
 #' @export
 build_pedigrees <- function(population, progress = TRUE) {
-    .Call('malan_build_pedigrees', PACKAGE = 'malan', population, progress)
+    .Call('_malan_build_pedigrees', PACKAGE = 'malan', population, progress)
 }
 
 #' Simulate a geneology.
@@ -84,7 +84,7 @@ build_pedigrees <- function(population, progress = TRUE) {
 #' @import RcppArmadillo
 #' @export
 sample_geneology <- function(population_size, generations, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L, verbose_result = FALSE) {
-    .Call('malan_sample_geneology', PACKAGE = 'malan', population_size, generations, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, verbose_result)
+    .Call('_malan_sample_geneology', PACKAGE = 'malan', population_size, generations, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, verbose_result)
 }
 
 #' Simulate a geneology with varying population size.
@@ -142,169 +142,189 @@ sample_geneology <- function(population_size, generations, extra_generations_ful
 #' @import RcppArmadillo
 #' @export
 sample_geneology_varying_size <- function(population_sizes, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L) {
-    .Call('malan_sample_geneology_varying_size', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
+    .Call('_malan_sample_geneology_varying_size', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
 }
 
 #' @export
 indices_in_mixture <- function(haplotypes, H1, H2) {
-    .Call('malan_indices_in_mixture', PACKAGE = 'malan', haplotypes, H1, H2)
+    .Call('_malan_indices_in_mixture', PACKAGE = 'malan', haplotypes, H1, H2)
 }
 
 #' @export
 pedigree_get_haplotypes_pids <- function(population, pids) {
-    .Call('malan_pedigree_get_haplotypes_pids', PACKAGE = 'malan', population, pids)
+    .Call('_malan_pedigree_get_haplotypes_pids', PACKAGE = 'malan', population, pids)
 }
 
 #' @export
 individuals_get_haplotypes <- function(individuals) {
-    .Call('malan_individuals_get_haplotypes', PACKAGE = 'malan', individuals)
+    .Call('_malan_individuals_get_haplotypes', PACKAGE = 'malan', individuals)
 }
 
 #' @export
 pedigree_populate_haplotypes <- function(ped, loci, mutation_rates) {
-    invisible(.Call('malan_pedigree_populate_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
+    invisible(.Call('_malan_pedigree_populate_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
 }
 
 #' @export
 pedigrees_all_populate_haplotypes <- function(pedigrees, loci, mutation_rates, progress = TRUE) {
-    invisible(.Call('malan_pedigrees_all_populate_haplotypes', PACKAGE = 'malan', pedigrees, loci, mutation_rates, progress))
+    invisible(.Call('_malan_pedigrees_all_populate_haplotypes', PACKAGE = 'malan', pedigrees, loci, mutation_rates, progress))
 }
 
 #' @export
 get_haplotype <- function(individual) {
-    .Call('malan_get_haplotype', PACKAGE = 'malan', individual)
+    .Call('_malan_get_haplotype', PACKAGE = 'malan', individual)
 }
 
 #' @export
 count_haplotype_occurrences_individuals <- function(individuals, haplotype) {
-    .Call('malan_count_haplotype_occurrences_individuals', PACKAGE = 'malan', individuals, haplotype)
+    .Call('_malan_count_haplotype_occurrences_individuals', PACKAGE = 'malan', individuals, haplotype)
 }
 
 #' @export
 meiosis_dist_haplotype_matches_individuals <- function(suspect, individuals) {
-    .Call('malan_meiosis_dist_haplotype_matches_individuals', PACKAGE = 'malan', suspect, individuals)
+    .Call('_malan_meiosis_dist_haplotype_matches_individuals', PACKAGE = 'malan', suspect, individuals)
 }
 
 #' @export
 pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists <- function(suspect, generation_upper_bound_in_result = -1L) {
-    .Call('malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists', PACKAGE = 'malan', suspect, generation_upper_bound_in_result)
+    .Call('_malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists', PACKAGE = 'malan', suspect, generation_upper_bound_in_result)
 }
 
 #' @export
 count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
-    .Call('malan_count_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
+    .Call('_malan_count_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
 }
 
 #' @export
 get_individual <- function(population, pid) {
-    .Call('malan_get_individual', PACKAGE = 'malan', population, pid)
+    .Call('_malan_get_individual', PACKAGE = 'malan', population, pid)
 }
 
 #' @export
 get_pid <- function(individual) {
-    .Call('malan_get_pid', PACKAGE = 'malan', individual)
+    .Call('_malan_get_pid', PACKAGE = 'malan', individual)
 }
 
 #' @export
 print_individual <- function(individual) {
-    invisible(.Call('malan_print_individual', PACKAGE = 'malan', individual))
+    invisible(.Call('_malan_print_individual', PACKAGE = 'malan', individual))
 }
 
 #' Get individual's generations
 #' 
 #' @export
 get_generation <- function(individual) {
-    .Call('malan_get_generation', PACKAGE = 'malan', individual)
+    .Call('_malan_get_generation', PACKAGE = 'malan', individual)
 }
 
 #' Get pedigree from individual
 #' 
 #' @export
 get_pedigree_from_individual <- function(individual) {
-    .Call('malan_get_pedigree_from_individual', PACKAGE = 'malan', individual)
+    .Call('_malan_get_pedigree_from_individual', PACKAGE = 'malan', individual)
 }
 
 #' Get pedigree id from pid
 #' 
 #' @export
 get_pedigree_id_from_pid <- function(population, pids) {
-    .Call('malan_get_pedigree_id_from_pid', PACKAGE = 'malan', population, pids)
+    .Call('_malan_get_pedigree_id_from_pid', PACKAGE = 'malan', population, pids)
+}
+
+#' @export
+count_brothers <- function(individual) {
+    .Call('_malan_count_brothers', PACKAGE = 'malan', individual)
+}
+
+#' @export
+brothers_matching <- function(individual) {
+    .Call('_malan_brothers_matching', PACKAGE = 'malan', individual)
+}
+
+#' @export
+father_matches <- function(individual) {
+    .Call('_malan_father_matches', PACKAGE = 'malan', individual)
+}
+
+#' @export
+count_uncles <- function(individual) {
+    .Call('_malan_count_uncles', PACKAGE = 'malan', individual)
 }
 
 malan_test <- function() {
-    invisible(.Call('malan_malan_test', PACKAGE = 'malan'))
+    invisible(.Call('_malan_malan_test', PACKAGE = 'malan'))
 }
 
 pop_size <- function(population) {
-    .Call('malan_pop_size', PACKAGE = 'malan', population)
+    .Call('_malan_pop_size', PACKAGE = 'malan', population)
 }
 
 #' @export
 meioses_generation_distribution <- function(individual, generation_upper_bound_in_result = -1L) {
-    .Call('malan_meioses_generation_distribution', PACKAGE = 'malan', individual, generation_upper_bound_in_result)
+    .Call('_malan_meioses_generation_distribution', PACKAGE = 'malan', individual, generation_upper_bound_in_result)
 }
 
 #' @export
 population_size_generation <- function(population, generation_upper_bound_in_result = -1L) {
-    .Call('malan_population_size_generation', PACKAGE = 'malan', population, generation_upper_bound_in_result)
+    .Call('_malan_population_size_generation', PACKAGE = 'malan', population, generation_upper_bound_in_result)
 }
 
 #' @export
 pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result = -1L) {
-    .Call('malan_pedigree_size_generation', PACKAGE = 'malan', pedigree, generation_upper_bound_in_result)
+    .Call('_malan_pedigree_size_generation', PACKAGE = 'malan', pedigree, generation_upper_bound_in_result)
 }
 
 #' Get number of pedigrees
 #' 
 #' @export
 pedigrees_count <- function(pedigrees) {
-    .Call('malan_pedigrees_count', PACKAGE = 'malan', pedigrees)
+    .Call('_malan_pedigrees_count', PACKAGE = 'malan', pedigrees)
 }
 
 #' Get pedigree size
 #' 
 #' @export
 pedigree_size <- function(ped) {
-    .Call('malan_pedigree_size', PACKAGE = 'malan', ped)
+    .Call('_malan_pedigree_size', PACKAGE = 'malan', ped)
 }
 
 #' Get distribution of pedigree sizes
 #' 
 #' @export
 pedigrees_table <- function(pedigrees) {
-    .Call('malan_pedigrees_table', PACKAGE = 'malan', pedigrees)
+    .Call('_malan_pedigrees_table', PACKAGE = 'malan', pedigrees)
 }
 
 get_pedigree <- function(pedigrees, index) {
-    .Call('malan_get_pedigree', PACKAGE = 'malan', pedigrees, index)
+    .Call('_malan_get_pedigree', PACKAGE = 'malan', pedigrees, index)
 }
 
 print_pedigree <- function(ped) {
-    invisible(.Call('malan_print_pedigree', PACKAGE = 'malan', ped))
+    invisible(.Call('_malan_print_pedigree', PACKAGE = 'malan', ped))
 }
 
 #' get pids in pedigree
 #' 
 #' @export
 get_pids_in_pedigree <- function(ped) {
-    .Call('malan_get_pids_in_pedigree', PACKAGE = 'malan', ped)
+    .Call('_malan_get_pids_in_pedigree', PACKAGE = 'malan', ped)
 }
 
 #' get pids in pedigree
 #' 
 #' @export
 get_haplotypes_in_pedigree <- function(ped) {
-    .Call('malan_get_haplotypes_in_pedigree', PACKAGE = 'malan', ped)
+    .Call('_malan_get_haplotypes_in_pedigree', PACKAGE = 'malan', ped)
 }
 
 get_pedigree_edgelist <- function(ped) {
-    .Call('malan_get_pedigree_edgelist', PACKAGE = 'malan', ped)
+    .Call('_malan_get_pedigree_edgelist', PACKAGE = 'malan', ped)
 }
 
 #' Get pedigree information as graph (mainly intended for plotting)
 #' 
 #' @export
 get_pedigree_as_graph <- function(ped) {
-    .Call('malan_get_pedigree_as_graph', PACKAGE = 'malan', ped)
+    .Call('_malan_get_pedigree_as_graph', PACKAGE = 'malan', ped)
 }
 

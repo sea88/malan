@@ -89,3 +89,115 @@ Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, 
 }
 
 
+
+//////////////////////////////////////
+
+//' @export
+// [[Rcpp::export]]
+int count_brothers(Rcpp::XPtr<Individual> individual) {  
+  Individual* i = individual;
+  
+  if (i->get_father() == nullptr) {
+    Rcpp::stop("Individual did not have a father");
+  }
+  
+  int fathers_boys = i->get_father()->get_children_count();
+  // exclude individual
+  return (fathers_boys - 1);
+}
+
+//' @export
+// [[Rcpp::export]]
+int brothers_matching(Rcpp::XPtr<Individual> individual) {  
+  Individual* i = individual;
+  
+  if (i->get_father() == nullptr) {
+    Rcpp::stop("Individual did not have a father");
+  }
+  
+  if (!(i->is_haplotype_set())) {
+    Rcpp::stop("Individual did not have a haplotype");
+  }
+
+  std::vector<int> h = i->get_haplotype();  
+  int loci = h.size();  
+  
+  std::vector<Individual*>* brothers = i->get_father()->get_children();
+  
+  if (brothers->size() == 0) {
+    return 0;
+  }
+  
+  int matching = 0;
+
+  for (auto brother : *brothers) {
+    if (brother->get_pid() == i->get_pid()) {
+      continue;
+    }
+
+    if (!(brother->is_haplotype_set())) {
+      Rcpp::stop("Individual's brother did not have a haplotype");
+    }  
+  
+    std::vector<int> indv_h = brother->get_haplotype();    
+    if (indv_h.size() != loci) {
+      Rcpp::stop("haplotype and indv_h did not have same number of loci");
+    }
+    
+    if (indv_h == h) {
+      matching += 1;
+    }
+  }
+  
+  return matching;
+}
+
+//' @export
+// [[Rcpp::export]]
+bool father_matches(Rcpp::XPtr<Individual> individual) {  
+  Individual* i = individual;
+  
+  if (i->get_father() == nullptr) {
+    Rcpp::stop("Individual did not have a father");
+  }
+  
+  if (!(i->is_haplotype_set())) {
+    Rcpp::stop("Individual did not have a haplotype");
+  }
+  
+  Individual* father = i->get_father();
+  
+  if (!(father->is_haplotype_set())) {
+    Rcpp::stop("Individual's father did not have a haplotype");
+  }  
+  
+  std::vector<int> h = i->get_haplotype();
+  std::vector<int> h_father = father->get_haplotype();    
+  
+  return (h.size() == h_father.size() && h == h_father);
+}
+
+
+//' @export
+// [[Rcpp::export]]
+int count_uncles(Rcpp::XPtr<Individual> individual) {  
+  Individual* i = individual;
+  
+  if (i->get_father() == nullptr) {
+    Rcpp::stop("Individual did not have a father");
+  }
+  
+  Individual* father = i->get_father();
+  
+  if (father->get_father() == nullptr) {
+    Rcpp::stop("Individual's father did not have a father");
+  }  
+  
+  int fathers_fathers_boys = father->get_father()->get_children_count();
+
+  // exclude father
+  return (fathers_fathers_boys - 1);
+}
+
+
+
