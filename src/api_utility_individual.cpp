@@ -156,13 +156,13 @@ int brothers_matching(Rcpp::XPtr<Individual> individual) {
 // [[Rcpp::export]]
 bool father_matches(Rcpp::XPtr<Individual> individual) {  
   Individual* i = individual;
-  
-  if (i->get_father() == nullptr) {
-    Rcpp::stop("Individual did not have a father");
-  }
-  
+
   if (!(i->is_haplotype_set())) {
     Rcpp::stop("Individual did not have a haplotype");
+  }
+    
+  if (i->get_father() == nullptr) {
+    Rcpp::stop("Individual did not have a father");
   }
   
   Individual* father = i->get_father();
@@ -175,6 +175,41 @@ bool father_matches(Rcpp::XPtr<Individual> individual) {
   std::vector<int> h_father = father->get_haplotype();    
   
   return (h.size() == h_father.size() && h == h_father);
+}
+
+//' @export
+// [[Rcpp::export]]
+bool grandfather_matches(Rcpp::XPtr<Individual> individual) {  
+  Individual* i = individual;
+
+  if (!(i->is_haplotype_set())) {
+    Rcpp::stop("Individual did not have a haplotype");
+  }
+  
+  
+  if (i->get_father() == nullptr) {
+    Rcpp::stop("Individual did not have a father");
+  }  
+  Individual* father = i->get_father();
+  if (!(father->is_haplotype_set())) {
+    Rcpp::stop("Individual's father did not have a haplotype");
+  }
+  
+  // It is not sufficient to calculate father_matches(father) as
+  // father and grandfather may not match
+
+  if (father->get_father() == nullptr) {
+    Rcpp::stop("Individual's father did not have a father");
+  }
+  Individual* grandfather = father->get_father();  
+  if (!(grandfather->is_haplotype_set())) {
+    Rcpp::stop("Individual's grandfather did not have a haplotype");
+  }  
+  
+  std::vector<int> h = i->get_haplotype();
+  std::vector<int> h_grandfather = grandfather->get_haplotype();    
+  
+  return (h.size() == h_grandfather.size() && h == h_grandfather);
 }
 
 
