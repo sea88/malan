@@ -286,6 +286,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// grandfather_matches
+bool grandfather_matches(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP _malan_grandfather_matches(SEXP individualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(grandfather_matches(individual));
+    return rcpp_result_gen;
+END_RCPP
+}
 // count_uncles
 int count_uncles(Rcpp::XPtr<Individual> individual);
 RcppExport SEXP _malan_count_uncles(SEXP individualSEXP) {
@@ -477,6 +488,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_count_brothers", (DL_FUNC) &_malan_count_brothers, 1},
     {"_malan_brothers_matching", (DL_FUNC) &_malan_brothers_matching, 1},
     {"_malan_father_matches", (DL_FUNC) &_malan_father_matches, 1},
+    {"_malan_grandfather_matches", (DL_FUNC) &_malan_grandfather_matches, 1},
     {"_malan_count_uncles", (DL_FUNC) &_malan_count_uncles, 1},
     {"_malan_malan_test", (DL_FUNC) &_malan_malan_test, 0},
     {"_malan_pop_size", (DL_FUNC) &_malan_pop_size, 1},

@@ -247,6 +247,11 @@ father_matches <- function(individual) {
 }
 
 #' @export
+grandfather_matches <- function(individual) {
+    .Call('_malan_grandfather_matches', PACKAGE = 'malan', individual)
+}
+
+#' @export
 count_uncles <- function(individual) {
     .Call('_malan_count_uncles', PACKAGE = 'malan', individual)
 }
