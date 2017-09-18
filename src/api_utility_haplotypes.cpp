@@ -305,19 +305,12 @@ Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(cons
       pids.push_back(dest->get_pid());
     }
   }
+}
   
-  size_t n = meiosis_dists.size();
-  
-  Rcpp::IntegerMatrix matches(n, 3);
-  colnames(matches) = Rcpp::CharacterVector::create("meioses", "max_L1", "pid");
-  
-  for (size_t i = 0; i < n; ++i) {
-    matches(i, 0) = meiosis_dists[i];
-    matches(i, 1) = max_L1_dists[i];
-    matches(i, 2) = pids[i];
-  }
-  
-  return matches;
+//' @export
+// [[Rcpp::export]]
+int meiotic_dist(Rcpp::XPtr<Individual> ind1, Rcpp::XPtr<Individual> ind2) {
+  return ind1->meiosis_dist_tree(ind2);
 }
 
 //' @export

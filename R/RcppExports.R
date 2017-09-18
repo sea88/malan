@@ -191,6 +191,11 @@ pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists <- function(suspect, gen
 }
 
 #' @export
+meiotic_dist <- function(ind1, ind2) {
+    .Call('_malan_meiotic_dist', PACKAGE = 'malan', ind1, ind2)
+}
+
+#' @export
 count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
     .Call('_malan_count_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
 }
