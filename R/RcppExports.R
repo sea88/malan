@@ -145,6 +145,64 @@ sample_geneology_varying_size <- function(population_sizes, extra_generations_fu
     .Call('_malan_sample_geneology_varying_size', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
 }
 
+#' Simulate a geneology with varying population size.
+#' 
+#' This function simulates a geneology with varying population size specified
+#' by a vector of population sizes, one for each generation. 
+#' 
+#' By the backwards simulating process of the Wright-Fisher model, 
+#' individuals with no descendants in the end population are not simulated 
+#' If for some reason additional full generations should be simulated, 
+#' the number can be specified via the \code{extra_generations_full} parameter.
+#' This can for example be useful if one wants to simulate the 
+#' final 3 generations although some of these may not get (male) children.
+#' 
+#' Let \eqn{\alpha} be the parameter of a symmetric Dirichlet distribution 
+#' specifying each man's probability to be the father of an arbitrary 
+#' male in the next generation. When \eqn{\alpha = 5}, a man's relative probability 
+#' to be the father has 95\% probability to lie between 0.32 and 2.05, compared with a 
+#' constant 1 under the standard Wright-Fisher model and the standard deviation in 
+#' the number of male offspring per man is 1.10 (standard Wright-Fisher = 1).
+#' 
+#' This symmetric Dirichlet distribution is implemented by drawing 
+#' father (unscaled) probabilities from a Gamma distribution with 
+#' parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale} 
+#' that are then normalised to sum to 1. 
+#' To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha}, 
+#' the following must be used:
+#' \eqn{\code{gamma_parameter_shape} = \alpha}
+#' and 
+#' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+#' 
+#' @param population_sizes The size of the population at each generation, g. 
+#'        population_sizes[g] is the population size at generation g.
+#'        The length of population_sizes is the number of generations being simulated.
+#' @param extra_generations_full Additional full generations to be simulated.
+#' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.
+#' @param gamma_parameter_scale Parameter realted to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.
+#' @param enable_gamma_variance_extension Enable symmetric Dirichlet (and disable standard Wright-Fisher).
+#' @param progress Show progress.
+#' @param individuals_generations_return How many generations back to return (pointers to) individuals for.
+#' 
+#' @return A malan_simulation / list with the following entries:
+#' \itemize{
+#'   \item \code{population}. An external pointer to the population.
+#'   \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
+#'   \item \code{founders}. Number of founders after the simulated \code{generations}.
+#'   \item \code{growth_type}. Growth type model.
+#'   \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
+#'   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
+#'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
+#' }
+#' 
+#' @import Rcpp
+#' @import RcppProgress
+#' @import RcppArmadillo
+#' @export
+sample_geneology_varying_size_parallel <- function(population_sizes, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L, threads = 1L) {
+    .Call('_malan_sample_geneology_varying_size_parallel', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, threads)
+}
+
 #' @export
 indices_in_mixture <- function(haplotypes, H1, H2) {
     .Call('_malan_indices_in_mixture', PACKAGE = 'malan', haplotypes, H1, H2)
@@ -282,6 +340,13 @@ population_size_generation <- function(population, generation_upper_bound_in_res
 #' @export
 pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result = -1L) {
     .Call('_malan_pedigree_size_generation', PACKAGE = 'malan', pedigree, generation_upper_bound_in_result)
+}
+
+#' Get pedigree id
+#' 
+#' @export
+get_pedigree_id <- function(ped) {
+    .Call('_malan_get_pedigree_id', PACKAGE = 'malan', ped)
 }
 
 #' Get number of pedigrees

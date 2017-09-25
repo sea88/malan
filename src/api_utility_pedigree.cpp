@@ -7,6 +7,13 @@
 
 #include "malan_types.hpp"
 
+//' Get pedigree id
+//' 
+//' @export
+// [[Rcpp::export]]
+int get_pedigree_id(Rcpp::XPtr<Pedigree> ped) { 
+  return ped->get_id();
+}
 
 //' Get number of pedigrees
 //' 

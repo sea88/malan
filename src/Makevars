@@ -1,0 +1,6 @@
+CXX_STD = CXX11
+#PKG_CXXFLAGS = -fopenmp=libomp
+#PKG_CXXFLAGS = -std=c++11 -fopenmp # Armadillo
+
+PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")
+

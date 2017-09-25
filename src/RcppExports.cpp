@@ -65,6 +65,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sample_geneology_varying_size_parallel
+List sample_geneology_varying_size_parallel(IntegerVector population_sizes, int extra_generations_full, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int individuals_generations_return, int threads);
+RcppExport SEXP _malan_sample_geneology_varying_size_parallel(SEXP population_sizesSEXP, SEXP extra_generations_fullSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP, SEXP threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type population_sizes(population_sizesSEXP);
+    Rcpp::traits::input_parameter< int >::type extra_generations_full(extra_generations_fullSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_parameter_shape(gamma_parameter_shapeSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_parameter_scale(gamma_parameter_scaleSEXP);
+    Rcpp::traits::input_parameter< bool >::type enable_gamma_variance_extension(enable_gamma_variance_extensionSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    Rcpp::traits::input_parameter< int >::type individuals_generations_return(individuals_generations_returnSEXP);
+    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_geneology_varying_size_parallel(population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, threads));
+    return rcpp_result_gen;
+END_RCPP
+}
 // indices_in_mixture
 Rcpp::List indices_in_mixture(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2);
 RcppExport SEXP _malan_indices_in_mixture(SEXP haplotypesSEXP, SEXP H1SEXP, SEXP H2SEXP) {
@@ -376,6 +394,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_pedigree_id
+int get_pedigree_id(Rcpp::XPtr<Pedigree> ped);
+RcppExport SEXP _malan_get_pedigree_id(SEXP pedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type ped(pedSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_pedigree_id(ped));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigrees_count
 int pedigrees_count(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
 RcppExport SEXP _malan_pedigrees_count(SEXP pedigreesSEXP) {
@@ -481,6 +510,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_build_pedigrees", (DL_FUNC) &_malan_build_pedigrees, 2},
     {"_malan_sample_geneology", (DL_FUNC) &_malan_sample_geneology, 9},
     {"_malan_sample_geneology_varying_size", (DL_FUNC) &_malan_sample_geneology_varying_size, 7},
+    {"_malan_sample_geneology_varying_size_parallel", (DL_FUNC) &_malan_sample_geneology_varying_size_parallel, 8},
     {"_malan_indices_in_mixture", (DL_FUNC) &_malan_indices_in_mixture, 3},
     {"_malan_pedigree_get_haplotypes_pids", (DL_FUNC) &_malan_pedigree_get_haplotypes_pids, 2},
     {"_malan_individuals_get_haplotypes", (DL_FUNC) &_malan_individuals_get_haplotypes, 1},
@@ -508,6 +538,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_meioses_generation_distribution", (DL_FUNC) &_malan_meioses_generation_distribution, 2},
     {"_malan_population_size_generation", (DL_FUNC) &_malan_population_size_generation, 2},
     {"_malan_pedigree_size_generation", (DL_FUNC) &_malan_pedigree_size_generation, 2},
+    {"_malan_get_pedigree_id", (DL_FUNC) &_malan_get_pedigree_id, 1},
     {"_malan_pedigrees_count", (DL_FUNC) &_malan_pedigrees_count, 1},
     {"_malan_pedigree_size", (DL_FUNC) &_malan_pedigree_size, 1},
     {"_malan_pedigrees_table", (DL_FUNC) &_malan_pedigrees_table, 1},
