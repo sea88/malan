@@ -17,21 +17,49 @@
 
 using namespace Rcpp;
 
+#ifndef RCPP_PARALLEL_USE_TBB
 
-#if RCPP_PARALLEL_USE_TBB
+List sample_geneology_varying_size_parallel(
+  IntegerVector population_sizes,
+  int extra_generations_full = 0,  
+  double gamma_parameter_shape = 7, double gamma_parameter_scale = 7, 
+  bool enable_gamma_variance_extension = false,
+  bool progress = true, 
+  int individuals_generations_return = 2,
+  int threads = 1) {
+  
+  List res;
+  stop("Intel TBB support required, but it was not found. Please use non-parallel version.");
+  return res;
+}
+
+#else
+
 struct InitialisePopulation : public RcppParallel::Worker {
   tbb::concurrent_vector<Individual*>* m_indvs;
   tbb::concurrent_vector<Individual*>* m_end_generation;
   std::unordered_map<int, Individual*>* m_population_map;
   tbb::mutex* m_population_map_mutex;
+  tbb::mutex* m_individual_xptr;
+  int m_individuals_generations_return;
+  List* m_end_generation_individuals;
+  List* m_last_k_generations_individuals;
 
   InitialisePopulation(tbb::concurrent_vector<Individual*>* indvs, tbb::concurrent_vector<Individual*>* end_generation,
                        std::unordered_map<int, Individual*>* population_map,
-                       tbb::mutex* population_map_mutex) {
+                       tbb::mutex* population_map_mutex,
+                       tbb::mutex* individual_xptr,
+                       int individuals_generations_return,
+                       List* end_generation_individuals,
+                       List* last_k_generations_individuals) {
     m_indvs = indvs;
     m_end_generation = end_generation;
     m_population_map = population_map;
     m_population_map_mutex = population_map_mutex;
+    m_individual_xptr = individual_xptr;
+    m_individuals_generations_return = individuals_generations_return;
+    m_end_generation_individuals = end_generation_individuals;
+    m_last_k_generations_individuals = last_k_generations_individuals;
   }
 
   void operator()(std::size_t begin, std::size_t end) {
@@ -43,13 +71,20 @@ struct InitialisePopulation : public RcppParallel::Worker {
       m_end_generation->at(i) = indv;
       
       m_population_map_mutex->lock();
-      //(*m_population_map)[individual_id] = indv;
       m_population_map->insert({ individual_id, indv });
       m_population_map_mutex->unlock();
+      
+      // Indv: All R related must be thread safe!
+      m_individual_xptr->lock();
+      Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
+      m_end_generation_individuals->at(i) = indv_xptr;      
+      if (m_individuals_generations_return >= 0) {
+        m_last_k_generations_individuals->at(i) = indv_xptr;
+      }  
+      m_individual_xptr->unlock();
     }      
   }
 };
-#endif
 
 //' Simulate a geneology with varying population size.
 //' 
@@ -115,7 +150,6 @@ List sample_geneology_varying_size_parallel(
   int individuals_generations_return = 2,
   int threads = 1) {
   
-  #if RCPP_PARALLEL_USE_TBB
   if (threads < 1) {
     Rcpp::stop("threads must be >= 1");
   }
@@ -159,13 +193,10 @@ List sample_geneology_varying_size_parallel(
   
   Progress progress_bar(generations, progress);
   
-  std::unordered_map<int, Individual*>* population_map = new std::unordered_map<int, Individual*>(); // pid's are garanteed to be unique
+  // pid's are garanteed to be unique
+  std::unordered_map<int, Individual*>* population_map = new std::unordered_map<int, Individual*>();
   Population* population = new Population(population_map);
-  tbb::mutex population_map_mutex;  
-  
-  //tbb::concurrent_unordered_map<int, Individual*>* population_map = new tbb::concurrent_unordered_map<int, Individual*>(); // pid's are garanteed to be unique
-  //Population<tbb::concurrent_unordered_map<int, Individual*> >* population = new Population(population_map);
-  
+  tbb::mutex population_map_mutex;
   Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG);
   population_xptr.attr("class") = CharacterVector::create("malan_population", "externalptr");
   
@@ -179,25 +210,19 @@ List sample_geneology_varying_size_parallel(
     last_k_generations_individuals = List(population_sizes[generations-1]);
   }
   
+  tbb::mutex individual_xptr;
+  
   int initial_popsize = population_sizes[generations-1];
   tbb::concurrent_vector<Individual*> initial_individuals(initial_popsize); 
-  InitialisePopulation init_pop(&initial_individuals, &end_generation, population_map, &population_map_mutex);
+  InitialisePopulation init_pop(&initial_individuals, 
+    &end_generation, population_map, 
+    &population_map_mutex, &individual_xptr,
+    individuals_generations_return,
+    &end_generation_individuals,
+    &last_k_generations_individuals
+  );
   parallelFor(0, initial_popsize-1, init_pop);  
 
-  // FIXME: PARALLELISE!
-  for (size_t i = 0; i < population_sizes[generations-1]; ++i) {
-    const int individual_id = i + 1;
-    Individual* indv = initial_individuals[i];
-
-    //(*population_map)[individual_id] = indv;
-    
-    Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
-    end_generation_individuals[i] = indv_xptr;
-    
-    if (individuals_generations_return >= 0) {
-      last_k_generations_individuals[i] = indv_xptr;
-    }
-  }
   
   // Be ready with id's for next generations:
   // In the initialisation, we created population_sizes[generations-1] individuals
@@ -354,10 +379,8 @@ List sample_geneology_varying_size_parallel(
   res.attr("class") = CharacterVector::create("malan_simulation", "list");
   
   return res;
-  #else
-  List res;
-  stop("Intel TBB support required, but it was not found. Please use non-parallel version.");
-  return res;  
-  #endif
 }
+
+#endif // #ifdef RCPP_PARALLEL_USE_TBB
+
 
