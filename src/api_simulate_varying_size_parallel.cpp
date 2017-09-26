@@ -15,6 +15,10 @@
 #include "malan_types.hpp"
 #include "api_simulate.hpp"
 
+#ifdef MALAN_PROFILE
+#include <gperftools/profiler.h>
+#endif
+
 using namespace Rcpp;
 
 #ifndef RCPP_PARALLEL_USE_TBB
@@ -131,6 +135,10 @@ List sample_geneology_varying_size_parallel(
   int individuals_generations_return = 2,
   int threads = 1) {
   
+  #ifdef MALAN_PROFILE
+  ProfilerStart("/home/mikl/work-aau/research-projects/2016-Balding-shared-haplotypes/model-31-malan-speed-up/prof.log");
+  #endif
+
   if (threads < 1) {
     Rcpp::stop("threads must be >= 1");
   }
@@ -366,6 +374,10 @@ List sample_geneology_varying_size_parallel(
   res["threads"] = threads;
 
   res.attr("class") = CharacterVector::create("malan_simulation", "list");
+  
+  #ifdef MALAN_PROFILE
+  ProfilerStop();
+  #endif
   
   return res;
 }
