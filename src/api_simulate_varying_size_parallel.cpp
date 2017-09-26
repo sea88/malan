@@ -40,30 +40,20 @@ struct InitialisePopulation : public RcppParallel::Worker {
   tbb::concurrent_vector<Individual*>* m_end_generation;
   std::unordered_map<int, Individual*>* m_population_map;
   tbb::mutex* m_population_map_mutex;
-  tbb::mutex* m_individual_xptr;
-  int m_individuals_generations_return;
-  List* m_end_generation_individuals;
-  List* m_last_k_generations_individuals;
 
   InitialisePopulation(tbb::concurrent_vector<Individual*>* indvs, tbb::concurrent_vector<Individual*>* end_generation,
                        std::unordered_map<int, Individual*>* population_map,
-                       tbb::mutex* population_map_mutex,
-                       tbb::mutex* individual_xptr,
-                       int individuals_generations_return,
-                       List* end_generation_individuals,
-                       List* last_k_generations_individuals) {
+                       tbb::mutex* population_map_mutex) {
     m_indvs = indvs;
     m_end_generation = end_generation;
     m_population_map = population_map;
     m_population_map_mutex = population_map_mutex;
-    m_individual_xptr = individual_xptr;
-    m_individuals_generations_return = individuals_generations_return;
-    m_end_generation_individuals = end_generation_individuals;
-    m_last_k_generations_individuals = last_k_generations_individuals;
   }
 
   void operator()(std::size_t begin, std::size_t end) {
-    for (size_t i = begin; i <= end; ++i) {
+    //Rcpp::Rcout << "i = " << begin << "; i < " << end << std::endl;
+    
+    for (size_t i = begin; i < end; ++i) {
       const int individual_id = i + 1;
       
       Individual* indv = new Individual(individual_id, 0);
@@ -73,15 +63,6 @@ struct InitialisePopulation : public RcppParallel::Worker {
       m_population_map_mutex->lock();
       m_population_map->insert({ individual_id, indv });
       m_population_map_mutex->unlock();
-      
-      // Indv: All R related must be thread safe!
-      m_individual_xptr->lock();
-      Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
-      m_end_generation_individuals->at(i) = indv_xptr;      
-      if (m_individuals_generations_return >= 0) {
-        m_last_k_generations_individuals->at(i) = indv_xptr;
-      }  
-      m_individual_xptr->unlock();
     }      
   }
 };
@@ -196,7 +177,7 @@ List sample_geneology_varying_size_parallel(
   // pid's are garanteed to be unique
   std::unordered_map<int, Individual*>* population_map = new std::unordered_map<int, Individual*>();
   Population* population = new Population(population_map);
-  tbb::mutex population_map_mutex;
+  tbb::mutex population_map_mutex;  
   Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG);
   population_xptr.attr("class") = CharacterVector::create("malan_population", "externalptr");
   
@@ -206,27 +187,35 @@ List sample_geneology_varying_size_parallel(
   List end_generation_individuals(population_sizes[generations-1]);
   List last_k_generations_individuals;  
   
+  /*
   if (individuals_generations_return >= 0) {
     last_k_generations_individuals = List(population_sizes[generations-1]);
   }
-  
-  tbb::mutex individual_xptr;
+  */
   
   int initial_popsize = population_sizes[generations-1];
   tbb::concurrent_vector<Individual*> initial_individuals(initial_popsize); 
-  InitialisePopulation init_pop(&initial_individuals, 
-    &end_generation, population_map, 
-    &population_map_mutex, &individual_xptr,
-    individuals_generations_return,
-    &end_generation_individuals,
-    &last_k_generations_individuals
-  );
-  parallelFor(0, initial_popsize-1, init_pop);  
+  InitialisePopulation init_pop(&initial_individuals, &end_generation, population_map, &population_map_mutex);
+  parallelFor(0, initial_popsize, init_pop); // does i = 0; i < initial_popsize
 
+  // Cannot be parallised as R memory is called (Rcpp::XPtr, List, ...) 
+  // and that must only be done in the main thread.
+  for (size_t i = 0; i < population_sizes[generations-1]; ++i) {
+    const int individual_id = i + 1;
+    Individual* indv = initial_individuals[i];
+
+    Rcpp::XPtr<Individual> indv_xptr(indv, RCPP_XPTR_2ND_ARG);
+    end_generation_individuals[i] = indv_xptr;
+    
+    if (individuals_generations_return >= 0) {
+      //last_k_generations_individuals[i] = indv_xptr;
+      last_k_generations_individuals.push_back(indv_xptr);
+    }
+  }
   
   // Be ready with id's for next generations:
   // In the initialisation, we created population_sizes[generations-1] individuals
-  int individual_id = population_sizes[generations-1] + 1; // +1: next individual must be the next
+  int individual_id = population_sizes[generations - 1] + 1; // +1: next individual must be the next
   
   if (progress) {
     progress_bar.increment();
