@@ -40,6 +40,44 @@ List sample_geneology_varying_size_parallel(
 #else
 
 struct InitialisePopulation : public RcppParallel::Worker {
+  tbb::concurrent_vector<Individual*>* m_init_indvs;
+  tbb::concurrent_vector<Individual*>* m_children_gen;
+  tbb::concurrent_vector<Individual*>* m_end_generation;
+  std::unordered_map<int, Individual*>* m_population_map;
+  tbb::mutex* m_population_map_mutex;
+
+  InitialisePopulation(tbb::concurrent_vector<Individual*>* init_indvs, 
+                       tbb::concurrent_vector<Individual*>* children_gen, 
+                       tbb::concurrent_vector<Individual*>* end_generation,
+                       std::unordered_map<int, Individual*>* population_map,
+                       tbb::mutex* population_map_mutex) {
+    m_init_indvs = init_indvs;
+    m_children_gen = children_gen;
+    m_end_generation = end_generation;
+    m_population_map = population_map;
+    m_population_map_mutex = population_map_mutex;
+  }
+
+  void operator()(std::size_t begin, std::size_t end) {
+    //Rcpp::Rcout << "i = " << begin << "; i < " << end << std::endl;
+    
+    for (size_t i = begin; i < end; ++i) {
+      const int individual_id = i + 1;
+      
+      Individual* indv = new Individual(individual_id, 0);
+      m_init_indvs->at(i) = indv;
+      m_children_gen->at(i) = indv;
+      m_end_generation->at(i) = indv;
+      
+      m_population_map_mutex->lock();
+      m_population_map->insert({ individual_id, indv });
+      m_population_map_mutex->unlock();
+    }      
+  }
+};
+
+/*
+struct EvolveGeneration : public RcppParallel::Worker {
   tbb::concurrent_vector<Individual*>* m_indvs;
   tbb::concurrent_vector<Individual*>* m_end_generation;
   std::unordered_map<int, Individual*>* m_population_map;
@@ -70,6 +108,7 @@ struct InitialisePopulation : public RcppParallel::Worker {
     }      
   }
 };
+*/
 
 //' Simulate a geneology with varying population size.
 //' 
@@ -193,17 +232,20 @@ List sample_geneology_varying_size_parallel(
   //std::vector<Individual*> end_generation(population_sizes[generations-1]);
   tbb::concurrent_vector<Individual*> end_generation(population_sizes[generations-1]);
   List end_generation_individuals(population_sizes[generations-1]);
-  List last_k_generations_individuals;  
+  List last_k_generations_individuals;
   
-  /*
+  // FIXME: Make last_k_generations_individuals big enough already here? The size
+  //        can easily be calculated.
+  
   if (individuals_generations_return >= 0) {
     last_k_generations_individuals = List(population_sizes[generations-1]);
-  }
-  */
+  }  
   
   int initial_popsize = population_sizes[generations-1];
-  tbb::concurrent_vector<Individual*> initial_individuals(initial_popsize); 
-  InitialisePopulation init_pop(&initial_individuals, &end_generation, population_map, &population_map_mutex);
+  tbb::concurrent_vector<Individual*> initial_individuals(initial_popsize);
+  tbb::concurrent_vector<Individual*> children_generation(initial_popsize);
+  
+  InitialisePopulation init_pop(&initial_individuals, &children_generation, &end_generation, population_map, &population_map_mutex);
   parallelFor(0, initial_popsize, init_pop); // does i = 0; i < initial_popsize
 
   // Cannot be parallised as R memory is called (Rcpp::XPtr, List, ...) 
@@ -216,8 +258,7 @@ List sample_geneology_varying_size_parallel(
     end_generation_individuals[i] = indv_xptr;
     
     if (individuals_generations_return >= 0) {
-      //last_k_generations_individuals[i] = indv_xptr;
-      last_k_generations_individuals.push_back(indv_xptr);
+      last_k_generations_individuals[i] = indv_xptr;
     }
   }
   
@@ -229,36 +270,20 @@ List sample_geneology_varying_size_parallel(
     progress_bar.increment();
   }
   
-  //Rcpp::Rcout << "vary 2" << std::endl;
-  //Rcpp::Rcout << "  population_sizes[generations-1] = population_sizes[" << (generations-1) << "]" << std::endl;
+  // Next generation ready from children_generation prepared by InitialisePopulation
   
-  // Next generation  
-  //std::vector<Individual*>* children_generation = &end_generation;
-  std::vector<Individual*> children_generation(population_sizes[generations-1]);
-  
-  // FIXME: PARALLELISE!
-  for (size_t i = 0; i < population_sizes[generations-1]; ++i) {
-    children_generation[i] = end_generation[i];
-  }
+
   std::vector<Individual*> fathers_generation;
   
   int founders_left = population_sizes[generations-1];
   
-  //Rcpp::Rcout << "vary 3" << std::endl;
-  //Rcpp::Rcout << "  generations = " << generations << std::endl;
-  //Rcpp::Rcout << "  population_sizes.length() = " << population_sizes.length() << std::endl;
-  
-  // now, find out who the fathers to the children are
+  // Now, find out who the fathers to the children are
   for (size_t generation = 1; generation < generations; ++generation) {
-    // Init ->
-    //Rcpp::Rcout << "vary 4-" << generation << std::endl;
-
-    //Rcpp::Rcout << "  population_size          = population_sizes[generations-(generation+1)] = population_sizes[" << generations << "-" << (generation+1) << "] = population_sizes[" << (generations-(generation+1)) << "]" << std::endl;
-    //Rcpp::Rcout << "  children_population_size = population_sizes[generations-generation] = population_sizes[" << generations << "-" << generation << "] = population_sizes[" << (generations-generation) << "]" << std::endl;
-
     int population_size = population_sizes[generations-(generation+1)];    
     int children_population_size = population_sizes[generations-generation];
     
+    // This is not possible to parallelise as it uses 
+    // R/Rcpp API: R::runif / Rcpp::rgamma
     WFRandomFather wf_random_father(population_size);
     GammaVarianceRandomFather gamma_variance_father(population_size, gamma_parameter_shape, gamma_parameter_scale);  
     SimulateChooseFather* choose_father = &wf_random_father;
@@ -281,16 +306,13 @@ List sample_geneology_varying_size_parallel(
       fathers_generation[i] = nullptr;
     }
     
-    //Rcpp::Rcout << "vary 6-" << generation << std::endl;
-    
     choose_father->update_state_new_generation();
-    
-    //Rcpp::Rcout << "vary 7-" << generation << std::endl;
     
     /*
     FIXME: New, more explicit logic? Maybe copy create_father_update_simulation_state_varying_size into here?
     */
     
+    /*
     // now, run through children to pick each child's father
     // FIXME: PARALLELISE?? BLOCK ON
     //     int* individual_id, 
@@ -310,6 +332,7 @@ List sample_geneology_varying_size_parallel(
       
       // if this is the father's first child, create the father
       if (fathers_generation[father_i] == nullptr) {        
+        // fathers_generation[father_i] is now an Individual* and not nullptr any more
         create_father_update_simulation_state_varying_size(father_i, &individual_id, generation, 
               individuals_generations_return, fathers_generation, population_map, 
               &new_founders_left, last_k_generations_individuals);
@@ -318,6 +341,67 @@ List sample_geneology_varying_size_parallel(
       children_generation[i]->set_father(fathers_generation[father_i]);
       fathers_generation[father_i]->add_child(children_generation[i]);
     }
+    */
+    
+    tbb::concurrent_vector<int> child_i_father_i_map;
+    if (generation <= individuals_generations_return) {
+      child_i_father_i_map = tbb::concurrent_vector<int>(children_population_size);
+    }    
+    
+    for (size_t i = 0; i < children_population_size; ++i) {
+      // if a child did not have children himself, forget his ancestors
+      if (children_generation[i] == nullptr) {
+        continue;
+      }
+      
+      // child [i] in [generation-1]/children_generation has father [father_i] in [generation]/fathers_generation
+      //int father_i = sample_person_weighted(population_size, fathers_prob, fathers_prob_perm);
+      int father_i = choose_father->get_father_i();
+      
+      if (generation <= individuals_generations_return) {
+        child_i_father_i_map[i] = father_i;
+      }
+      
+      // if this is the father's first child, create the father
+      if (fathers_generation[father_i] == nullptr) {
+        // fathers_generation[father_i] is now an Individual* and not nullptr any more
+        
+        Individual* father = new Individual(individual_id, generation);
+        individual_id = individual_id + 1;
+        
+        fathers_generation[father_i] = father;
+        (*population_map)[father->get_pid()] = father;
+
+        new_founders_left = new_founders_left + 1;  
+      }
+
+      children_generation[i]->set_father(fathers_generation[father_i]);
+      fathers_generation[father_i]->add_child(children_generation[i]);
+    }
+    
+    if (generation <= individuals_generations_return) {
+      for (size_t i = 0; i < children_population_size; ++i) {
+        // if a child did not have children himself, forget his ancestors
+        if (children_generation[i] == nullptr) {
+          continue;
+        }
+        
+        int father_i = child_i_father_i_map[i];
+        
+        if (fathers_generation[father_i] == nullptr) {
+          Rcpp::stop("Unexpected!");
+        }
+        
+        Individual* father = fathers_generation[father_i];
+        
+        Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
+        last_k_generations_individuals.push_back(father_xptr);
+      }
+    }
+    
+    
+    
+    
     
     //Rcpp::Rcout << "vary 8-" << generation << std::endl;
     
