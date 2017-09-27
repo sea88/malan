@@ -78,37 +78,115 @@ struct InitialisePopulation : public RcppParallel::Worker {
 
 /*
 struct EvolveGeneration : public RcppParallel::Worker {
-  tbb::concurrent_vector<Individual*>* m_indvs;
-  tbb::concurrent_vector<Individual*>* m_end_generation;
+  int m_generation;
+  tbb::concurrent_vector<Individual*>* m_children_gen;
+  tbb::concurrent_vector<int>* m_child_i_father_i_map;
+  tbb::concurrent_vector<Individual*>* m_fathers_generation;
+  std::unordered_map<int, Individual*>* m_population_map;
+  tbb::mutex* m_population_map_mutex;
+  int* m_individual_id;
+  int* m_new_founders_left;
+
+  EvolveGeneration(int generation,
+                   tbb::concurrent_vector<Individual*>* children_gen,
+                   tbb::concurrent_vector<int>* child_i_father_i_map,
+                   tbb::concurrent_vector<Individual*>* fathers_generation,
+                   std::unordered_map<int, Individual*>* population_map,
+                   tbb::mutex* population_map_mutex,
+                   int* individual_id,
+                   int* new_founders_left) {
+    m_generation = generation;
+    m_children_gen = children_gen;
+    m_child_i_father_i_map = child_i_father_i_map;
+    m_fathers_generation = fathers_generation;
+    m_population_map = population_map;
+    m_population_map_mutex = population_map_mutex;
+    m_individual_id = individual_id;
+    m_new_founders_left = new_founders_left;
+  }
+
+  void operator()(std::size_t begin, std::size_t end) {
+    for (size_t i = begin; i < end; ++i) {
+      // if a child did not have children himself, forget his ancestors
+      if (m_children_gen->at(i) == nullptr) {
+        continue;
+      }
+      
+      // FIXME: Consider locking...
+      m_population_map_mutex->lock();
+      
+      // child [i] in [generation-1]/m_children_gen has father [father_i] in [generation]/fathers_generation
+      int father_i = m_child_i_father_i_map->at(i);
+      
+      // if this is the father's first child, create the father
+      Individual* father = m_fathers_generation->at(father_i);
+      
+      if (father == nullptr) {
+        // m_fathers_generation[father_i] is now made an Individual* and not nullptr any more
+        
+        //m_population_map_mutex->lock();
+        int ind_id = *m_individual_id;
+        father = new Individual(ind_id, m_generation);
+        m_population_map->insert({ ind_id, father });
+        *m_individual_id = ind_id + 1;
+        *m_new_founders_left = (*m_new_founders_left) + 1;
+        //m_population_map_mutex->unlock();
+        
+        m_fathers_generation->at(father_i) = father;
+      }
+      
+      m_population_map_mutex->unlock();
+      
+      Individual* child = m_children_gen->at(i);
+      child->set_father(father);
+      father->add_child(child);
+    }      
+  }
+};
+*/
+
+struct GenerateFathers : public RcppParallel::Worker {
+  int m_generation;
+  tbb::concurrent_vector<Individual*>* m_fathers_generation;
+  std::vector<int>* m_fathers_to_create;
+  std::vector<int>* m_fathers_pids;
   std::unordered_map<int, Individual*>* m_population_map;
   tbb::mutex* m_population_map_mutex;
 
-  InitialisePopulation(tbb::concurrent_vector<Individual*>* indvs, tbb::concurrent_vector<Individual*>* end_generation,
-                       std::unordered_map<int, Individual*>* population_map,
-                       tbb::mutex* population_map_mutex) {
-    m_indvs = indvs;
-    m_end_generation = end_generation;
+  GenerateFathers(int generation, 
+                  tbb::concurrent_vector<Individual*>* fathers_generation,
+                  std::vector<int>* fathers_to_create,
+                  std::vector<int>* fathers_pids,
+                  std::unordered_map<int, Individual*>* population_map,
+                  tbb::mutex* population_map_mutex) {
+
+    m_generation = generation;
+    m_fathers_generation = fathers_generation;
+    m_fathers_to_create = fathers_to_create;
+    m_fathers_pids = fathers_pids;
     m_population_map = population_map;
     m_population_map_mutex = population_map_mutex;
   }
 
   void operator()(std::size_t begin, std::size_t end) {
-    //Rcpp::Rcout << "i = " << begin << "; i < " << end << std::endl;
-    
     for (size_t i = begin; i < end; ++i) {
-      const int individual_id = i + 1;
+      // if a child did not have children himself, forget his ancestors
+      if (m_fathers_to_create->at(i) == 0) {
+        continue;
+      }
       
-      Individual* indv = new Individual(individual_id, 0);
-      m_indvs->at(i) = indv;
-      m_end_generation->at(i) = indv;
+      int father_pid = m_fathers_pids->at(i);
+      
+      Individual* father = new Individual(father_pid, m_generation);
+      m_fathers_generation->at(i) = father;
       
       m_population_map_mutex->lock();
-      m_population_map->insert({ individual_id, indv });
+      m_population_map->insert({ father_pid, father });
       m_population_map_mutex->unlock();
-    }      
+    }
   }
 };
-*/
+
 
 //' Simulate a geneology with varying population size.
 //' 
@@ -245,8 +323,18 @@ List sample_geneology_varying_size_parallel(
   tbb::concurrent_vector<Individual*> initial_individuals(initial_popsize);
   tbb::concurrent_vector<Individual*> children_generation(initial_popsize);
   
-  InitialisePopulation init_pop(&initial_individuals, &children_generation, &end_generation, population_map, &population_map_mutex);
-  parallelFor(0, initial_popsize, init_pop); // does i = 0; i < initial_popsize
+  InitialisePopulation init_pop(&initial_individuals, 
+                                &children_generation, 
+                                &end_generation, 
+                                population_map, 
+                                &population_map_mutex);
+                                
+  if (initial_popsize <= 1000) {
+    init_pop(0, initial_popsize);
+  } else {
+    parallelFor(0, initial_popsize, init_pop); // does i = 0; i < initial_popsize
+  }
+  
 
   // Cannot be parallised as R memory is called (Rcpp::XPtr, List, ...) 
   // and that must only be done in the main thread.
@@ -273,7 +361,8 @@ List sample_geneology_varying_size_parallel(
   // Next generation ready from children_generation prepared by InitialisePopulation
   
 
-  std::vector<Individual*> fathers_generation;
+  //std::vector<Individual*> fathers_generation;
+  tbb::concurrent_vector<Individual*> fathers_generation;
   
   int founders_left = population_sizes[generations-1];
   
@@ -333,7 +422,7 @@ List sample_geneology_varying_size_parallel(
       // if this is the father's first child, create the father
       if (fathers_generation[father_i] == nullptr) {        
         // fathers_generation[father_i] is now an Individual* and not nullptr any more
-        create_father_update_simulation_state_varying_size(father_i, &individual_id, generation, 
+        create_father_update_simulation_state_varying_size_parallel(father_i, &individual_id, generation, 
               individuals_generations_return, fathers_generation, population_map, 
               &new_founders_left, last_k_generations_individuals);
       }
@@ -343,63 +432,57 @@ List sample_geneology_varying_size_parallel(
     }
     */
     
-    tbb::concurrent_vector<int> child_i_father_i_map;
-    if (generation <= individuals_generations_return) {
-      child_i_father_i_map = tbb::concurrent_vector<int>(children_population_size);
-    }    
+    // cannot be parallised due to choose_father
+    // is only going to be read afterwards, so stl vector would suffice
+    std::vector<int> child_i_father_i_map(children_population_size);
+    std::vector<int> fathers_to_create(population_size);
+    std::vector<int> fathers_pids(population_size);
     
     for (size_t i = 0; i < children_population_size; ++i) {
-      // if a child did not have children himself, forget his ancestors
+      int father_id = choose_father->get_father_i();
+      child_i_father_i_map[i] = father_id;
+      
+      if (fathers_to_create[father_id] == 0) {
+        fathers_pids[father_id] = individual_id;
+        individual_id += 1;
+        new_founders_left += 1;
+      }
+      
+      fathers_to_create[father_id] += 1;
+    }
+    
+    GenerateFathers fathers_gen(generation,                                
+                                &fathers_generation,
+                                &fathers_to_create,
+                                &fathers_pids, 
+                                population_map, 
+                                &population_map_mutex);
+    
+    // Only in parallel if it makes sense
+    if (new_founders_left <= 1000) {
+      fathers_gen(0, population_size);
+    } else {
+      parallelFor(0, population_size, fathers_gen); // does i = 0; i < children_population_size
+    }
+    
+    
+    for (size_t i = 0; i < children_population_size; ++i) {
       if (children_generation[i] == nullptr) {
         continue;
       }
       
-      // child [i] in [generation-1]/children_generation has father [father_i] in [generation]/fathers_generation
-      //int father_i = sample_person_weighted(population_size, fathers_prob, fathers_prob_perm);
-      int father_i = choose_father->get_father_i();
+      int father_id = child_i_father_i_map[i];
+      Individual* child = children_generation[i];
+      Individual* father = fathers_generation[father_id];
+      
+      child->set_father(father);
+      father->add_child(child);
       
       if (generation <= individuals_generations_return) {
-        child_i_father_i_map[i] = father_i;
-      }
-      
-      // if this is the father's first child, create the father
-      if (fathers_generation[father_i] == nullptr) {
-        // fathers_generation[father_i] is now an Individual* and not nullptr any more
-        
-        Individual* father = new Individual(individual_id, generation);
-        individual_id = individual_id + 1;
-        
-        fathers_generation[father_i] = father;
-        (*population_map)[father->get_pid()] = father;
-
-        new_founders_left = new_founders_left + 1;  
-      }
-
-      children_generation[i]->set_father(fathers_generation[father_i]);
-      fathers_generation[father_i]->add_child(children_generation[i]);
-    }
-    
-    if (generation <= individuals_generations_return) {
-      for (size_t i = 0; i < children_population_size; ++i) {
-        // if a child did not have children himself, forget his ancestors
-        if (children_generation[i] == nullptr) {
-          continue;
-        }
-        
-        int father_i = child_i_father_i_map[i];
-        
-        if (fathers_generation[father_i] == nullptr) {
-          Rcpp::stop("Unexpected!");
-        }
-        
-        Individual* father = fathers_generation[father_i];
-        
         Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
         last_k_generations_individuals.push_back(father_xptr);
       }
     }
-    
-    
     
     
     
@@ -417,9 +500,21 @@ List sample_geneology_varying_size_parallel(
         }        
         
         // create father, no children etc.
-        create_father_update_simulation_state_varying_size(father_i, &individual_id, generation, 
-              individuals_generations_return, fathers_generation, population_map, 
-              &new_founders_left, last_k_generations_individuals);
+        // create_father_update_simulation_state_varying_size ->
+          Individual* father = new Individual(individual_id, generation);
+          fathers_generation[father_i] = father;
+          population_map->insert({ individual_id, father });
+          
+          individual_id = individual_id + 1;
+          new_founders_left = new_founders_left + 1;
+
+          if (generation <= individuals_generations_return) {
+            //Rcpp::Rcout << "create_father_update_simulation_state_varying_size_parallel: generation = " << generation << "; individuals_generations_return = " << individuals_generations_return << std::endl;
+            
+            Rcpp::XPtr<Individual> father_xptr(father, RCPP_XPTR_2ND_ARG);
+            last_k_generations_individuals.push_back(father_xptr);
+          }  
+        // <- create_father_update_simulation_state_varying_size
       }      
     }
     

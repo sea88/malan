@@ -202,7 +202,7 @@ List sample_geneology_varying_size(
       
       // if this is the father's first child, create the father
       if (fathers_generation[father_i] == nullptr) {
-        // fathers_generation[father_i] is now an Individual* and not nullptr any more
+        // fathers_generation[father_i] is made now an Individual* and not nullptr any more
         create_father_update_simulation_state_varying_size(father_i, &individual_id, generation, 
               individuals_generations_return, fathers_generation, population_map, 
               &new_founders_left, last_k_generations_individuals);
