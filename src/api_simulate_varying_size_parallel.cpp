@@ -400,41 +400,6 @@ List sample_geneology_varying_size_parallel(
     
     choose_father->update_state_new_generation();
     
-    /*
-    FIXME: New, more explicit logic? Maybe copy create_father_update_simulation_state_varying_size into here?
-    */
-    
-    /*
-    // now, run through children to pick each child's father
-    // FIXME: PARALLELISE?? BLOCK ON
-    //     int* individual_id, 
-    //     std::vector<Individual*>& fathers_generation, 
-    //     std::unordered_map<int, Individual*>* population_map, 
-    //     int* new_founders_left,
-    //     List& last_k_generations_individuals
-    for (size_t i = 0; i < children_population_size; ++i) {
-      // if a child did not have children himself, forget his ancestors
-      if (children_generation[i] == nullptr) {
-        continue;
-      }
-      
-      // child [i] in [generation-1]/children_generation has father [father_i] in [generation]/fathers_generation
-      //int father_i = sample_person_weighted(population_size, fathers_prob, fathers_prob_perm);
-      int father_i = choose_father->get_father_i();
-      
-      // if this is the father's first child, create the father
-      if (fathers_generation[father_i] == nullptr) {        
-        // fathers_generation[father_i] is now an Individual* and not nullptr any more
-        create_father_update_simulation_state_varying_size_parallel(father_i, &individual_id, generation, 
-              individuals_generations_return, fathers_generation, population_map, 
-              &new_founders_left, last_k_generations_individuals);
-      }
-
-      children_generation[i]->set_father(fathers_generation[father_i]);
-      fathers_generation[father_i]->add_child(children_generation[i]);
-    }
-    */
-    
     // cannot be parallised due to choose_father
     // is only going to be read afterwards, so stl vector would suffice
     std::vector<int> child_i_father_i_map(children_population_size);
@@ -491,13 +456,7 @@ List sample_geneology_varying_size_parallel(
         last_k_generations_individuals.push_back(father_xptr);
       }
     }
-    
-    
-    
-    //Rcpp::Rcout << "vary 8-" << generation << std::endl;
-    
-    //Rcpp::Rcout << "generation = " << generation << "; extra_generations_full = " << extra_generations_full << std::endl;
-    
+        
     // create additional fathers (without children) if needed:
     if (generation <= extra_generations_full) {
       for (size_t father_i = 0; father_i < population_size; ++father_i) {
