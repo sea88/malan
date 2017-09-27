@@ -66,8 +66,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_geneology_varying_size_parallel
-List sample_geneology_varying_size_parallel(IntegerVector population_sizes, int extra_generations_full, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int individuals_generations_return, int threads);
-RcppExport SEXP _malan_sample_geneology_varying_size_parallel(SEXP population_sizesSEXP, SEXP extra_generations_fullSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP, SEXP threadsSEXP) {
+List sample_geneology_varying_size_parallel(IntegerVector population_sizes, int extra_generations_full, double gamma_parameter_shape, double gamma_parameter_scale, bool enable_gamma_variance_extension, bool progress, int individuals_generations_return, int threads, int do_parallel_when_individuals_above);
+RcppExport SEXP _malan_sample_geneology_varying_size_parallel(SEXP population_sizesSEXP, SEXP extra_generations_fullSEXP, SEXP gamma_parameter_shapeSEXP, SEXP gamma_parameter_scaleSEXP, SEXP enable_gamma_variance_extensionSEXP, SEXP progressSEXP, SEXP individuals_generations_returnSEXP, SEXP threadsSEXP, SEXP do_parallel_when_individuals_aboveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -79,7 +79,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
     Rcpp::traits::input_parameter< int >::type individuals_generations_return(individuals_generations_returnSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geneology_varying_size_parallel(population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, threads));
+    Rcpp::traits::input_parameter< int >::type do_parallel_when_individuals_above(do_parallel_when_individuals_aboveSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_geneology_varying_size_parallel(population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, threads, do_parallel_when_individuals_above));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -510,7 +511,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_build_pedigrees", (DL_FUNC) &_malan_build_pedigrees, 2},
     {"_malan_sample_geneology", (DL_FUNC) &_malan_sample_geneology, 9},
     {"_malan_sample_geneology_varying_size", (DL_FUNC) &_malan_sample_geneology_varying_size, 7},
-    {"_malan_sample_geneology_varying_size_parallel", (DL_FUNC) &_malan_sample_geneology_varying_size_parallel, 8},
+    {"_malan_sample_geneology_varying_size_parallel", (DL_FUNC) &_malan_sample_geneology_varying_size_parallel, 9},
     {"_malan_indices_in_mixture", (DL_FUNC) &_malan_indices_in_mixture, 3},
     {"_malan_pedigree_get_haplotypes_pids", (DL_FUNC) &_malan_pedigree_get_haplotypes_pids, 2},
     {"_malan_individuals_get_haplotypes", (DL_FUNC) &_malan_individuals_get_haplotypes, 1},

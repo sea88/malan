@@ -250,27 +250,30 @@ List sample_geneology_varying_size_parallel(
   bool enable_gamma_variance_extension = false,
   bool progress = true, 
   int individuals_generations_return = 2,
-  int threads = 1) {
+  int threads = 0,
+  int do_parallel_when_individuals_above = 0) {
   
   #ifdef MALAN_PROFILE
   ProfilerStart("/home/mikl/work-aau/research-projects/2016-Balding-shared-haplotypes/model-31-malan-speed-up/prof.log");
   #endif
 
-  if (threads < 1) {
-    Rcpp::stop("threads must be >= 1");
+  if (threads < 0) {
+    Rcpp::stop("threads must be >= 0 (0 for automatic)");
   }
   
-  static tbb::task_scheduler_init* s_pTaskScheduler = NULL;
-  try
-  {
-    if (!s_pTaskScheduler) {
-      s_pTaskScheduler = new tbb::task_scheduler_init(threads, 0);
-    } else {
-      s_pTaskScheduler->terminate();
-      s_pTaskScheduler->initialize(threads, 0); 
+  if (threads > 0) {
+    static tbb::task_scheduler_init* s_pTaskScheduler = NULL;
+    try
+    {
+      if (!s_pTaskScheduler) {
+        s_pTaskScheduler = new tbb::task_scheduler_init(threads, 0);
+      } else {
+        s_pTaskScheduler->terminate();
+        s_pTaskScheduler->initialize(threads, 0); 
+      }
+    } catch (...) {
+      stop("Error loading TBB: (Unknown error)");
     }
-  } catch (...) {
-    stop("Error loading TBB: (Unknown error)");
   }
 
   // boolean chosen like this to obey NA's
@@ -329,10 +332,10 @@ List sample_geneology_varying_size_parallel(
                                 population_map, 
                                 &population_map_mutex);
                                 
-  if (initial_popsize <= 1000) {
-    init_pop(0, initial_popsize);
-  } else {
+  if (initial_popsize >= do_parallel_when_individuals_above) {
     parallelFor(0, initial_popsize, init_pop); // does i = 0; i < initial_popsize
+  } else {
+    init_pop(0, initial_popsize);
   }
   
 
@@ -439,6 +442,11 @@ List sample_geneology_varying_size_parallel(
     std::vector<int> fathers_pids(population_size);
     
     for (size_t i = 0; i < children_population_size; ++i) {
+      // if a child did not have children himself, forget his ancestors
+      if (children_generation[i] == nullptr) {
+        continue;
+      }
+      
       int father_id = choose_father->get_father_i();
       child_i_father_i_map[i] = father_id;
       
@@ -459,10 +467,10 @@ List sample_geneology_varying_size_parallel(
                                 &population_map_mutex);
     
     // Only in parallel if it makes sense
-    if (new_founders_left <= 1000) {
-      fathers_gen(0, population_size);
-    } else {
+    if (new_founders_left >= do_parallel_when_individuals_above) {
       parallelFor(0, population_size, fathers_gen); // does i = 0; i < children_population_size
+    } else {
+      fathers_gen(0, population_size);
     }
     
     

@@ -199,8 +199,8 @@ sample_geneology_varying_size <- function(population_sizes, extra_generations_fu
 #' @import RcppProgress
 #' @import RcppArmadillo
 #' @export
-sample_geneology_varying_size_parallel <- function(population_sizes, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L, threads = 1L) {
-    .Call('_malan_sample_geneology_varying_size_parallel', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, threads)
+sample_geneology_varying_size_parallel <- function(population_sizes, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L, threads = 0L, do_parallel_when_individuals_above = 0L) {
+    .Call('_malan_sample_geneology_varying_size_parallel', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return, threads, do_parallel_when_individuals_above)
 }
 
 #' @export
