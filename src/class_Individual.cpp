@@ -226,10 +226,14 @@ void Individual::haplotype_mutate_ladder_bounded(std::vector<double>& mutation_r
             
       if (m_haplotype[loc] >= ladder_max_dist_0[loc]) {
         // Already at upper bound (or more, by wrong initial conditions), move downwards
+        //Rcpp::Rcout << "Locus " << loc << " was at upper boundary " << ladder_max_dist_0[loc] << " mutating down, now ";
         m_haplotype[loc] = ladder_max_dist_0[loc] - 1;
+        //Rcpp::Rcout << m_haplotype[loc] << std::endl;
       } else if (m_haplotype[loc] <= -ladder_max_dist_0[loc]) {
+        //Rcpp::Rcout << "Locus " << loc << " was at lower boundary " << ladder_max_dist_0[loc] << " mutating up, now ";
         // Already at upper bound (or more, by wrong initial conditions), move downwards
         m_haplotype[loc] = -ladder_max_dist_0[loc] + 1;
+        //Rcpp::Rcout << m_haplotype[loc] << std::endl;
       } else {
         // Somewhere on non-boundary ladder, choose direction
         if (R::runif(0.0, 1.0) < 0.5) {

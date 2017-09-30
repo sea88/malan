@@ -126,6 +126,20 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// pedigrees_all_populate_haplotypes_ladder_bounded
+void pedigrees_all_populate_haplotypes_ladder_bounded(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, Rcpp::NumericVector mutation_rates, Rcpp::IntegerVector ladder_max_dist_0, bool progress);
+RcppExport SEXP _malan_pedigrees_all_populate_haplotypes_ladder_bounded(SEXP pedigreesSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP, SEXP ladder_max_dist_0SEXP, SEXP progressSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< int >::type loci(lociSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ladder_max_dist_0(ladder_max_dist_0SEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    pedigrees_all_populate_haplotypes_ladder_bounded(pedigrees, loci, mutation_rates, ladder_max_dist_0, progress);
+    return R_NilValue;
+END_RCPP
+}
 // get_haplotype
 std::vector<int> get_haplotype(Rcpp::XPtr<Individual> individual);
 RcppExport SEXP _malan_get_haplotype(SEXP individualSEXP) {
@@ -376,6 +390,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_pedigree_id
+int get_pedigree_id(Rcpp::XPtr<Pedigree> ped);
+RcppExport SEXP _malan_get_pedigree_id(SEXP pedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type ped(pedSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_pedigree_id(ped));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigrees_count
 int pedigrees_count(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
 RcppExport SEXP _malan_pedigrees_count(SEXP pedigreesSEXP) {
@@ -486,6 +511,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_individuals_get_haplotypes", (DL_FUNC) &_malan_individuals_get_haplotypes, 1},
     {"_malan_pedigree_populate_haplotypes", (DL_FUNC) &_malan_pedigree_populate_haplotypes, 3},
     {"_malan_pedigrees_all_populate_haplotypes", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes, 4},
+    {"_malan_pedigrees_all_populate_haplotypes_ladder_bounded", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_ladder_bounded, 5},
     {"_malan_get_haplotype", (DL_FUNC) &_malan_get_haplotype, 1},
     {"_malan_count_haplotype_occurrences_individuals", (DL_FUNC) &_malan_count_haplotype_occurrences_individuals, 2},
     {"_malan_meiosis_dist_haplotype_matches_individuals", (DL_FUNC) &_malan_meiosis_dist_haplotype_matches_individuals, 2},
@@ -508,6 +534,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_meioses_generation_distribution", (DL_FUNC) &_malan_meioses_generation_distribution, 2},
     {"_malan_population_size_generation", (DL_FUNC) &_malan_population_size_generation, 2},
     {"_malan_pedigree_size_generation", (DL_FUNC) &_malan_pedigree_size_generation, 2},
+    {"_malan_get_pedigree_id", (DL_FUNC) &_malan_get_pedigree_id, 1},
     {"_malan_pedigrees_count", (DL_FUNC) &_malan_pedigrees_count, 1},
     {"_malan_pedigree_size", (DL_FUNC) &_malan_pedigree_size, 1},
     {"_malan_pedigrees_table", (DL_FUNC) &_malan_pedigrees_table, 1},

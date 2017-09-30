@@ -91,5 +91,19 @@ void Pedigree::populate_haplotypes(int loci, std::vector<double>& mutation_rates
 }
 
 
+void Pedigree::populate_haplotypes_ladder_bounded(int loci, std::vector<double>& mutation_rates, std::vector<int>& ladder_max_dist_0) {
+  if (mutation_rates.size() != ladder_max_dist_0.size()) {
+    Rcpp::stop("mutation_rates and ladder_max_dist_0 must have same length");
+  }
+
+  /* FIXME: Exploits tree */
+  Individual* root = this->get_root();
+  
+  std::vector<int> h(loci); // initialises to 0, 0, ..., 0
+  
+  root->set_haplotype(h);
+  root->pass_haplotype_to_children_ladder_bounded(true, mutation_rates, ladder_max_dist_0);
+}
+
 
 

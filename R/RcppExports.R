@@ -171,6 +171,11 @@ pedigrees_all_populate_haplotypes <- function(pedigrees, loci, mutation_rates, p
 }
 
 #' @export
+pedigrees_all_populate_haplotypes_ladder_bounded <- function(pedigrees, loci, mutation_rates, ladder_max_dist_0, progress = TRUE) {
+    invisible(.Call('_malan_pedigrees_all_populate_haplotypes_ladder_bounded', PACKAGE = 'malan', pedigrees, loci, mutation_rates, ladder_max_dist_0, progress))
+}
+
+#' @export
 get_haplotype <- function(individual) {
     .Call('_malan_get_haplotype', PACKAGE = 'malan', individual)
 }
@@ -282,6 +287,13 @@ population_size_generation <- function(population, generation_upper_bound_in_res
 #' @export
 pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result = -1L) {
     .Call('_malan_pedigree_size_generation', PACKAGE = 'malan', pedigree, generation_upper_bound_in_result)
+}
+
+#' Get pedigree id
+#' 
+#' @export
+get_pedigree_id <- function(ped) {
+    .Call('_malan_get_pedigree_id', PACKAGE = 'malan', ped)
 }
 
 #' Get number of pedigrees

@@ -163,6 +163,42 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
 
 //' @export
 // [[Rcpp::export]]
+void pedigrees_all_populate_haplotypes_ladder_bounded(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, 
+                                                      int loci, 
+                                                      Rcpp::NumericVector mutation_rates, 
+                                                      Rcpp::IntegerVector ladder_max_dist_0,
+                                                      bool progress = true) {
+  std::vector<Pedigree*> peds = (*pedigrees);
+
+  std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
+  std::vector<int> lds_dists = Rcpp::as< std::vector<int> >(ladder_max_dist_0);
+  
+  if (loci != mut_rates.size()) {
+    Rcpp::stop("Number of loci specified in haplotype must equal number of mutation rates specified");
+  }
+
+  if (mutation_rates.size() != ladder_max_dist_0.size()) {
+    Rcpp::stop("mutation_rates and ladder_max_dist_0 must have same length");
+  }
+    
+  size_t N = peds.size();
+  Progress p(N, progress);
+  
+  for (size_t i = 0; i < N; ++i) {
+    peds.at(i)->populate_haplotypes_ladder_bounded(loci, mut_rates, lds_dists);
+    
+     if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
+      Rcpp::stop("Aborted.");
+    }
+    
+    if (progress) {
+      p.increment();
+    }
+  }
+}
+
+//' @export
+// [[Rcpp::export]]
 std::vector<int> get_haplotype(Rcpp::XPtr<Individual> individual) {
   return individual->get_haplotype();
 }
