@@ -208,6 +208,41 @@ void Individual::haplotype_mutate(std::vector<double>& mutation_rates) {
   }
 }
 
+
+void Individual::haplotype_mutate_ladder_bounded(std::vector<double>& mutation_rates, std::vector<int>& ladder_max_dist_0) {
+  if (!m_haplotype_set) {
+    throw std::invalid_argument("Father haplotype not set yet, so cannot mutate");
+  }
+  if (m_haplotype.size() != mutation_rates.size()) {
+    throw std::invalid_argument("Number of loci specified in haplotype must equal number of mutation rates specified");
+  }
+  if (m_haplotype_mutated) {
+    throw std::invalid_argument("Father haplotype already set and mutated");
+  }  
+  
+  for (int loc = 0; loc < m_haplotype.size(); ++loc) {
+    if (R::runif(0.0, 1.0) < mutation_rates[loc]) {
+      // A mutation must happen:
+            
+      if (m_haplotype[loc] >= ladder_max_dist_0[loc]) {
+        // Already at upper bound (or more, by wrong initial conditions), move downwards
+        m_haplotype[loc] = ladder_max_dist_0[loc] - 1;
+      } else if (m_haplotype[loc] <= -ladder_max_dist_0[loc]) {
+        // Already at upper bound (or more, by wrong initial conditions), move downwards
+        m_haplotype[loc] = -ladder_max_dist_0[loc] + 1;
+      } else {
+        // Somewhere on non-boundary ladder, choose direction
+        if (R::runif(0.0, 1.0) < 0.5) {
+          m_haplotype[loc] = m_haplotype[loc] - 1;
+        } else {
+          m_haplotype[loc] = m_haplotype[loc] + 1;
+        }
+      }
+    }
+  }
+}
+
+
 bool Individual::is_haplotype_set() const {
   return m_haplotype_set; 
 }
@@ -228,6 +263,17 @@ void Individual::pass_haplotype_to_children(bool recursive, std::vector<double>&
     
     if (recursive) {
       child->pass_haplotype_to_children(recursive, mutation_rates);
+    }
+  }
+}
+
+void Individual::pass_haplotype_to_children_ladder_bounded(bool recursive, std::vector<double>& mutation_rates, std::vector<int>& ladder_max_dist_0) {
+  for (auto &child : (*m_children)) {
+    child->set_haplotype(m_haplotype);
+    child->haplotype_mutate_ladder_bounded(mutation_rates, ladder_max_dist_0);
+    
+    if (recursive) {
+      child->pass_haplotype_to_children_ladder_bounded(recursive, mutation_rates, ladder_max_dist_0);
     }
   }
 }

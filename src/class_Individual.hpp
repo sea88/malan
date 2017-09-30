@@ -22,6 +22,7 @@ private:
   bool m_haplotype_set = false;
   bool m_haplotype_mutated = false;
   void haplotype_mutate(std::vector<double>& mutation_rates);
+  void haplotype_mutate_ladder_bounded(std::vector<double>& mutation_rates, std::vector<int>& ladder_max_dist_0);
   
 public:
   Individual(int pid, int generation);
@@ -54,6 +55,7 @@ public:
   void set_haplotype(std::vector<int> h);
   std::vector<int> get_haplotype() const;
   void pass_haplotype_to_children(bool recursive, std::vector<double>& mutation_rates);
+  void pass_haplotype_to_children_ladder_bounded(bool recursive, std::vector<double>& mutation_rates, std::vector<int>& ladder_max_dist_0);
   
   int get_haplotype_L1(Individual* dest) const;
 };
