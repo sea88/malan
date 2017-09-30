@@ -24,7 +24,7 @@ private:
   void haplotype_mutate(std::vector<double>& mutation_rates);
   
 public:
-  Individual(int pid, int m_generation);
+  Individual(int pid, int generation);
   ~Individual();
   int get_pid() const;
   int get_generation() const;

@@ -82,8 +82,8 @@ List sample_geneology_varying_size(
   
   int generations = population_sizes.length();
   
-  if (generations < -1 || generations == 0) {
-    Rcpp::stop("Please specify generations as -1 (for simulation to 1 founder) or > 0");
+  if (generations == 0) {
+    Rcpp::stop("Please specify at least 1 generation (the vector population_sizes must have length >= 1)");
   }
 
   if (enable_gamma_variance_extension) {
