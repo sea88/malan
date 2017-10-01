@@ -161,31 +161,43 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
   }
 }
 
+//' @param get_founder_haplotype has no default as it is not know in advance how many loci there are and what the ladder is; see \code{\link{generate_get_founder_haplotype}}
 //' @export
 // [[Rcpp::export]]
 void pedigrees_all_populate_haplotypes_ladder_bounded(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, 
-                                                      int loci, 
                                                       Rcpp::NumericVector mutation_rates, 
-                                                      Rcpp::IntegerVector ladder_max_dist_0,
+                                                      Rcpp::IntegerVector ladder_min,
+                                                      Rcpp::IntegerVector ladder_max,
+                                                      Rcpp::Nullable<Rcpp::Function> get_founder_haplotype = R_NilValue,
                                                       bool progress = true) {
+  //https://stackoverflow.com/questions/36992627/can-rcppfunction-be-null
+  
   std::vector<Pedigree*> peds = (*pedigrees);
 
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
-  std::vector<int> lds_dists = Rcpp::as< std::vector<int> >(ladder_max_dist_0);
+  std::vector<int> lad_min = Rcpp::as< std::vector<int> >(ladder_min);
+  std::vector<int> lad_max = Rcpp::as< std::vector<int> >(ladder_max);
   
-  if (loci != mut_rates.size()) {
-    Rcpp::stop("Number of loci specified in haplotype must equal number of mutation rates specified");
+
+  if (mutation_rates.size() != lad_min.size()) {
+    Rcpp::stop("mutation_rates and ladder_min must have same length");
   }
 
-  if (mutation_rates.size() != ladder_max_dist_0.size()) {
-    Rcpp::stop("mutation_rates and ladder_max_dist_0 must have same length");
+  if (mutation_rates.size() != lad_max.size()) {
+    Rcpp::stop("mutation_rates and ladder_max must have same length");
   }
+
+  if (get_founder_haplotype.isNull()) {
+    Rcpp::stop("get_founder_haplotype must not be NULL");
+  }  
+  
+  Rcpp::Function g_founder_hap = Rcpp::as<Rcpp::Function>(get_founder_haplotype);
     
   size_t N = peds.size();
   Progress p(N, progress);
   
   for (size_t i = 0; i < N; ++i) {
-    peds.at(i)->populate_haplotypes_ladder_bounded(loci, mut_rates, lds_dists);
+    peds.at(i)->populate_haplotypes_ladder_bounded(mut_rates, lad_min, lad_max, g_founder_hap);
     
      if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
       Rcpp::stop("Aborted.");

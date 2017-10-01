@@ -1,3 +1,5 @@
+#include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
+
 #include "malan_types.hpp"
 
 #include <vector>
@@ -21,6 +23,6 @@ public:
   Individual* get_root();
   
   void populate_haplotypes(int loci, std::vector<double>& mutation_rates);
-  void populate_haplotypes_ladder_bounded(int loci, std::vector<double>& mutation_rates, std::vector<int>& ladder_max_dist_0);
+  void populate_haplotypes_ladder_bounded(std::vector<double>& mutation_rates, std::vector<int>& ladder_min, std::vector<int>& ladder_max, Rcpp::Function get_founder_hap);
 };
 

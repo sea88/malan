@@ -91,18 +91,31 @@ void Pedigree::populate_haplotypes(int loci, std::vector<double>& mutation_rates
 }
 
 
-void Pedigree::populate_haplotypes_ladder_bounded(int loci, std::vector<double>& mutation_rates, std::vector<int>& ladder_max_dist_0) {
-  if (mutation_rates.size() != ladder_max_dist_0.size()) {
-    Rcpp::stop("mutation_rates and ladder_max_dist_0 must have same length");
+void Pedigree::populate_haplotypes_ladder_bounded(std::vector<double>& mutation_rates, std::vector<int>& ladder_min, std::vector<int>& ladder_max, Rcpp::Function get_founder_hap) {
+  if (mutation_rates.size() != ladder_min.size()) {
+    Rcpp::stop("mutation_rates and ladder_min must have same length");
+  }
+  
+  if (mutation_rates.size() != ladder_min.size()) {
+    Rcpp::stop("mutation_rates and ladder_max must have same length");
   }
 
   /* FIXME: Exploits tree */
   Individual* root = this->get_root();
   
-  std::vector<int> h(loci); // initialises to 0, 0, ..., 0
+  //std::vector<int> h(mutation_rates.size()); // initialises to 0, 0, ..., 0
+  
+  std::vector<int> h = Rcpp::as< std::vector<int> >( get_founder_hap() );  
+
+  // Test that a haplotype of proper length generated  
+  if (h.size() != mutation_rates.size()) {
+    Rcpp::stop("get_founder_haplotype generated haplotype with number of loci different from the number of mutation rates specified");
+  }
+  
+  //Rf_PrintValue(Rcpp::wrap(h));
   
   root->set_haplotype(h);
-  root->pass_haplotype_to_children_ladder_bounded(true, mutation_rates, ladder_max_dist_0);
+  root->pass_haplotype_to_children_ladder_bounded(true, mutation_rates, ladder_min, ladder_max);
 }
 
 

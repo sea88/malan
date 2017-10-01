@@ -170,9 +170,10 @@ pedigrees_all_populate_haplotypes <- function(pedigrees, loci, mutation_rates, p
     invisible(.Call('_malan_pedigrees_all_populate_haplotypes', PACKAGE = 'malan', pedigrees, loci, mutation_rates, progress))
 }
 
+#' @param get_founder_haplotype has no default as it is not know in advance how many loci there are and what the ladder is; see \code{\link{generate_get_founder_haplotype}}
 #' @export
-pedigrees_all_populate_haplotypes_ladder_bounded <- function(pedigrees, loci, mutation_rates, ladder_max_dist_0, progress = TRUE) {
-    invisible(.Call('_malan_pedigrees_all_populate_haplotypes_ladder_bounded', PACKAGE = 'malan', pedigrees, loci, mutation_rates, ladder_max_dist_0, progress))
+pedigrees_all_populate_haplotypes_ladder_bounded <- function(pedigrees, mutation_rates, ladder_min, ladder_max, get_founder_haplotype = NULL, progress = TRUE) {
+    invisible(.Call('_malan_pedigrees_all_populate_haplotypes_ladder_bounded', PACKAGE = 'malan', pedigrees, mutation_rates, ladder_min, ladder_max, get_founder_haplotype, progress))
 }
 
 #' @export
