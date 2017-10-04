@@ -161,6 +161,8 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
   }
 }
 
+//' Populate haplotypes such that they are all on-ladder
+//' 
 //' @param get_founder_haplotype has no default as it is not know in advance how many loci there are and what the ladder is; see \code{\link{generate_get_founder_haplotype}}
 //' @export
 // [[Rcpp::export]]
