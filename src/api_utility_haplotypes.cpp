@@ -6,10 +6,120 @@
 #include <string>
 
 #include "malan_types.hpp"
+#include "api_utility_individual.hpp"
 
+//' New, implicit haplotypes by individuals
+//' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::List indices_in_mixture(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2) { 
+Rcpp::List mixture_info_by_individuals(const Rcpp::List individuals, Rcpp::XPtr<Individual>& donor1, Rcpp::XPtr<Individual>& donor2) { 
+  size_t N = individuals.size();
+  
+  Rcpp::List res;
+  
+  if (N == 0) {
+    return res;
+  }
+
+  // mainly count wanted, but indices are good for debugging
+  Rcpp::IntegerVector res_comp_with_mixture;
+  Rcpp::List res_comp_with_mixture_dists;
+  Rcpp::IntegerVector res_match_donor1;
+  Rcpp::IntegerVector res_match_donor2;
+  Rcpp::IntegerVector res_others_included;
+  
+  std::vector<int> H1 = donor1->get_haplotype();
+  std::vector<int> H2 = donor2->get_haplotype();
+  
+  size_t loci = H1.size();
+  
+  if (H2.size() != loci) {
+    Rcpp::stop("H2.size() != H1.size()");
+  }
+
+  for (size_t i = 0; i < N; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    std::vector<int> indv_h = indv->get_haplotype();
+    
+    if (indv_h.size() != loci) {
+      Rcpp::stop("indv_h.size() != H1.size()");
+    }
+    
+    bool in_mixture = true;
+    bool match_H1 = true; // faster than Rcpp equal/all sugar 
+    bool match_H2 = true;
+    
+    for (size_t locus = 0; locus < loci; ++locus) {
+      if (in_mixture && (indv_h[locus] != H1[locus]) && (indv_h[locus] != H2[locus])) {
+        in_mixture = false;
+      }
+      
+      if (match_H1 && (indv_h[locus] != H1[locus])) {
+        match_H1 = false;
+      }
+      
+      if (match_H2 && (indv_h[locus] != H2[locus])) {
+        match_H2 = false;
+      }
+      
+      // if neither have a chance, just stop
+      if (!in_mixture && !match_H1 && !match_H2) {
+        break;
+      }
+    }
+    
+    int pid = indv->get_pid();
+    
+    if (in_mixture) {
+      res_comp_with_mixture.push_back(pid); // R indexing
+      
+      //int dist_donor1 = donor1->calculate_path_to(indv);
+      //int dist_donor2 = donor2->calculate_path_to(indv);      
+      int dist_donor1 = donor1->meiosis_dist_tree(indv);
+      int dist_donor2 = donor2->meiosis_dist_tree(indv);
+      
+      Rcpp::List r = Rcpp::List::create(
+        Rcpp::Named("indv_pid") = pid,
+        Rcpp::Named("pid_donor1") = donor1->get_pid(),
+        Rcpp::Named("pid_donor2") = donor2->get_pid(),
+        Rcpp::Named("dist_donor1") = dist_donor1,
+        Rcpp::Named("dist_donor2") = dist_donor2);   
+        
+      res_comp_with_mixture_dists.push_back(r);
+      
+      if (match_H1) {
+        res_match_donor1.push_back(pid);
+      }
+      
+      if (match_H2) {
+        res_match_donor2.push_back(pid);
+      }
+      
+      if (!match_H1 && !match_H2) {
+        res_others_included.push_back(pid);
+      }
+    }    
+  }
+  
+  res["pids_included_in_mixture"] = res_comp_with_mixture;
+  res["pids_included_in_mixture_info"] = res_comp_with_mixture_dists;
+  res["pids_matching_donor1"] = res_match_donor1;
+  res["pids_matching_donor2"] = res_match_donor2;
+  res["pids_others_included"] = res_others_included;
+  res["pids_donor12_meiotic_dist"] = donor1->meiosis_dist_tree(donor2);
+  res["donor1_family_info"] = get_family_info(donor1);
+  res["donor2_family_info"] = get_family_info(donor2);
+  res["donor1_profile"] = H1;
+  res["donor2_profile"] = H2;
+
+  return res;
+}
+
+//' Old, explicit IntegerMatrix haplotypes
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::List indices_in_mixture_by_haplotype_matrix(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2) { 
   size_t N = haplotypes.nrow();
   
   Rcpp::List res;

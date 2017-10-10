@@ -145,9 +145,18 @@ sample_geneology_varying_size <- function(population_sizes, extra_generations_fu
     .Call('_malan_sample_geneology_varying_size', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
 }
 
+#' New, implicit haplotypes by individuals
+#' 
 #' @export
-indices_in_mixture <- function(haplotypes, H1, H2) {
-    .Call('_malan_indices_in_mixture', PACKAGE = 'malan', haplotypes, H1, H2)
+mixture_info_by_individuals <- function(individuals, donor1, donor2) {
+    .Call('_malan_mixture_info_by_individuals', PACKAGE = 'malan', individuals, donor1, donor2)
+}
+
+#' Old, explicit IntegerMatrix haplotypes
+#' 
+#' @export
+indices_in_mixture_by_haplotype_matrix <- function(haplotypes, H1, H2) {
+    .Call('_malan_indices_in_mixture_by_haplotype_matrix', PACKAGE = 'malan', haplotypes, H1, H2)
 }
 
 #' @export
@@ -242,6 +251,11 @@ get_pedigree_from_individual <- function(individual) {
 #' @export
 get_pedigree_id_from_pid <- function(population, pids) {
     .Call('_malan_get_pedigree_id_from_pid', PACKAGE = 'malan', population, pids)
+}
+
+#' @export
+get_family_info <- function(individual) {
+    .Call('_malan_get_family_info', PACKAGE = 'malan', individual)
 }
 
 #' @export

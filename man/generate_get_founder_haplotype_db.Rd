@@ -2,7 +2,7 @@
 % Please edit documentation in R/haplotypes.R
 \name{generate_get_founder_haplotype_db}
 \alias{generate_get_founder_haplotype_db}
-\title{Generate a function to simulate pedigree founder haplotype based on a haplotype database}
+\title{Generate a function to simulate pedigree founder haplotype based on a haplotype databasep}
 \usage{
 generate_get_founder_haplotype_db(db)
 }
@@ -10,5 +10,5 @@ generate_get_founder_haplotype_db(db)
 \item{db}{data frame or matrix with haplotypes from which the founder is randomly simulated}
 }
 \description{
-Generate a function to simulate pedigree founder haplotype based on a haplotype database
+Generate a function to simulate pedigree founder haplotype based on a haplotype databasep
 }

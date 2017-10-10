@@ -65,16 +65,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// indices_in_mixture
-Rcpp::List indices_in_mixture(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2);
-RcppExport SEXP _malan_indices_in_mixture(SEXP haplotypesSEXP, SEXP H1SEXP, SEXP H2SEXP) {
+// mixture_info_by_individuals
+Rcpp::List mixture_info_by_individuals(const Rcpp::List individuals, Rcpp::XPtr<Individual>& donor1, Rcpp::XPtr<Individual>& donor2);
+RcppExport SEXP _malan_mixture_info_by_individuals(SEXP individualsSEXP, SEXP donor1SEXP, SEXP donor2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual>& >::type donor1(donor1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual>& >::type donor2(donor2SEXP);
+    rcpp_result_gen = Rcpp::wrap(mixture_info_by_individuals(individuals, donor1, donor2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// indices_in_mixture_by_haplotype_matrix
+Rcpp::List indices_in_mixture_by_haplotype_matrix(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2);
+RcppExport SEXP _malan_indices_in_mixture_by_haplotype_matrix(SEXP haplotypesSEXP, SEXP H1SEXP, SEXP H2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type haplotypes(haplotypesSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type H1(H1SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type H2(H2SEXP);
-    rcpp_result_gen = Rcpp::wrap(indices_in_mixture(haplotypes, H1, H2));
+    rcpp_result_gen = Rcpp::wrap(indices_in_mixture_by_haplotype_matrix(haplotypes, H1, H2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -277,6 +290,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pids(pidsSEXP);
     rcpp_result_gen = Rcpp::wrap(get_pedigree_id_from_pid(population, pids));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_family_info
+Rcpp::List get_family_info(Rcpp::XPtr<Individual> individual);
+RcppExport SEXP _malan_get_family_info(SEXP individualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type individual(individualSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_family_info(individual));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -507,7 +531,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_build_pedigrees", (DL_FUNC) &_malan_build_pedigrees, 2},
     {"_malan_sample_geneology", (DL_FUNC) &_malan_sample_geneology, 9},
     {"_malan_sample_geneology_varying_size", (DL_FUNC) &_malan_sample_geneology_varying_size, 7},
-    {"_malan_indices_in_mixture", (DL_FUNC) &_malan_indices_in_mixture, 3},
+    {"_malan_mixture_info_by_individuals", (DL_FUNC) &_malan_mixture_info_by_individuals, 3},
+    {"_malan_indices_in_mixture_by_haplotype_matrix", (DL_FUNC) &_malan_indices_in_mixture_by_haplotype_matrix, 3},
     {"_malan_pedigree_get_haplotypes_pids", (DL_FUNC) &_malan_pedigree_get_haplotypes_pids, 2},
     {"_malan_individuals_get_haplotypes", (DL_FUNC) &_malan_individuals_get_haplotypes, 1},
     {"_malan_pedigree_populate_haplotypes", (DL_FUNC) &_malan_pedigree_populate_haplotypes, 3},
@@ -525,6 +550,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_get_generation", (DL_FUNC) &_malan_get_generation, 1},
     {"_malan_get_pedigree_from_individual", (DL_FUNC) &_malan_get_pedigree_from_individual, 1},
     {"_malan_get_pedigree_id_from_pid", (DL_FUNC) &_malan_get_pedigree_id_from_pid, 2},
+    {"_malan_get_family_info", (DL_FUNC) &_malan_get_family_info, 1},
     {"_malan_count_brothers", (DL_FUNC) &_malan_count_brothers, 1},
     {"_malan_brothers_matching", (DL_FUNC) &_malan_brothers_matching, 1},
     {"_malan_father_matches", (DL_FUNC) &_malan_father_matches, 1},

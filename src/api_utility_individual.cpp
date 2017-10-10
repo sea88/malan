@@ -1,11 +1,5 @@
-#include <RcppArmadillo.h>
-
-// [[Rcpp::depends(RcppProgress)]]
-#include <progress.hpp>
-
-#include <string>
-
 #include "malan_types.hpp"
+#include "api_utility_individual.hpp"
 
 //' @export
 // [[Rcpp::export]]
@@ -91,6 +85,18 @@ Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, 
 
 
 //////////////////////////////////////
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::List get_family_info(Rcpp::XPtr<Individual> individual) {  
+  return Rcpp::List::create(
+    Rcpp::Named("num_brothers") = count_brothers(individual),
+    Rcpp::Named("num_brothers_matching") = brothers_matching(individual),
+    Rcpp::Named("father_matches") = father_matches(individual),
+    Rcpp::Named("grandfather_matches") = grandfather_matches(individual),
+    Rcpp::Named("num_uncles") = count_uncles(individual));
+
+}
 
 //' @export
 // [[Rcpp::export]]
