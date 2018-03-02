@@ -139,6 +139,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// pedigrees_all_populate_haplotypes_custom_founders
+void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, Rcpp::Nullable<Rcpp::Function> get_founder_haplotype, bool progress);
+RcppExport SEXP _malan_pedigrees_all_populate_haplotypes_custom_founders(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP get_founder_haplotypeSEXP, SEXP progressSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mutation_rates(mutation_ratesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Function> >::type get_founder_haplotype(get_founder_haplotypeSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    pedigrees_all_populate_haplotypes_custom_founders(pedigrees, mutation_rates, get_founder_haplotype, progress);
+    return R_NilValue;
+END_RCPP
+}
 // pedigrees_all_populate_haplotypes_ladder_bounded
 void pedigrees_all_populate_haplotypes_ladder_bounded(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector mutation_rates, Rcpp::IntegerVector ladder_min, Rcpp::IntegerVector ladder_max, Rcpp::Nullable<Rcpp::Function> get_founder_haplotype, bool progress);
 RcppExport SEXP _malan_pedigrees_all_populate_haplotypes_ladder_bounded(SEXP pedigreesSEXP, SEXP mutation_ratesSEXP, SEXP ladder_minSEXP, SEXP ladder_maxSEXP, SEXP get_founder_haplotypeSEXP, SEXP progressSEXP) {
@@ -537,6 +550,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_individuals_get_haplotypes", (DL_FUNC) &_malan_individuals_get_haplotypes, 1},
     {"_malan_pedigree_populate_haplotypes", (DL_FUNC) &_malan_pedigree_populate_haplotypes, 3},
     {"_malan_pedigrees_all_populate_haplotypes", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes, 4},
+    {"_malan_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_custom_founders, 4},
     {"_malan_pedigrees_all_populate_haplotypes_ladder_bounded", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_ladder_bounded, 6},
     {"_malan_get_haplotype", (DL_FUNC) &_malan_get_haplotype, 1},
     {"_malan_count_haplotype_occurrences_individuals", (DL_FUNC) &_malan_count_haplotype_occurrences_individuals, 2},

@@ -223,14 +223,30 @@ void Individual::haplotype_mutate_ladder_bounded(std::vector<double>& mutation_r
   for (int loc = 0; loc < m_haplotype.size(); ++loc) {
     if (R::runif(0.0, 1.0) < mutation_rates[loc]) {
       // A mutation must happen:
+      
+      if (m_haplotype[loc] < ladder_min[loc]) {
+        throw std::invalid_argument("Haplotype locus lower than ladder minimum");
+      }      
+      if (m_haplotype[loc] > ladder_max[loc]) {
+        throw std::invalid_argument("Haplotype locus higher than ladder minimum");
+      }
 
+      /*
       if (m_haplotype[loc] <= ladder_min[loc]) {
         // Already at lower bound (or less, by wrong initial conditions), move upwards
         m_haplotype[loc] = ladder_min[loc] + 1; // mutate upwards
       } else if (m_haplotype[loc] >= ladder_max[loc]) {
         // Already at upper bound (or more, by wrong initial conditions), move downwards
         m_haplotype[loc] = ladder_max[loc] - 1;
-      } else {
+      }*/
+      if (m_haplotype[loc] == ladder_min[loc]) {
+        // Already at lower bound, move upwards
+        m_haplotype[loc] = ladder_min[loc] + 1; // mutate upwards
+      } else if (m_haplotype[loc] == ladder_max[loc]) {
+        // Already at upper bound, move downwards
+        m_haplotype[loc] = ladder_max[loc] - 1;
+      }
+       else {
         // Somewhere on non-boundary ladder, choose direction
         if (R::runif(0.0, 1.0) < 0.5) {
           m_haplotype[loc] = m_haplotype[loc] - 1;

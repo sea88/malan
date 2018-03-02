@@ -244,9 +244,14 @@ void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::Nume
   ped->populate_haplotypes(loci, mut_rates);
 }
 
+//' Unbounded, founders all zero
+//' 
 //' @export
 // [[Rcpp::export]]
-void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, Rcpp::NumericVector mutation_rates, bool progress = true) {
+void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, 
+                                       int loci, 
+                                       Rcpp::NumericVector mutation_rates, 
+                                       bool progress = true) {
   std::vector<Pedigree*> peds = (*pedigrees);
   
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
@@ -271,6 +276,42 @@ void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedi
   }
 }
 
+//' Unbounded, custom founders
+//' 
+//' @export
+// [[Rcpp::export]]
+void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, 
+                                       Rcpp::NumericVector mutation_rates,
+                                       Rcpp::Nullable<Rcpp::Function> get_founder_haplotype = R_NilValue,
+                                       bool progress = true) {
+  std::vector<Pedigree*> peds = (*pedigrees);
+  
+  std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);
+  
+  if (get_founder_haplotype.isNull()) {
+    Rcpp::stop("get_founder_haplotype must not be NULL");
+  }  
+  
+  Rcpp::Function g_founder_hap = Rcpp::as<Rcpp::Function>(get_founder_haplotype);
+
+  size_t N = peds.size();
+  Progress p(N, progress);
+  
+  for (size_t i = 0; i < N; ++i) {
+    peds.at(i)->populate_haplotypes_custom_founders(mut_rates, g_founder_hap);
+    
+     if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
+      Rcpp::stop("Aborted.");
+    }
+    
+    if (progress) {
+      p.increment();
+    }
+  }
+}
+
+//' Bounded, custom founders
+//' 
 //' Populate haplotypes such that they are all on-ladder
 //' 
 //' @param get_founder_haplotype has no default as it is not know in advance how many loci there are and what the ladder is; see \code{\link{generate_get_founder_haplotype}}

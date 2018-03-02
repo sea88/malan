@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{pedigrees_all_populate_haplotypes_ladder_bounded}
 \alias{pedigrees_all_populate_haplotypes_ladder_bounded}
-\title{Populate haplotypes such that they are all on-ladder}
+\title{Bounded, custom founders}
 \usage{
 pedigrees_all_populate_haplotypes_ladder_bounded(pedigrees, mutation_rates,
   ladder_min, ladder_max, get_founder_haplotype = NULL, progress = TRUE)

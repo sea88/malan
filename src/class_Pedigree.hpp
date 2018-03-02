@@ -23,6 +23,7 @@ public:
   Individual* get_root();
   
   void populate_haplotypes(int loci, std::vector<double>& mutation_rates);
+  void populate_haplotypes_custom_founders(std::vector<double>& mutation_rates, Rcpp::Function get_founder_hap);
   void populate_haplotypes_ladder_bounded(std::vector<double>& mutation_rates, std::vector<int>& ladder_min, std::vector<int>& ladder_max, Rcpp::Function get_founder_hap);
 };
 
