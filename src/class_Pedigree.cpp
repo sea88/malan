@@ -95,6 +95,9 @@ void Pedigree::populate_haplotypes_custom_founders(std::vector<double>& mutation
   Individual* root = this->get_root();
   
   std::vector<int> h = Rcpp::as< std::vector<int> >( get_founder_hap() );  
+  
+  //Rcpp::Rcout << "Unbounded: " << std::endl;
+  //Rcpp::print(Rcpp::wrap(h));
 
   // Test that a haplotype of proper length generated  
   if (h.size() != mutation_rates.size()) {
@@ -122,7 +125,10 @@ void Pedigree::populate_haplotypes_ladder_bounded(std::vector<double>& mutation_
   //std::vector<int> h(mutation_rates.size()); // initialises to 0, 0, ..., 0
   
   std::vector<int> h = Rcpp::as< std::vector<int> >( get_founder_hap() );  
-
+  
+  //Rcpp::Rcout << "Bounded: " << std::endl;
+  //Rcpp::print(Rcpp::wrap(h));
+  
   // Test that a haplotype of proper length generated  
   if (h.size() != mutation_rates.size()) {
     Rcpp::stop("get_founder_haplotype generated haplotype with number of loci different from the number of mutation rates specified");
