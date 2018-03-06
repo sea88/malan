@@ -242,7 +242,7 @@ get_nodes_edges <- function(x, ...) {
   return(list(nodes = d_indv, edges = d_edges))
 }
 
-
+#' @importFrom tidygraph as_tbl_graph
 #' @export
 as_tbl_graph.malan_pedigreelist <- function(x, ...) {
   if (!is(x, "malan_pedigreelist")) stop("x must be a malan_pedigreelist object")

@@ -14,6 +14,7 @@ Imports:
     igraph (>= 1.0.1),
     tibble (>= 1.1),
     dplyr (>= 0.7.4),
+    ggraph (>= 1.0.1),
     tidygraph (>= 1.0.0.9999)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress, igraph
 Suggests: knitr, rmarkdown
