@@ -35,6 +35,23 @@ bool pedigree_size_comparator(Pedigree* p1, Pedigree* p2) {
 //' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< std::vector<Pedigree*> > build_pedigrees(Rcpp::XPtr<Population> population, bool progress = true) {
+  std::unordered_map<int, Individual*> pop = *(population->get_population());
+  
+  // Check if peds are already built ->  
+  for (auto it = pop.begin(); it != pop.end(); ++it) {
+    if (it->second == nullptr) {
+      continue;
+    }
+    
+    if (it->second->pedigree_is_set()) {
+      Rcpp::stop("It looks like pedigrees are already built for this population, so will not do it again.");
+    }
+    
+    break;
+  }
+  // <- Check if peds are already built
+  
+  
   //Rcpp::Rcout << "Bulding pedigrees!" << std::endl;
   
   // Construct pedigrees
@@ -47,7 +64,6 @@ Rcpp::XPtr< std::vector<Pedigree*> > build_pedigrees(Rcpp::XPtr<Population> popu
   int pedigree_id = 1;
   Pedigree* ped;
   
-  std::unordered_map<int, Individual*> pop = *(population->get_population());
   int N = pop.size();
   int k = 0;
   Progress p(N, progress);
