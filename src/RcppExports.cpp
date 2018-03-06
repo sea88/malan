@@ -538,6 +538,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_pedigrees_tidy
+Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
+RcppExport SEXP _malan_get_pedigrees_tidy(SEXP pedigreesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_pedigrees_tidy(pedigrees));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_malan_wipe_pedigrees", (DL_FUNC) &_malan_wipe_pedigrees, 1},
@@ -585,6 +596,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_get_haplotypes_in_pedigree", (DL_FUNC) &_malan_get_haplotypes_in_pedigree, 1},
     {"_malan_get_pedigree_edgelist", (DL_FUNC) &_malan_get_pedigree_edgelist, 1},
     {"_malan_get_pedigree_as_graph", (DL_FUNC) &_malan_get_pedigree_as_graph, 1},
+    {"_malan_get_pedigrees_tidy", (DL_FUNC) &_malan_get_pedigrees_tidy, 1},
     {NULL, NULL, 0}
 };
 

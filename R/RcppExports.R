@@ -378,3 +378,9 @@ get_pedigree_as_graph <- function(ped) {
     .Call('_malan_get_pedigree_as_graph', PACKAGE = 'malan', ped)
 }
 
+#' get pedigrees information in tidy format
+#' 
+get_pedigrees_tidy <- function(pedigrees) {
+    .Call('_malan_get_pedigrees_tidy', PACKAGE = 'malan', pedigrees)
+}
+

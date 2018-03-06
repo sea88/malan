@@ -12,7 +12,9 @@ Imports:
     RcppProgress (>= 0.2.1),
     RcppArmadillo (>= 0.7.600.1.0),
     igraph (>= 1.0.1),
-    tibble (>= 1.1)
+    tibble (>= 1.1),
+    dplyr (>= 0.7.4),
+    tidygraph (>= 1.0.0.9999)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress, igraph
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr

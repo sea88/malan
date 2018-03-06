@@ -214,3 +214,44 @@ plot.malan_pedigree <-
   
 
 
+
+
+#' @export
+get_nodes_edges <- function(x, ...) {
+  if (!is(x, "malan_pedigreelist")) stop("x must be a malan_pedigreelist object")
+  
+  ret <- get_pedigrees_tidy(x)
+  
+  d_edges <- dplyr::bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+    tibble(from = ret$edgelists[[i]][, 1], 
+           to = ret$edgelists[[i]][, 2])
+  })) %>%
+  mutate(from = as.character(from),
+         to = as.character(to))
+  #d_edges
+  
+  d_indv <- dplyr::bind_rows(lapply(seq_along(ret$ped_ids), function(i) {
+    tibble(name = ret$pids[[i]], 
+           gens_from_final = ret$generation[[i]], 
+           ped_id = ret$ped_ids[[i]], 
+           haplotype = ret$haplotypes[[i]])
+  })) %>%
+  mutate(name = as.character(name))
+  #d_indv
+      
+  return(list(nodes = d_indv, edges = d_edges))
+}
+
+
+#' @export
+as_tbl_graph.malan_pedigreelist <- function(x, ...) {
+  if (!is(x, "malan_pedigreelist")) stop("x must be a malan_pedigreelist object")
+  
+  VE <- get_nodes_edges(x)
+  
+  g <- tbl_graph(nodes = VE$nodes, edges = VE$edges)
+    
+  return(g)
+}
+
+

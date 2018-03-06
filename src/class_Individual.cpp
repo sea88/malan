@@ -228,8 +228,8 @@ void Individual::haplotype_mutate_ladder_bounded(std::vector<double>& mutation_r
         Rcpp::Rcout << "Locus (0-based): " << loc << std::endl;
         Rcpp::Rcout << "Haplotype " << m_haplotype[loc] << std::endl;
         Rcpp::Rcout << "Ladder min " << ladder_min[loc] << std::endl;
-        Rcpp::print(wrap(m_haplotype));
-        Rcpp::print(wrap(ladder_min));
+        Rcpp::print(Rcpp::wrap(m_haplotype));
+        Rcpp::print(Rcpp::wrap(ladder_min));
         
         throw std::invalid_argument("Haplotype locus lower than ladder minimum");
       }      
@@ -237,8 +237,8 @@ void Individual::haplotype_mutate_ladder_bounded(std::vector<double>& mutation_r
         Rcpp::Rcout << "Locus (0-based): " << loc << std::endl;
         Rcpp::Rcout << "Haplotype " << m_haplotype[loc] << std::endl;
         Rcpp::Rcout << "Ladder max " << ladder_max[loc] << std::endl;
-        Rcpp::print(wrap(m_haplotype));
-        Rcpp::print(wrap(ladder_max));
+        Rcpp::print(Rcpp::wrap(m_haplotype));
+        Rcpp::print(Rcpp::wrap(ladder_max));
         
         throw std::invalid_argument("Haplotype locus higher than ladder minimum");
       }

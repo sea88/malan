@@ -159,3 +159,70 @@ Rcpp::List get_pedigree_as_graph(Rcpp::XPtr<Pedigree> ped) {
   return ret;
 }
 
+
+
+
+//' get pedigrees information in tidy format
+//' 
+// [[Rcpp::export]]
+Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {  
+  std::vector<Pedigree*>* peds = pedigrees;
+  
+  Rcpp::List ret_ped_ids;
+  Rcpp::List ret_edgelists;
+  Rcpp::List ret_haplotypes;
+  Rcpp::List ret_pids;
+  Rcpp::List ret_generation;  
+  
+  for (auto it = peds->begin(); it != peds->end(); ++it) {
+    Pedigree* ped = *it;
+
+    ret_ped_ids.push_back(ped->get_id());    
+    
+    std::vector< std::pair<Individual*, Individual*>* >* rels = ped->get_relations();
+    
+    Rcpp::IntegerMatrix edgelist(rels->size(), 2);
+    int i = 0;
+    
+    for (auto pair: *rels) {
+      edgelist(i, 0) = pair->first->get_pid();
+      edgelist(i, 1) = pair->second->get_pid();
+      ++i;
+    }
+    
+    ret_edgelists.push_back(edgelist);
+
+    
+    std::vector<Individual*>* inds = ped->get_all_individuals();
+    
+    size_t N = inds->size();
+    Rcpp::List haps(N);
+    Rcpp::IntegerVector pids(N);
+    Rcpp::IntegerVector generation(N);
+    
+    for (size_t i = 0; i < N; ++i) {
+      Individual* indv = inds->at(i);
+      haps(i) = indv->get_haplotype();
+      pids(i) = indv->get_pid();
+      //generation(i) = indv->get_generations_from_final();
+      generation(i) = indv->get_generation();
+    }
+    
+    ret_haplotypes.push_back(haps);
+    ret_pids.push_back(pids);
+    ret_generation.push_back(generation);
+  }
+  
+  Rcpp::List ret;
+  
+  ret["ped_ids"] = ret_ped_ids;
+  ret["edgelists"] = ret_edgelists;
+  ret["haplotypes"] = ret_haplotypes;
+  ret["pids"] = ret_pids;
+  ret["generations_from_final"] = ret_generation;
+  
+  return ret;
+}
+
+
+
