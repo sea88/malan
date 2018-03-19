@@ -22,4 +22,5 @@ LinkingTo: Rcpp, RcppArmadillo, RcppProgress, igraph
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 SystemRequirements: C++11
+LazyData: true
 RoxygenNote: 6.0.1
