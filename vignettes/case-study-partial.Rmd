@@ -50,7 +50,7 @@ sim_res_growth <- sample_geneology_varying_size(
   # VRS = 0.2:
   enable_gamma_variance_extension = TRUE,
   gamma_parameter_shape = 5,
-  gamma_parameter_scale = 5,
+  gamma_parameter_scale = 1/5,
   
   # Live population: 
   # 3 generations, i.e. 2 extra in addition to final generation

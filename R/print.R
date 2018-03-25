@@ -44,7 +44,7 @@ stop_invalid_id <- function(id) {
     stop("Invalid id: ", id)
   }
 }
-  
+
 #' @export
 `[[.malan_pedigreelist` <- function(x, ...) {
   i <- ..1
@@ -105,7 +105,7 @@ pedigree_as_igraph <-
     return(g)
   }
 
-  
+ 
 #' @export  
 #plot_pedigrees <-
 plot.malan_pedigreelist <-
@@ -254,5 +254,4 @@ as_tbl_graph.malan_pedigreelist <- function(x, ...) {
     
   return(g)
 }
-
 
