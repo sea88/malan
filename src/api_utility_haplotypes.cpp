@@ -36,6 +36,14 @@ Rcpp::List mixture_info_by_individuals(const Rcpp::List individuals, Rcpp::XPtr<
   if (H2.size() != loci) {
     Rcpp::stop("H2.size() != H1.size()");
   }
+  
+  size_t loci_not_matching = 0;
+  
+  for (size_t locus = 0; locus < loci; ++locus) {
+    if (H1[locus] != H2[locus]) {
+      loci_not_matching += 1;
+    }
+  }
 
   for (size_t i = 0; i < N; ++i) {
     Rcpp::XPtr<Individual> indv = individuals[i];
@@ -80,8 +88,8 @@ Rcpp::List mixture_info_by_individuals(const Rcpp::List individuals, Rcpp::XPtr<
       
       Rcpp::List r = Rcpp::List::create(
         Rcpp::Named("indv_pid") = pid,
-        Rcpp::Named("pid_donor1") = donor1->get_pid(),
-        Rcpp::Named("pid_donor2") = donor2->get_pid(),
+        //Rcpp::Named("pid_donor1") = donor1->get_pid(),
+        //Rcpp::Named("pid_donor2") = donor2->get_pid(),
         Rcpp::Named("dist_donor1") = dist_donor1,
         Rcpp::Named("dist_donor2") = dist_donor2);   
         
@@ -111,6 +119,9 @@ Rcpp::List mixture_info_by_individuals(const Rcpp::List individuals, Rcpp::XPtr<
   res["donor2_family_info"] = get_family_info(donor2);
   res["donor1_profile"] = H1;
   res["donor2_profile"] = H2;
+  res["donor1_pid"] = donor1->get_pid();
+  res["donor2_pid"] = donor2->get_pid();
+  res["loci_not_matching"] = loci_not_matching;
 
   return res;
 }
