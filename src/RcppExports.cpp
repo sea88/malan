@@ -78,6 +78,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mixture_info_by_individuals_3pers
+Rcpp::List mixture_info_by_individuals_3pers(const Rcpp::List individuals, Rcpp::XPtr<Individual>& donor1, Rcpp::XPtr<Individual>& donor2, Rcpp::XPtr<Individual>& donor3);
+RcppExport SEXP _malan_mixture_info_by_individuals_3pers(SEXP individualsSEXP, SEXP donor1SEXP, SEXP donor2SEXP, SEXP donor3SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual>& >::type donor1(donor1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual>& >::type donor2(donor2SEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Individual>& >::type donor3(donor3SEXP);
+    rcpp_result_gen = Rcpp::wrap(mixture_info_by_individuals_3pers(individuals, donor1, donor2, donor3));
+    return rcpp_result_gen;
+END_RCPP
+}
 // indices_in_mixture_by_haplotype_matrix
 Rcpp::List indices_in_mixture_by_haplotype_matrix(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2);
 RcppExport SEXP _malan_indices_in_mixture_by_haplotype_matrix(SEXP haplotypesSEXP, SEXP H1SEXP, SEXP H2SEXP) {
@@ -556,6 +570,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_sample_geneology", (DL_FUNC) &_malan_sample_geneology, 9},
     {"_malan_sample_geneology_varying_size", (DL_FUNC) &_malan_sample_geneology_varying_size, 7},
     {"_malan_mixture_info_by_individuals", (DL_FUNC) &_malan_mixture_info_by_individuals, 3},
+    {"_malan_mixture_info_by_individuals_3pers", (DL_FUNC) &_malan_mixture_info_by_individuals_3pers, 4},
     {"_malan_indices_in_mixture_by_haplotype_matrix", (DL_FUNC) &_malan_indices_in_mixture_by_haplotype_matrix, 3},
     {"_malan_pedigree_get_haplotypes_pids", (DL_FUNC) &_malan_pedigree_get_haplotypes_pids, 2},
     {"_malan_individuals_get_haplotypes", (DL_FUNC) &_malan_individuals_get_haplotypes, 1},

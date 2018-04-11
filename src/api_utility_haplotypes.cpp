@@ -126,6 +126,151 @@ Rcpp::List mixture_info_by_individuals(const Rcpp::List individuals, Rcpp::XPtr<
   return res;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//' New, implicit haplotypes by individuals
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::List mixture_info_by_individuals_3pers(const Rcpp::List individuals, 
+    Rcpp::XPtr<Individual>& donor1, 
+    Rcpp::XPtr<Individual>& donor2, 
+    Rcpp::XPtr<Individual>& donor3) { 
+    
+  size_t N = individuals.size();
+  
+  Rcpp::List res;
+  
+  if (N == 0) {
+    return res;
+  }
+
+  // mainly count wanted, but indices are good for debugging
+  Rcpp::IntegerVector res_comp_with_mixture;
+  Rcpp::IntegerVector res_match_donor1;
+  Rcpp::IntegerVector res_match_donor2;
+  Rcpp::IntegerVector res_match_donor3;
+  Rcpp::IntegerVector res_others_included;
+  
+  std::vector<int> H1 = donor1->get_haplotype();
+  std::vector<int> H2 = donor2->get_haplotype();
+  std::vector<int> H3 = donor3->get_haplotype();
+  
+  size_t loci = H1.size();
+  
+  if (H2.size() != loci) {
+    Rcpp::stop("H2.size() != H1.size()");
+  }
+
+  if (H3.size() != loci) {
+    Rcpp::stop("H3.size() != H1.size()");
+  }
+
+  for (size_t i = 0; i < N; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    std::vector<int> indv_h = indv->get_haplotype();
+    
+    if (indv_h.size() != loci) {
+      Rcpp::stop("indv_h.size() != H1.size()");
+    }
+    
+    bool in_mixture = true;
+    bool match_H1 = true; // faster than Rcpp equal/all sugar 
+    bool match_H2 = true;
+    bool match_H3 = true;
+    
+    for (size_t locus = 0; locus < loci; ++locus) {
+      if (in_mixture && 
+            (indv_h[locus] != H1[locus]) && 
+            (indv_h[locus] != H2[locus]) && 
+            (indv_h[locus] != H3[locus])) {
+        in_mixture = false;
+      }
+      
+      if (match_H1 && (indv_h[locus] != H1[locus])) {
+        match_H1 = false;
+      }
+      
+      if (match_H2 && (indv_h[locus] != H2[locus])) {
+        match_H2 = false;
+      }
+      
+      if (match_H3 && (indv_h[locus] != H3[locus])) {
+        match_H3 = false;
+      }
+      
+      // if neither have a chance, just stop
+      if (!in_mixture && !match_H1 && !match_H2 && !match_H3) {
+        break;
+      }
+    }
+    
+    int pid = indv->get_pid();
+    
+    if (in_mixture) {
+      res_comp_with_mixture.push_back(pid); // R indexing
+            
+      if (match_H1) {
+        res_match_donor1.push_back(pid);
+      }
+      
+      if (match_H2) {
+        res_match_donor2.push_back(pid);
+      }
+      
+      if (match_H3) {
+        res_match_donor3.push_back(pid);
+      }
+      
+      if (!match_H1 && !match_H2 && !match_H3) {
+        res_others_included.push_back(pid);
+      }
+    }    
+  }
+  
+  res["pids_included_in_mixture"] = res_comp_with_mixture;
+  res["pids_matching_donor1"] = res_match_donor1;
+  res["pids_matching_donor2"] = res_match_donor2;
+  res["pids_matching_donor3"] = res_match_donor3;
+  res["pids_others_included"] = res_others_included;
+  res["donor1_profile"] = H1;
+  res["donor2_profile"] = H2;
+  res["donor3_profile"] = H3;
+  res["donor1_pid"] = donor1->get_pid();
+  res["donor2_pid"] = donor2->get_pid();
+  res["donor3_pid"] = donor3->get_pid();
+
+  return res;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //' Old, explicit IntegerMatrix haplotypes
 //' 
 //' @export

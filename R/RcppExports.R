@@ -141,7 +141,7 @@ sample_geneology <- function(population_size, generations, extra_generations_ful
 #' @import RcppProgress
 #' @import RcppArmadillo
 #' @export
-sample_geneology_varying_size <- function(population_sizes, extra_generations_full = 0L, gamma_parameter_shape = 7, gamma_parameter_scale = 7, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L) {
+sample_geneology_varying_size <- function(population_sizes, extra_generations_full = 0L, gamma_parameter_shape = 5.0, gamma_parameter_scale = 1.0/5.0, enable_gamma_variance_extension = FALSE, progress = TRUE, individuals_generations_return = 2L) {
     .Call('_malan_sample_geneology_varying_size', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
 }
 
@@ -150,6 +150,13 @@ sample_geneology_varying_size <- function(population_sizes, extra_generations_fu
 #' @export
 mixture_info_by_individuals <- function(individuals, donor1, donor2) {
     .Call('_malan_mixture_info_by_individuals', PACKAGE = 'malan', individuals, donor1, donor2)
+}
+
+#' New, implicit haplotypes by individuals
+#' 
+#' @export
+mixture_info_by_individuals_3pers <- function(individuals, donor1, donor2, donor3) {
+    .Call('_malan_mixture_info_by_individuals_3pers', PACKAGE = 'malan', individuals, donor1, donor2, donor3)
 }
 
 #' Old, explicit IntegerMatrix haplotypes

@@ -69,7 +69,7 @@ using namespace Rcpp;
 List sample_geneology_varying_size(
   IntegerVector population_sizes,
   int extra_generations_full = 0,  
-  double gamma_parameter_shape = 7, double gamma_parameter_scale = 7, 
+  double gamma_parameter_shape = 5.0, double gamma_parameter_scale = 1.0/5.0, 
   bool enable_gamma_variance_extension = false,
   bool progress = true, 
   int individuals_generations_return = 2) {
