@@ -281,7 +281,7 @@ Rcpp::List pedigree_get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp:
 
   return haps;
 }
- 
+
 //' Get haplotype matrix from list of individuals
 //' @export
 // [[Rcpp::export]]
@@ -313,6 +313,51 @@ Rcpp::IntegerMatrix individuals_get_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individu
     }
     
     Rcpp::IntegerVector h = Rcpp::wrap(hap);
+    haps(i, Rcpp::_) = h;
+  }
+
+  return haps;
+}
+
+//' Get haplotype matrix from list of individual pids
+//'
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix individual_pids_get_haplotypes(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) {
+  size_t n = pids.size();
+ 
+  if (n <= 0) {
+    Rcpp::IntegerMatrix empty_haps(0, 0);
+    return empty_haps;
+  }
+ 
+  Individual* ind = population->get_individual(pids[0]);
+  std::vector<int> hap = ind->get_haplotype();
+  size_t loci = hap.size();
+
+  if (loci <= 0) {
+    Rcpp::stop("Expected > 0 loci");
+    Rcpp::IntegerMatrix empty_haps(0, 0);
+    return empty_haps;
+  }
+
+  Rcpp::IntegerMatrix haps(n, loci);
+  
+  Rcpp::IntegerVector h = Rcpp::wrap(hap);
+  haps(0, Rcpp::_) = h;
+
+  // i = 0 already taken above
+  for (size_t i = 1; i < n; ++i) {
+    ind = population->get_individual(pids[i]);
+    hap = ind->get_haplotype();
+
+    if (hap.size() != loci) {
+      Rcpp::stop("Expected > 0 loci for all haplotypes");
+      Rcpp::IntegerMatrix empty_haps(0, 0);
+      return empty_haps;
+    }
+    
+    h = Rcpp::wrap(hap);
     haps(i, Rcpp::_) = h;
   }
 

@@ -115,6 +115,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// individual_pids_get_haplotypes
+Rcpp::IntegerMatrix individual_pids_get_haplotypes(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids);
+RcppExport SEXP _malan_individual_pids_get_haplotypes(SEXP populationSEXP, SEXP pidsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pids(pidsSEXP);
+    rcpp_result_gen = Rcpp::wrap(individual_pids_get_haplotypes(population, pids));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigree_populate_haplotypes
 void pedigree_populate_haplotypes(Rcpp::XPtr<Pedigree> ped, int loci, Rcpp::NumericVector mutation_rates);
 RcppExport SEXP _malan_pedigree_populate_haplotypes(SEXP pedSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP) {
@@ -560,6 +572,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_mixture_info_by_individuals_3pers", (DL_FUNC) &_malan_mixture_info_by_individuals_3pers, 4},
     {"_malan_pedigree_get_haplotypes_pids", (DL_FUNC) &_malan_pedigree_get_haplotypes_pids, 2},
     {"_malan_individuals_get_haplotypes", (DL_FUNC) &_malan_individuals_get_haplotypes, 1},
+    {"_malan_individual_pids_get_haplotypes", (DL_FUNC) &_malan_individual_pids_get_haplotypes, 2},
     {"_malan_pedigree_populate_haplotypes", (DL_FUNC) &_malan_pedigree_populate_haplotypes, 3},
     {"_malan_pedigrees_all_populate_haplotypes", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes, 4},
     {"_malan_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_custom_founders, 4},

@@ -182,6 +182,13 @@ individuals_get_haplotypes <- function(individuals) {
     .Call('_malan_individuals_get_haplotypes', PACKAGE = 'malan', individuals)
 }
 
+#' Get haplotype matrix from list of individual pids
+#'
+#' @export
+individual_pids_get_haplotypes <- function(population, pids) {
+    .Call('_malan_individual_pids_get_haplotypes', PACKAGE = 'malan', population, pids)
+}
+
 #' @export
 pedigree_populate_haplotypes <- function(ped, loci, mutation_rates) {
     invisible(.Call('_malan_pedigree_populate_haplotypes', PACKAGE = 'malan', ped, loci, mutation_rates))
