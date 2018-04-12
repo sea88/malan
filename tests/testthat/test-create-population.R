@@ -104,3 +104,5 @@ test_that("pedigrees_all_populate_haplotypes_ladder_bounded haplotypes works", {
   #hap_from_indv
   expect_equal(haps_from_ped, hap_from_indv)
 })
+
+
