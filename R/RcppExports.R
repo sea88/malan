@@ -322,6 +322,13 @@ pop_size <- function(population) {
     .Call('_malan_pop_size', PACKAGE = 'malan', population)
 }
 
+#' Get all individuals in population
+#'
+#' @export
+get_individuals <- function(population) {
+    .Call('_malan_get_individuals', PACKAGE = 'malan', population)
+}
+
 #' @export
 meioses_generation_distribution <- function(individual, generation_upper_bound_in_result = -1L) {
     .Call('_malan_meioses_generation_distribution', PACKAGE = 'malan', individual, generation_upper_bound_in_result)
@@ -402,5 +409,12 @@ get_pedigree_as_graph <- function(ped) {
 #' 
 get_pedigrees_tidy <- function(pedigrees) {
     .Call('_malan_get_pedigrees_tidy', PACKAGE = 'malan', pedigrees)
+}
+
+#' Generate test population
+#' 
+#' @return An external pointer to the population.
+test_create_population <- function() {
+    .Call('_malan_test_create_population', PACKAGE = 'malan')
 }
 

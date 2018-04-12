@@ -18,6 +18,30 @@ int pop_size(Rcpp::XPtr<Population> population) {
 }
 
 
+//' Get all individuals in population
+//'
+//' @export
+// [[Rcpp::export]]
+Rcpp::ListOf< Rcpp::XPtr<Individual> > get_individuals(Rcpp::XPtr<Population> population) {     
+  std::unordered_map<int, Individual*>* pop = population->get_population();
+  int n = pop->size();
+  Rcpp::List individuals(n);
+  int i = 0;
+  
+  for (auto dest : *pop) {
+    Rcpp::XPtr<Individual> indv_xptr(dest.second, RCPP_XPTR_2ND_ARG);
+    individuals[i] = indv_xptr;
+    
+    if (i >= n) {
+      Rcpp::stop("i > n");
+    }
+    
+    i+= 1;
+  }  
+
+  return individuals;
+}
+
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound_in_result = -1) {  

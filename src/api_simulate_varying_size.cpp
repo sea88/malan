@@ -206,9 +206,9 @@ List sample_geneology_varying_size(
               individuals_generations_return, fathers_generation, population_map, 
               &new_founders_left, last_k_generations_individuals);
       }
-      
-      children_generation[i]->set_father(fathers_generation[father_i]);
+            
       fathers_generation[father_i]->add_child(children_generation[i]);
+      //children_generation[i]->set_father(fathers_generation[father_i]);
     }
     
     //Rcpp::Rcout << "vary 8-" << generation << std::endl;

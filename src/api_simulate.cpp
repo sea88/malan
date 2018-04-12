@@ -241,9 +241,9 @@ List sample_geneology(size_t population_size,
         father_pids_tmp_vec[i] = fathers_generation[father_i]->get_pid();
         father_indices_tmp_vec[i] = father_i + 1; // 1 to get R's 1-indexed
       }      
-      
-      children_generation[i]->set_father(fathers_generation[father_i]);
+            
       fathers_generation[father_i]->add_child(children_generation[i]);
+      //children_generation[i]->set_father(fathers_generation[father_i]);
     }
     
     // create additional fathers (without children) if needed:

@@ -457,7 +457,15 @@ void pedigrees_all_populate_haplotypes_ladder_bounded(Rcpp::XPtr< std::vector<Pe
                                                       Rcpp::Nullable<Rcpp::Function> get_founder_haplotype = R_NilValue,
                                                       bool progress = true) {
   //https://stackoverflow.com/questions/36992627/can-rcppfunction-be-null
+
+  if (ladder_min.size() != ladder_max.size()) {
+    Rcpp::stop("ladder_min and ladder_max must have same length");
+  }
   
+  if (any((ladder_max - ladder_min) <= 0).is_true()) {
+    Rcpp::stop("ladder_max must be at least 1 greater than ladder_min at all loci");
+  }
+    
   std::vector<Pedigree*> peds = (*pedigrees);
 
   std::vector<double> mut_rates = Rcpp::as< std::vector<double> >(mutation_rates);

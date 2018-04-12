@@ -30,7 +30,7 @@ public:
   int get_pid() const;
   int get_generation() const;
   void add_child(Individual* child);
-  void set_father(Individual* i);
+  //void set_father(Individual* i);
   Individual* get_father() const;
   std::vector<Individual*>* get_children() const;
   int get_children_count() const;

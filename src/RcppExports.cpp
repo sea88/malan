@@ -405,6 +405,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_individuals
+Rcpp::ListOf< Rcpp::XPtr<Individual> > get_individuals(Rcpp::XPtr<Population> population);
+RcppExport SEXP _malan_get_individuals(SEXP populationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Population> >::type population(populationSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_individuals(population));
+    return rcpp_result_gen;
+END_RCPP
+}
 // meioses_generation_distribution
 Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound_in_result);
 RcppExport SEXP _malan_meioses_generation_distribution(SEXP individualSEXP, SEXP generation_upper_bound_in_resultSEXP) {
@@ -562,6 +573,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_create_population
+Rcpp::XPtr<Population> test_create_population();
+RcppExport SEXP _malan_test_create_population() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_create_population());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_malan_wipe_pedigrees", (DL_FUNC) &_malan_wipe_pedigrees, 1},
@@ -597,6 +618,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_count_uncles", (DL_FUNC) &_malan_count_uncles, 1},
     {"_malan_malan_test", (DL_FUNC) &_malan_malan_test, 0},
     {"_malan_pop_size", (DL_FUNC) &_malan_pop_size, 1},
+    {"_malan_get_individuals", (DL_FUNC) &_malan_get_individuals, 1},
     {"_malan_meioses_generation_distribution", (DL_FUNC) &_malan_meioses_generation_distribution, 2},
     {"_malan_population_size_generation", (DL_FUNC) &_malan_population_size_generation, 2},
     {"_malan_pedigree_size_generation", (DL_FUNC) &_malan_pedigree_size_generation, 2},
@@ -611,6 +633,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_get_pedigree_edgelist", (DL_FUNC) &_malan_get_pedigree_edgelist, 1},
     {"_malan_get_pedigree_as_graph", (DL_FUNC) &_malan_get_pedigree_as_graph, 1},
     {"_malan_get_pedigrees_tidy", (DL_FUNC) &_malan_get_pedigrees_tidy, 1},
+    {"_malan_test_create_population", (DL_FUNC) &_malan_test_create_population, 0},
     {NULL, NULL, 0}
 };
 
