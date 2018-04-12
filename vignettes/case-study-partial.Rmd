@@ -13,10 +13,10 @@ vignette: >
 knitr::opts_chunk$set(fig.width = 7)
 ```
 
-First, be sure to use the development version of the library (`ext-applied` branch):
+First, be sure to use the newest version of the library:
 
 ```{r}
-#devtools::install_github('mikldk/malan', ref = 'ext-applied')
+#devtools::install_github('mikldk/malan')
 ```
 
 Then, the library et al. are loaded:
@@ -100,9 +100,11 @@ print(p)
 This is rather difficult to make any sense of. Let's instead plot only pedigree 2:
 
 ```{r}
+PED_ID <- 1
+
 g_ped2 <- g %>% 
   activate(nodes) %>% 
-  filter(ped_id == 2)
+  filter(ped_id == PED_ID)
 
 p <- ggraph(g_ped2, layout = 'tree') +
     geom_edge_link() +
@@ -188,7 +190,7 @@ We can now plot pedigrees with haplotype information (note that `as_tbl_graph` n
 ```{r}
 g_ped2 <- as_tbl_graph(pedigrees) %>% 
   activate(nodes) %>% 
-  filter(ped_id == 2) %>%
+  filter(ped_id == PED_ID) %>%
   group_by(name) %>% 
   mutate(haplotype_str = paste0(haplotype[[1]], collapse = ";"))
   #mutate(haplotype_str = map(haplotype, paste0, collapse = ";")[[1]])
