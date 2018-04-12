@@ -1,4 +1,4 @@
-context("test-create-population.R")
+context("Pedigrees and haplotypes")
 
 test_pop <- test_create_population()
 

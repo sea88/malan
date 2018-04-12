@@ -23,4 +23,5 @@ Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 SystemRequirements: C++11
 LazyData: true
+Roxygen: list(roclets = c("rd", "collate", "namespace"))
 RoxygenNote: 6.0.1

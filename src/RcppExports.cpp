@@ -7,16 +7,6 @@
 
 using namespace Rcpp;
 
-// wipe_pedigrees
-void wipe_pedigrees(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees);
-RcppExport SEXP _malan_wipe_pedigrees(SEXP pedigreesSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
-    wipe_pedigrees(pedigrees);
-    return R_NilValue;
-END_RCPP
-}
 // build_pedigrees
 Rcpp::XPtr< std::vector<Pedigree*> > build_pedigrees(Rcpp::XPtr<Population> population, bool progress);
 RcppExport SEXP _malan_build_pedigrees(SEXP populationSEXP, SEXP progressSEXP) {
@@ -585,7 +575,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_malan_wipe_pedigrees", (DL_FUNC) &_malan_wipe_pedigrees, 1},
     {"_malan_build_pedigrees", (DL_FUNC) &_malan_build_pedigrees, 2},
     {"_malan_sample_geneology", (DL_FUNC) &_malan_sample_geneology, 9},
     {"_malan_sample_geneology_varying_size", (DL_FUNC) &_malan_sample_geneology_varying_size, 7},
