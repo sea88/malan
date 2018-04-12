@@ -8,7 +8,14 @@
 #include "malan_types.hpp"
 #include "api_utility_individual.hpp"
 
-//' New, implicit haplotypes by individuals
+//' Mixture information about 2 persons' mixture of donor1 and donor2.
+//' 
+//' @param individuals Individuals to consider as possible contributors and thereby get information from.
+//' @param donor1 Contributor1/donor 1
+//' @param donor2 Contributor2/donor 2
+//' @return A list with mixture information about the mixture \code{donor1}+\code{donor2}+\code{donor3} from \code{individuals}
+//' 
+//' @seealso \code{\link{mixture_info_by_individuals_3pers}}
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -138,8 +145,12 @@ Rcpp::List mixture_info_by_individuals(const Rcpp::List individuals, Rcpp::XPtr<
 
 
 
-
-//' New, implicit haplotypes by individuals
+//' Mixture information about 3 persons' mixture of donor1, donor2 and donor3.
+//' 
+//' @inherit mixture_info_by_individuals
+//' @param donor3 Contributor2/donor 3
+//' 
+//' @seealso \code{\link{mixture_info_by_individuals}}
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -257,86 +268,6 @@ Rcpp::List mixture_info_by_individuals_3pers(const Rcpp::List individuals,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//' Old, explicit IntegerMatrix haplotypes
-//' 
-//' @export
-// [[Rcpp::export]]
-Rcpp::List indices_in_mixture_by_haplotype_matrix(Rcpp::IntegerMatrix haplotypes, Rcpp::IntegerVector H1, Rcpp::IntegerVector H2) { 
-  size_t N = haplotypes.nrow();
-  
-  Rcpp::List res;
-  
-  if (N == 0) {
-    return res;
-  }
-
-  // mainly count wanted, but indices are good for debuggin
-  Rcpp::IntegerVector res_in_mixture;
-  Rcpp::IntegerVector res_H1;
-  Rcpp::IntegerVector res_H2;
-  
-  size_t loci = haplotypes.ncol();
-
-  for (size_t i = 0; i < N; ++i) {
-    Rcpp::IntegerVector h = haplotypes(i, Rcpp::_);
-    
-    bool in_mixture = true;
-    bool match_H1 = true; // faster than Rcpp equal/all sugar 
-    bool match_H2 = true;
-    
-    for (size_t locus = 0; locus < loci; ++locus) {
-      if (in_mixture && (h[locus] != H1[locus]) && (h[locus] != H2[locus])) {
-        in_mixture = false;
-      }
-      
-      if (match_H1 && (h[locus] != H1[locus])) {
-        match_H1 = false;
-      }
-      
-      if (match_H2 && (h[locus] != H2[locus])) {
-        match_H2 = false;
-      }
-      
-      // if neither have a chance, just stop
-      if (!in_mixture && !match_H1 && !match_H2) {
-        break;
-      }
-    }
-    
-    if (in_mixture) {
-      res_in_mixture.push_back(i + 1); // R indexing
-    }
-    
-    if (match_H1) {
-      res_H1.push_back(i + 1); // R indexing
-    }
-    
-    if (match_H2) {
-      res_H2.push_back(i + 1); // R indexing
-    }
-  }
-  
-  res["in_mixture"] = res_in_mixture;
-  res["match_H1"] = res_H1;
-  res["match_H2"] = res_H2;
-
-  return res;
-}
-
 //' @export
 // [[Rcpp::export]]
 Rcpp::List pedigree_get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) {  
@@ -350,7 +281,8 @@ Rcpp::List pedigree_get_haplotypes_pids(Rcpp::XPtr<Population> population, Rcpp:
 
   return haps;
 }
- 
+
+//' Get haplotype matrix from list of individuals
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerMatrix individuals_get_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {   
@@ -381,6 +313,51 @@ Rcpp::IntegerMatrix individuals_get_haplotypes(Rcpp::ListOf< Rcpp::XPtr<Individu
     }
     
     Rcpp::IntegerVector h = Rcpp::wrap(hap);
+    haps(i, Rcpp::_) = h;
+  }
+
+  return haps;
+}
+
+//' Get haplotype matrix from list of individual pids
+//'
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix individual_pids_get_haplotypes(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) {
+  size_t n = pids.size();
+ 
+  if (n <= 0) {
+    Rcpp::IntegerMatrix empty_haps(0, 0);
+    return empty_haps;
+  }
+ 
+  Individual* ind = population->get_individual(pids[0]);
+  std::vector<int> hap = ind->get_haplotype();
+  size_t loci = hap.size();
+
+  if (loci <= 0) {
+    Rcpp::stop("Expected > 0 loci");
+    Rcpp::IntegerMatrix empty_haps(0, 0);
+    return empty_haps;
+  }
+
+  Rcpp::IntegerMatrix haps(n, loci);
+  
+  Rcpp::IntegerVector h = Rcpp::wrap(hap);
+  haps(0, Rcpp::_) = h;
+
+  // i = 0 already taken above
+  for (size_t i = 1; i < n; ++i) {
+    ind = population->get_individual(pids[i]);
+    hap = ind->get_haplotype();
+
+    if (hap.size() != loci) {
+      Rcpp::stop("Expected > 0 loci for all haplotypes");
+      Rcpp::IntegerMatrix empty_haps(0, 0);
+      return empty_haps;
+    }
+    
+    h = Rcpp::wrap(hap);
     haps(i, Rcpp::_) = h;
   }
 
