@@ -279,8 +279,10 @@ Draw true contributors:
 ```{r}
 set.seed(100)
 U_indices <- sample.int(n = length(live_individuals), size = 2, replace = FALSE)
-H1 <- get_haplotype(live_individuals[[U_indices[1]]])
-H2 <- get_haplotype(live_individuals[[U_indices[2]]])
+U1 <- live_individuals[[U_indices[1]]]
+U2 <- live_individuals[[U_indices[2]]]
+H1 <- get_haplotype(U1)
+H2 <- get_haplotype(U2)
 ```
 
 View haplotypes:
@@ -292,35 +294,47 @@ rbind(H1, H2)
 Now, find those haplotype in live individuals (those haplotypes are in `haps` from before) that are included in (or compatible with) the mixture:
 
 ```{r}
-mixres <- indices_in_mixture_by_haplotype_matrix(haplotypes = haps, H1 = H1, H2 = H2)
-mixres
+#mixres <- indices_in_mixture_by_haplotype_matrix(haplotypes = haps, H1 = H1, H2 = H2)
+mixres <- mixture_info_by_individuals(live_individuals, U1, U2)
+str(mixres, 1)
 ```
 
 Compare with matches:
 
 ```{r}
-length(mixres$match_H1)
+length(mixres$pids_matching_donor1)
 count_haplotype_occurrences_individuals(individuals = live_individuals, haplotype = H1)
 
-length(mixres$match_H2)
+length(mixres$pids_matching_donor2)
 count_haplotype_occurrences_individuals(individuals = live_individuals, haplotype = H2)
 ```
 
 In mixture that are not H1 and not H2:
 ```{r}
-H1_or_H2_hap_indices <- c(mixres$match_H1, mixres$match_H2)
-others_indices <- setdiff(mixres$in_mixture, H1_or_H2_hap_indices)
-length(others_indices)
+length(mixres$pids_others_included)
 ```
 
-Inspect these these (only unique ones):
+Inspect these (only unique ones):
 
 ```{r}
-others_haps <- haps[others_indices, ]
-others_haps[!duplicated(others_haps), ]
+others_indv <- lapply(mixres$pids_others_included, function(pid) get_individual(sim_res$population, pid))
+others_haps <- individuals_get_haplotypes(individuals = others_indv)
+others_haps <- others_haps[!duplicated(others_haps), ]
+others_haps
 ```
 
-Compared with true contributors:
+And get their population counts:
+
+```{r}
+others_haps_counts <- unlist(lapply(seq_len(nrow(others_haps)), function(hap_i) {
+            count_haplotype_occurrences_individuals(individuals = live_individuals, 
+                                                    haplotype = others_haps[hap_i, ])
+          }))
+sum(others_haps_counts)
+length(mixres$pids_others_included)
+```
+
+Compare with profiles of true contributors:
 
 ```{r}
 rbind(H1, H2)

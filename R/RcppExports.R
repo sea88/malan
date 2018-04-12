@@ -145,25 +145,30 @@ sample_geneology_varying_size <- function(population_sizes, extra_generations_fu
     .Call('_malan_sample_geneology_varying_size', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
 }
 
-#' New, implicit haplotypes by individuals
+#' Mixture information about 2 persons' mixture of donor1 and donor2.
+#' 
+#' @param individuals Individuals to consider as possible contributors and thereby get information from.
+#' @param donor1 Contributor1/donor 1
+#' @param donor2 Contributor2/donor 2
+#' @return A list with mixture information about the mixture \code{donor1}+\code{donor2}+\code{donor3} from \code{individuals}
+#' 
+#' @seealso \code{\link{mixture_info_by_individuals_3pers}}
 #' 
 #' @export
 mixture_info_by_individuals <- function(individuals, donor1, donor2) {
     .Call('_malan_mixture_info_by_individuals', PACKAGE = 'malan', individuals, donor1, donor2)
 }
 
-#' New, implicit haplotypes by individuals
+#' Mixture information about 3 persons' mixture of donor1, donor2 and donor3.
+#' 
+#' @inherit mixture_info_by_individuals
+#' @param donor3 Contributor2/donor 3
+#' 
+#' @seealso \code{\link{mixture_info_by_individuals}}
 #' 
 #' @export
 mixture_info_by_individuals_3pers <- function(individuals, donor1, donor2, donor3) {
     .Call('_malan_mixture_info_by_individuals_3pers', PACKAGE = 'malan', individuals, donor1, donor2, donor3)
-}
-
-#' Old, explicit IntegerMatrix haplotypes
-#' 
-#' @export
-indices_in_mixture_by_haplotype_matrix <- function(haplotypes, H1, H2) {
-    .Call('_malan_indices_in_mixture_by_haplotype_matrix', PACKAGE = 'malan', haplotypes, H1, H2)
 }
 
 #' @export
@@ -171,6 +176,7 @@ pedigree_get_haplotypes_pids <- function(population, pids) {
     .Call('_malan_pedigree_get_haplotypes_pids', PACKAGE = 'malan', population, pids)
 }
 
+#' Get haplotype matrix from list of individuals
 #' @export
 individuals_get_haplotypes <- function(individuals) {
     .Call('_malan_individuals_get_haplotypes', PACKAGE = 'malan', individuals)

@@ -2,10 +2,23 @@
 % Please edit documentation in R/RcppExports.R
 \name{mixture_info_by_individuals}
 \alias{mixture_info_by_individuals}
-\title{New, implicit haplotypes by individuals}
+\title{Mixture information about 2 persons' mixture of donor1 and donor2.}
 \usage{
 mixture_info_by_individuals(individuals, donor1, donor2)
 }
+\arguments{
+\item{individuals}{Individuals to consider as possible contributors and thereby get information from.}
+
+\item{donor1}{Contributor1/donor 1}
+
+\item{donor2}{Contributor2/donor 2}
+}
+\value{
+A list with mixture information about the mixture \code{donor1}+\code{donor2}+\code{donor3} from \code{individuals}
+}
 \description{
-New, implicit haplotypes by individuals
+Mixture information about 2 persons' mixture of donor1 and donor2.
+}
+\seealso{
+\code{\link{mixture_info_by_individuals_3pers}}
 }
