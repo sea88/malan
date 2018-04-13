@@ -147,11 +147,11 @@ pedigrees</code></pre></div>
 ##  $ individuals_generations   :List of 23</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">live_individuals &lt;-<span class="st"> </span>sim_res$end_generation_individuals</code></pre></div>
 <p>And a live individual is printed:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print_individual</span>(live_individuals[[<span class="dv">1</span>]])</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/print_individual.html">print_individual</a></span>(live_individuals[[<span class="dv">1</span>]])</code></pre></div>
 <pre><code>##   pid = 1 with father pid = 11 and no children</code></pre>
 <p>We can also print another individual (from the entire population):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">indv &lt;-<span class="st"> </span><span class="kw">get_individual</span>(sim_res$population, <span class="dv">22</span>)
-<span class="kw">print_individual</span>(indv)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">indv &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_individual.html">get_individual</a></span>(sim_res$population, <span class="dv">22</span>)
+<span class="kw"><a href="../reference/print_individual.html">print_individual</a></span>(indv)</code></pre></div>
 <pre><code>##   pid = 22 with father pid = 28 and children (n = 2): 
 ##     pid = 16 with father pid = 28 and 2 children
 ##     pid = 14 with father pid = 28 and 2 children</code></pre>
@@ -314,7 +314,7 @@ Q_hap</code></pre></div>
 <p>First, identify <span class="math inline">\(Q\)</span>’s pedigree:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Q_ped &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_pedigree_from_individual.html">get_pedigree_from_individual</a></span>(Q)</code></pre></div>
 <p>Now, count matches in pedigree and in live population:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">count_haplotype_occurrences_pedigree</span>(<span class="dt">pedigree =</span> Q_ped, <span class="dt">haplotype =</span> Q_hap, <span class="dt">generation_upper_bound_in_result =</span> <span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/count_haplotype_occurrences_pedigree.html">count_haplotype_occurrences_pedigree</a></span>(<span class="dt">pedigree =</span> Q_ped, <span class="dt">haplotype =</span> Q_hap, <span class="dt">generation_upper_bound_in_result =</span> <span class="dv">2</span>)</code></pre></div>
 <pre><code>## [1] 80</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/count_haplotype_occurrences_individuals.html">count_haplotype_occurrences_individuals</a></span>(<span class="dt">individuals =</span> live_individuals, <span class="dt">haplotype =</span> Q_hap)</code></pre></div>
 <pre><code>## [1] 80</code></pre>
@@ -487,13 +487,13 @@ number_of_children &lt;-<span class="st"> </span><span class="kw">as.numeric</sp
 }
 
 <span class="kw">library</span>(parallel)
-<span class="kw">options</span>(<span class="dt">mc.cores =</span> <span class="dv">3</span>)
+<span class="kw">options</span>(<span class="dt">mc.cores =</span> <span class="dv">2</span>)
 <span class="kw">RNGkind</span>(<span class="st">"L'Ecuyer-CMRG"</span>) <span class="co"># for mclapply</span>
 <span class="kw">set.seed</span>(<span class="dv">1</span>)
 x &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/parallel/topics/mclapply">mclapply</a></span>(<span class="dv">1</span>:<span class="dv">100</span>, function(i) <span class="kw">get_number_children</span>(<span class="dv">100</span>))
 sds &lt;-<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">lapply</span>(x, sd))
 <span class="kw">mean</span>(sds)</code></pre></div>
-<pre><code>## [1] 1.101396</code></pre>
+<pre><code>## [1] 1.100545</code></pre>
 </div>
 <div id="population-growth" class="section level2">
 <h2 class="hasAnchor">
