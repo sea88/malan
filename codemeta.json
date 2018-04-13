@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0002-0234-0266",
+      "@type": "Person",
+      "email": "mikl@math.aau.dk",
+      "name": "Mikkel Meyer Andersen",
+      "affiliation": "Department of Mathematical Sciences, Aalborg University, Denmark"
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/mikldk/malan",
+  "datePublished": "2018-04-13",
+  "dateModified": "2018-04-13",
+  "dateCreated": "2018-04-13",
+  "description": "MAle Lineage ANlysis by simulating genealogies backwards and imposing short tandem repeats (STR) mutations forwards. Intended for forensic Y chromosomal STR (Y-STR) haplotype analyses. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.",
+  "keywords": "forensic genetics, STR loci, Y-chromosome, population genetics",
+  "license": "GPL v2.0",
+  "title": "malan: MAle Lineage ANlysis",
+  "version": ""
+}
