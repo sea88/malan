@@ -1,8 +1,8 @@
 Package: malan
 Type: Package
 Title: MAle Lineage ANalysis
-Version: 0.0.2
-Date: 2017-09-29
+Version: 0.0.3
+Date: 2018-04-13
 Authors@R: c(
     person(given = "Mikkel Meyer", family = "Andersen", 
         email = "mikl@math.aau.dk", role = c("aut", "cre"))
@@ -24,6 +24,7 @@ Depends:
   ggraph (>= 1.0.1)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress, igraph
 Suggests: knitr, rmarkdown, testthat
+BugReports: https://github.com/mikldk/malan/issues
 VignetteBuilder: knitr
 SystemRequirements: C++11
 LazyData: true
