@@ -155,6 +155,8 @@ sample_geneology_varying_size <- function(population_sizes, extra_generations_fu
 #' Note, that haplotypes are unbounded and 
 #' that all founders get haplotype `rep(0L, loci)`.
 #' 
+#' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+#' 
 #' @param pedigrees Pedigree list in which to populate haplotypes
 #' @param loci Number of loci
 #' @param mutation_rates Vector with mutation rates, length `loci`
@@ -175,6 +177,8 @@ pedigrees_all_populate_haplotypes <- function(pedigrees, loci, mutation_rates, p
 #' All founders get a haplotype from calling the user 
 #' provided function `get_founder_haplotype()`.
 #' 
+#' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+#' 
 #' @param pedigrees Pedigree list in which to populate haplotypes
 #' @param mutation_rates Vector with mutation rates
 #' @param get_founder_haplotype Function taking no arguments returning a haplotype of `length(mutation_rates)`
@@ -194,6 +198,8 @@ pedigrees_all_populate_haplotypes_custom_founders <- function(pedigrees, mutatio
 #' Note, that haplotypes are bounded by `ladder_min` and `ladder_max`.
 #' All founders get a haplotype from calling the user 
 #' provided function [get_founder_haplotype()].
+#' 
+#' Note, that pedigrees must first have been inferred by [build_pedigrees()].
 #' 
 #' @param pedigrees Pedigree list in which to populate haplotypes
 #' @param mutation_rates Vector with mutation rates
@@ -279,6 +285,28 @@ count_haplotype_occurrences_individuals <- function(individuals, haplotype) {
     .Call('_malan_count_haplotype_occurrences_individuals', PACKAGE = 'malan', individuals, haplotype)
 }
 
+#' Count haplotypes occurrences in pedigree
+#' 
+#' Counts the number of types `haplotype` appears in `pedigree`.
+#' 
+#' @param pedigree Pedigree to count occurrences in.
+#' @param haplotype Haplotype to count occurrences of.
+#' @param generation_upper_bound_in_result Only consider matches in 
+#' generation 0, 1, ... generation_upper_bound_in_result.
+#' -1 means disabled, consider all generations.
+#' End generation is generation 0.
+#' Second last generation is 1. 
+#' And so on.
+#' 
+#' @return Number of times that `haplotype` occurred in `pedigree`.
+#' 
+#' @seealso [pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists()].
+#' 
+#' @export
+count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
+    .Call('_malan_count_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
+}
+
 #' Information about matching individuals
 #' 
 #' Gives information about all individuals in pedigree that matches an individual.
@@ -310,14 +338,19 @@ pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists <- function(suspect, gen
     .Call('_malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists', PACKAGE = 'malan', suspect, generation_upper_bound_in_result)
 }
 
+#' Meiotic distance between two individuals
+#' 
+#' Get the number of meioses between two individuals.
+#' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+#' 
+#' @param ind1 Individual 1
+#' @param ind2 Individual 2
+#' 
+#' @return Number of meioses between `ind1` and `ind2` if they are in the same pedigree, else -1.
+#' 
 #' @export
 meiotic_dist <- function(ind1, ind2) {
     .Call('_malan_meiotic_dist', PACKAGE = 'malan', ind1, ind2)
-}
-
-#' @export
-count_haplotype_occurrences_pedigree <- function(pedigree, haplotype, generation_upper_bound_in_result = -1L) {
-    .Call('_malan_count_haplotype_occurrences_pedigree', PACKAGE = 'malan', pedigree, haplotype, generation_upper_bound_in_result)
 }
 
 #' @export

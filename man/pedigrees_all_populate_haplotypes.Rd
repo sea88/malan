@@ -21,6 +21,9 @@ Populate haplotypes from founder and down in all pedigrees.
 Note, that haplotypes are unbounded and
 that all founders get haplotype \code{rep(0L, loci)}.
 }
+\details{
+Note, that pedigrees must first have been inferred by \code{\link[=build_pedigrees]{build_pedigrees()}}.
+}
 \seealso{
 \code{\link[=pedigrees_all_populate_haplotypes_custom_founders]{pedigrees_all_populate_haplotypes_custom_founders()}} and
 \code{\link[=pedigrees_all_populate_haplotypes_ladder_bounded]{pedigrees_all_populate_haplotypes_ladder_bounded()}}.

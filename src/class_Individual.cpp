@@ -119,11 +119,10 @@ bool Individual::dijkstra_was_visited() const {
   return m_dijkstra_visited; 
 }
 
-// ASSUMES TREE!
-//FIXME: Heavily relies on it being a tree, hence there is only one path connecting every pair of nodes
+
+// Heavily relies on it being a TREE, hence there is only one path connecting every pair of nodes
 void Individual::meiosis_dist_tree_internal(Individual* dest, int* dist) const {
   if (this->get_pid() == dest->get_pid()) {
-    //FIXME: Heavily relies on it being a tree, hence there is only one path connecting every pair of nodes
     *dist = dest->dijkstra_get_distance();    
     return;
   }
@@ -138,28 +137,19 @@ void Individual::meiosis_dist_tree_internal(Individual* dest, int* dist) const {
   
   Individual* father = dest->get_father();
   if (father != nullptr) {  
-    //tree: ok
-    father->dijkstra_tick_distance(m);
-    
-    // general? FIXME Correct?
-    //father->dijkstra_set_distance_if_less(m);
-    
+    father->dijkstra_tick_distance(m);    
     this->meiosis_dist_tree_internal(father, dist); 
   }
   
   std::vector<Individual*>* children = dest->get_children();
   for (auto child : *children) {
-    //tree: ok
     child->dijkstra_tick_distance(m);
 
-    // general? FIXME Correct?
-    //child->dijkstra_set_distance_if_less(m);
-    
     this->meiosis_dist_tree_internal(child, dist);
   }
 }
 
-// ASSUMES TREE!
+// Heavily relies on it being a TREE, hence there is only one path connecting every pair of nodes
 int Individual::meiosis_dist_tree(Individual* dest) const {
   if (!(this->pedigree_is_set())) {
     throw std::invalid_argument("!(this->pedigree_is_set())");

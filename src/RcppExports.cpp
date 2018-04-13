@@ -142,6 +142,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// count_haplotype_occurrences_pedigree
+int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::IntegerVector haplotype, int generation_upper_bound_in_result);
+RcppExport SEXP _malan_count_haplotype_occurrences_pedigree(SEXP pedigreeSEXP, SEXP haplotypeSEXP, SEXP generation_upper_bound_in_resultSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type pedigree(pedigreeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
+    Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_pedigree(pedigree, haplotype, generation_upper_bound_in_result));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists
 Rcpp::IntegerMatrix pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(const Rcpp::XPtr<Individual> suspect, int generation_upper_bound_in_result);
 RcppExport SEXP _malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists(SEXP suspectSEXP, SEXP generation_upper_bound_in_resultSEXP) {
@@ -163,19 +176,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type ind1(ind1SEXP);
     Rcpp::traits::input_parameter< Rcpp::XPtr<Individual> >::type ind2(ind2SEXP);
     rcpp_result_gen = Rcpp::wrap(meiotic_dist(ind1, ind2));
-    return rcpp_result_gen;
-END_RCPP
-}
-// count_haplotype_occurrences_pedigree
-int count_haplotype_occurrences_pedigree(Rcpp::XPtr<Pedigree> pedigree, const Rcpp::IntegerVector haplotype, int generation_upper_bound_in_result);
-RcppExport SEXP _malan_count_haplotype_occurrences_pedigree(SEXP pedigreeSEXP, SEXP haplotypeSEXP, SEXP generation_upper_bound_in_resultSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<Pedigree> >::type pedigree(pedigreeSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
-    Rcpp::traits::input_parameter< int >::type generation_upper_bound_in_result(generation_upper_bound_in_resultSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_pedigree(pedigree, haplotype, generation_upper_bound_in_result));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -549,9 +549,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_get_haplotypes_individuals", (DL_FUNC) &_malan_get_haplotypes_individuals, 1},
     {"_malan_get_haplotypes_pids", (DL_FUNC) &_malan_get_haplotypes_pids, 2},
     {"_malan_count_haplotype_occurrences_individuals", (DL_FUNC) &_malan_count_haplotype_occurrences_individuals, 2},
+    {"_malan_count_haplotype_occurrences_pedigree", (DL_FUNC) &_malan_count_haplotype_occurrences_pedigree, 3},
     {"_malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists", (DL_FUNC) &_malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists, 2},
     {"_malan_meiotic_dist", (DL_FUNC) &_malan_meiotic_dist, 2},
-    {"_malan_count_haplotype_occurrences_pedigree", (DL_FUNC) &_malan_count_haplotype_occurrences_pedigree, 3},
     {"_malan_get_individual", (DL_FUNC) &_malan_get_individual, 2},
     {"_malan_get_pid", (DL_FUNC) &_malan_get_pid, 1},
     {"_malan_print_individual", (DL_FUNC) &_malan_print_individual, 1},

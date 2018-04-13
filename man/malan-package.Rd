@@ -9,7 +9,7 @@
 Simulating genealogies backwards and imposing STR mutations forwards.
 }
 \details{
-Se vignettes and manual for documentation.
+See vignettes and manual for documentation.
 
 Disclaimer:
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,

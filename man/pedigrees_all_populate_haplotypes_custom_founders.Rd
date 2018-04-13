@@ -22,6 +22,9 @@ Note, that haplotypes are unbounded.
 All founders get a haplotype from calling the user
 provided function \code{get_founder_haplotype()}.
 }
+\details{
+Note, that pedigrees must first have been inferred by \code{\link[=build_pedigrees]{build_pedigrees()}}.
+}
 \seealso{
 \code{\link[=pedigrees_all_populate_haplotypes]{pedigrees_all_populate_haplotypes()}} and
 \code{\link[=pedigrees_all_populate_haplotypes_ladder_bounded]{pedigrees_all_populate_haplotypes_ladder_bounded()}}.

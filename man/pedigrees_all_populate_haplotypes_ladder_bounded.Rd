@@ -26,6 +26,9 @@ Note, that haplotypes are bounded by \code{ladder_min} and \code{ladder_max}.
 All founders get a haplotype from calling the user
 provided function \code{\link[=get_founder_haplotype]{get_founder_haplotype()}}.
 }
+\details{
+Note, that pedigrees must first have been inferred by \code{\link[=build_pedigrees]{build_pedigrees()}}.
+}
 \seealso{
 \code{\link[=pedigrees_all_populate_haplotypes]{pedigrees_all_populate_haplotypes()}} and
 \code{\link[=pedigrees_all_populate_haplotypes_custom_founders]{pedigrees_all_populate_haplotypes_custom_founders()}}.
