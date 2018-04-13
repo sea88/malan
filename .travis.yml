@@ -8,27 +8,22 @@ r:
 - release
 #- devel
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.9
-      - g++-4.9
+before_install:
+  # C++14
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+  # R
+  - sudo add-apt-repository -y ppa:marutter/rrutter
+  - sudo apt-get update -qq
 
 install: 
   # R
-  # gfortran?
   - sudo apt-get install r-base r-base-dev gfortran
   - sudo apt-get install libudunits2-dev
   - sudo Rscript -e 'install.packages(c("igraph", "knitr", "rmarkdown", "testthat", "tidygraph", "RcppProgress", "RcppArmadillo", "ggraph"), repos = "http://cran.r-project.org")'
-  
-before_install: |
-  mkdir ~/.R
-  cat <<EOF > ~/.R/Makevars
-  CXX=g++-4.9
-  CXX1X=g++-4.9
-  CXX1XSTD=-std=c++11
+  # C++14
+  - sudo apt-get install -qq g++-5
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
 
 r_packages:
   - covr
