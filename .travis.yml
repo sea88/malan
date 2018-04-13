@@ -18,8 +18,10 @@ addons:
 
 install: 
   # R
-  - sudo apt-get install r-base r-base-dev
-  - sudo Rscript -e 'install.packages(c("igraph", "knitr", "rmarkdown", "testthat", "ggraph"), repos = "http://cran.r-project.org")'
+  # gfortran?
+  - sudo apt-get install r-base r-base-dev gfortran
+  - sudo apt-get install libudunits2-dev
+  - sudo Rscript -e 'install.packages(c("igraph", "knitr", "rmarkdown", "testthat", "tidygraph", "RcppProgress", "RcppArmadillo", "ggraph"), repos = "http://cran.r-project.org")'
   
 before_install: |
   mkdir ~/.R
@@ -28,8 +30,8 @@ before_install: |
   CXX1X=g++-4.9
   CXX1XSTD=-std=c++11
 
-#r_packages:
-#  - covr
-#
-#after_success:
-#  - Rscript -e 'library(covr); codecov()'
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
