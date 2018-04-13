@@ -1,7 +1,7 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
+sudo: true
 cache: packages
 
 r:
@@ -16,6 +16,11 @@ addons:
       - gcc-4.9
       - g++-4.9
 
+install: 
+  # R
+  - sudo apt-get install r-base r-base-dev
+  - sudo Rscript -e 'install.packages("igraph", repos = "http://cran.r-project.org")'
+  
 before_install: |
   mkdir ~/.R
   cat <<EOF > ~/.R/Makevars
