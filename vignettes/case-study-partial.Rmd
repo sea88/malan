@@ -13,17 +13,9 @@ vignette: >
 knitr::opts_chunk$set(fig.width = 7)
 ```
 
-First, be sure to use the newest version of the library:
-
+First, the library is loaded:
 ```{r}
-#devtools::install_github('mikldk/malan')
-```
-
-Then, the library et al. are loaded:
-```{r}
-library(tidyverse)
 library(malan)
-library(ggraph)
 ```
 
 For reproducibility, the seed for the (pseudo) random number generator is set:
@@ -88,16 +80,20 @@ g
 This can be plotted:
 
 ```{r}
-p <- ggraph(g, layout = 'tree') +
-  geom_edge_link() +
-  geom_node_point(size = 8) +
-  geom_node_text(aes(label = name), color = "white") +
-  facet_nodes(~ ped_id) +
-  theme_graph() 
-print(p)
+if (requireNamespace("ggraph", quietly = TRUE)) {
+  library(ggraph)
+  p <- ggraph(g, layout = 'tree') +
+    geom_edge_link() +
+    geom_node_point(size = 8) +
+    geom_node_text(aes(label = name), color = "white") +
+    facet_nodes(~ ped_id) +
+    theme_graph() 
+  
+  print(p)
+}
 ```
 
-This is rather difficult to make any sense of. Let's instead plot only pedigree 2:
+This is rather difficult to make any sense of. Let's instead plot only pedigree 1:
 
 ```{r}
 PED_ID <- 1
@@ -106,12 +102,15 @@ g_ped2 <- g %>%
   activate(nodes) %>% 
   filter(ped_id == PED_ID)
 
-p <- ggraph(g_ped2, layout = 'tree') +
-    geom_edge_link() +
-    geom_node_point(size = 8) +
-    geom_node_text(aes(label = name), color = "white") +
-    theme_graph() 
-print(p)
+if (requireNamespace("ggraph", quietly = TRUE)) {
+  library(ggraph)
+  p <- ggraph(g_ped2, layout = 'tree') +
+      geom_edge_link() +
+      geom_node_point(size = 8) +
+      geom_node_text(aes(label = name), color = "white") +
+      theme_graph() 
+  print(p)
+}
 ```
 
 
@@ -195,12 +194,15 @@ g_ped2 <- as_tbl_graph(pedigrees) %>%
   mutate(haplotype_str = paste0(haplotype[[1]], collapse = ";"))
   #mutate(haplotype_str = map(haplotype, paste0, collapse = ";")[[1]])
 
-p <- ggraph(g_ped2, layout = 'tree') +
-    geom_edge_link() +
-    geom_node_point(aes(color = haplotype_str), size = 8) +
-    geom_node_text(aes(label = name), color = "white") +
-    theme_graph() 
-print(p)
+if (requireNamespace("ggraph", quietly = TRUE)) {
+  library(ggraph)
+  p <- ggraph(g_ped2, layout = 'tree') +
+      geom_edge_link() +
+      geom_node_point(aes(color = haplotype_str), size = 8) +
+      geom_node_text(aes(label = name), color = "white") +
+      theme_graph() 
+  print(p)
+}
 ```
 
 

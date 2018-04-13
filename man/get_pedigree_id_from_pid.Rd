@@ -2,10 +2,18 @@
 % Please edit documentation in R/RcppExports.R
 \name{get_pedigree_id_from_pid}
 \alias{get_pedigree_id_from_pid}
-\title{Get pedigree id from pid}
+\title{Get pedigree ids from pids}
 \usage{
 get_pedigree_id_from_pid(population, pids)
 }
+\arguments{
+\item{population}{Population}
+
+\item{pids}{Pids}
+}
+\value{
+Vector with pedigree ids
+}
 \description{
-Get pedigree id from pid
+Get pedigree ids from pids
 }

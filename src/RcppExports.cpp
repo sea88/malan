@@ -312,15 +312,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// malan_test
-void malan_test();
-RcppExport SEXP _malan_malan_test() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    malan_test();
-    return R_NilValue;
-END_RCPP
-}
 // pop_size
 int pop_size(Rcpp::XPtr<Population> population);
 RcppExport SEXP _malan_pop_size(SEXP populationSEXP) {
@@ -564,7 +555,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_father_matches", (DL_FUNC) &_malan_father_matches, 1},
     {"_malan_grandfather_matches", (DL_FUNC) &_malan_grandfather_matches, 1},
     {"_malan_count_uncles", (DL_FUNC) &_malan_count_uncles, 1},
-    {"_malan_malan_test", (DL_FUNC) &_malan_malan_test, 0},
     {"_malan_pop_size", (DL_FUNC) &_malan_pop_size, 1},
     {"_malan_get_individuals", (DL_FUNC) &_malan_get_individuals, 1},
     {"_malan_meioses_generation_distribution", (DL_FUNC) &_malan_meioses_generation_distribution, 2},

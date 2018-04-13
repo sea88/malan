@@ -2,10 +2,13 @@
 % Please edit documentation in R/RcppExports.R
 \name{get_pedigrees_tidy}
 \alias{get_pedigrees_tidy}
-\title{get pedigrees information in tidy format}
+\title{Get pedigrees information in tidy format}
 \usage{
 get_pedigrees_tidy(pedigrees)
 }
+\arguments{
+\item{pedigrees}{Pedigrees}
+}
 \description{
-get pedigrees information in tidy format
+Get pedigrees information in tidy format
 }

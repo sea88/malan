@@ -6,6 +6,12 @@
 \usage{
 get_pedigree_from_individual(individual)
 }
+\arguments{
+\item{individual}{Individual}
+}
+\value{
+pedigree
+}
 \description{
 Get pedigree from individual
 }

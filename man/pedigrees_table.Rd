@@ -6,6 +6,9 @@
 \usage{
 pedigrees_table(pedigrees)
 }
+\arguments{
+\item{pedigrees}{Pedigrees}
+}
 \description{
 Get distribution of pedigree sizes
 }

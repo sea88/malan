@@ -6,6 +6,9 @@
 \usage{
 get_individuals(population)
 }
+\arguments{
+\item{population}{Population}
+}
 \description{
 Get all individuals in population
 }

@@ -6,6 +6,9 @@
 \usage{
 get_pedigree_as_graph(ped)
 }
+\arguments{
+\item{ped}{Pedigree}
+}
 \description{
 Get pedigree information as graph (mainly intended for plotting)
 }

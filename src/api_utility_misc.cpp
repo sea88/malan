@@ -16,17 +16,14 @@
 #include "malan_types.h"
 
 //[[Rcpp::export]]
-void malan_test() {
-  Rcpp::Rcout << "mikl was here 1324" << std::endl;
-}
-
-//[[Rcpp::export]]
 int pop_size(Rcpp::XPtr<Population> population) {
   return population->get_population_size();
 }
 
 
 //' Get all individuals in population
+//' 
+//' @param population Population
 //'
 //' @export
 // [[Rcpp::export]]
@@ -50,10 +47,25 @@ Rcpp::ListOf< Rcpp::XPtr<Individual> > get_individuals(Rcpp::XPtr<Population> po
   return individuals;
 }
 
+//' Meiotic distribution
+//' 
+//' Get the distribution of number of meioses from `individual` 
+//' to all individuals in `individual`'s pedigree.
+//' Note the `generation_upper_bound_in_result` parameter.
+//' 
+//' @param individual Individual to calculate all meiotic distances from
+//' @param generation_upper_bound_in_result Limit on distribution; -1 means no limit. 
+//' 0 is the final generation. 1 second last generation etc.
+//' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, int generation_upper_bound_in_result = -1) {  
+Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> individual, 
+                                                    int generation_upper_bound_in_result = -1) {  
   Individual* i = individual;
+  
+  if (!(i->pedigree_is_set())) {
+    Rcpp::stop("Pedigree not yet set");
+  }
   
   Pedigree* ped = i->get_pedigree();
   std::vector<Individual*>* family = ped->get_all_individuals();
@@ -95,6 +107,15 @@ Rcpp::IntegerMatrix meioses_generation_distribution(Rcpp::XPtr<Individual> indiv
 
 
 
+//' Size of population
+//' 
+//' Get the size of the population.
+//' Note the `generation_upper_bound_in_result` parameter.
+//' 
+//' @param population Population to get size of
+//' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
+//' 0 only include the final generation. 1 only second last generation etc.
+//' 
 //' @export
 // [[Rcpp::export]]
 int population_size_generation(Rcpp::XPtr<Population> population, int generation_upper_bound_in_result = -1) {  
@@ -115,7 +136,15 @@ int population_size_generation(Rcpp::XPtr<Population> population, int generation
   return size;
 }
 
-
+//' Size of pedigree
+//' 
+//' Get the size of the pedigree.
+//' Note the `generation_upper_bound_in_result` parameter.
+//' 
+//' @param pedigree Pedigree to get size of
+//' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
+//' 0 only include the final generation. 1 only second last generation etc.
+//' 
 //' @export
 // [[Rcpp::export]]
 int pedigree_size_generation(Rcpp::XPtr<Pedigree> pedigree, int generation_upper_bound_in_result = -1) {  

@@ -6,6 +6,9 @@
 \usage{
 pedigrees_count(pedigrees)
 }
+\arguments{
+\item{pedigrees}{Pedigrees}
+}
 \description{
 Get number of pedigrees
 }

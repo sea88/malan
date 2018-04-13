@@ -6,6 +6,9 @@
 \usage{
 get_pedigree_id(ped)
 }
+\arguments{
+\item{ped}{Pedigree}
+}
 \description{
 Get pedigree id
 }

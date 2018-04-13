@@ -1,8 +1,9 @@
-# malan
+# malan: MAle Lineage ANlysis
 
-MAle Lineage ANlysis
-
-Simulating genealogies backwards and imposing STR mutations forwards.
+MAle Lineage ANlysis by simulating genealogies backwards and 
+imposing short tandem repeats (STR) mutations forwards. 
+Intended for forensic Y chromosomal STR (Y-STR) haplotype analyses. 
+Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.
 
 See vignettes and manual at <https://mikldk.github.io/malan/> for documentation.
 

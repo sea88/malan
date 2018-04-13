@@ -353,22 +353,46 @@ meiotic_dist <- function(ind1, ind2) {
     .Call('_malan_meiotic_dist', PACKAGE = 'malan', ind1, ind2)
 }
 
+#' Get individual by pid
+#' 
+#' @param population Population
+#' @param pid pid
+#' 
+#' @return Individual
+#' 
 #' @export
 get_individual <- function(population, pid) {
     .Call('_malan_get_individual', PACKAGE = 'malan', population, pid)
 }
 
+#' Get pid from individual
+#' 
+#' @param individual Individual to get pid of
+#' 
+#' @return pid
+#' 
 #' @export
 get_pid <- function(individual) {
     .Call('_malan_get_pid', PACKAGE = 'malan', individual)
 }
 
+#' Print individual
+#' 
+#' @param individual Individual
+#' 
 #' @export
 print_individual <- function(individual) {
     invisible(.Call('_malan_print_individual', PACKAGE = 'malan', individual))
 }
 
-#' Get individual's generations
+#' Get individual's generation number
+#' 
+#' Note that generation 0 is final, end generation. 
+#' 1 is second last generation etc.
+#' 
+#' @param individual Individual
+#' 
+#' @return generation
 #' 
 #' @export
 get_generation <- function(individual) {
@@ -377,50 +401,101 @@ get_generation <- function(individual) {
 
 #' Get pedigree from individual
 #' 
+#' @param individual Individual
+#' 
+#' @return pedigree
+#' 
 #' @export
 get_pedigree_from_individual <- function(individual) {
     .Call('_malan_get_pedigree_from_individual', PACKAGE = 'malan', individual)
 }
 
-#' Get pedigree id from pid
+#' Get pedigree ids from pids
+#'
+#' @param population Population
+#' @param pids Pids
+#' 
+#' @return Vector with pedigree ids
 #' 
 #' @export
 get_pedigree_id_from_pid <- function(population, pids) {
     .Call('_malan_get_pedigree_id_from_pid', PACKAGE = 'malan', population, pids)
 }
 
+#' Get individual's family information
+#'
+#' @param individual individual
+#' 
+#' @return List with family information
+#' 
 #' @export
 get_family_info <- function(individual) {
     .Call('_malan_get_family_info', PACKAGE = 'malan', individual)
 }
 
+#' Number of brothes
+#' 
+#' Get individual's number of brothes
+#'
+#' @param individual individual
+#' 
+#' @return Number of brothers
+#' 
 #' @export
 count_brothers <- function(individual) {
     .Call('_malan_count_brothers', PACKAGE = 'malan', individual)
 }
 
+#' Number of brothes with matching haplotype
+#' 
+#' Get individual's number of brothes that matches `individual`'s haplotype
+#'
+#' @param individual individual
+#' 
+#' @return Number of brothers that matches `individual`'s haplotype
+#' 
 #' @export
 brothers_matching <- function(individual) {
     .Call('_malan_brothers_matching', PACKAGE = 'malan', individual)
 }
 
+#' Father matches
+#' 
+#' Does the father have the same profile as `individual`?
+#'
+#' @param individual individual
+#' 
+#' @return Whether father has the same profile as `individual` or not
+#' 
 #' @export
 father_matches <- function(individual) {
     .Call('_malan_father_matches', PACKAGE = 'malan', individual)
 }
 
+#' Grandfather matches
+#' 
+#' Does the frandfather have the same profile as `individual`?
+#'
+#' @param individual individual
+#' 
+#' @return Whether grandfather has the same profile as `individual` or not
+#' 
 #' @export
 grandfather_matches <- function(individual) {
     .Call('_malan_grandfather_matches', PACKAGE = 'malan', individual)
 }
 
+#' Number of uncles
+#' 
+#' Get individual's number of uncles
+#'
+#' @param individual individual
+#' 
+#' @return Number of uncles
+#' 
 #' @export
 count_uncles <- function(individual) {
     .Call('_malan_count_uncles', PACKAGE = 'malan', individual)
-}
-
-malan_test <- function() {
-    invisible(.Call('_malan_malan_test', PACKAGE = 'malan'))
 }
 
 pop_size <- function(population) {
@@ -428,22 +503,52 @@ pop_size <- function(population) {
 }
 
 #' Get all individuals in population
+#' 
+#' @param population Population
 #'
 #' @export
 get_individuals <- function(population) {
     .Call('_malan_get_individuals', PACKAGE = 'malan', population)
 }
 
+#' Meiotic distribution
+#' 
+#' Get the distribution of number of meioses from `individual` 
+#' to all individuals in `individual`'s pedigree.
+#' Note the `generation_upper_bound_in_result` parameter.
+#' 
+#' @param individual Individual to calculate all meiotic distances from
+#' @param generation_upper_bound_in_result Limit on distribution; -1 means no limit. 
+#' 0 is the final generation. 1 second last generation etc.
+#' 
 #' @export
 meioses_generation_distribution <- function(individual, generation_upper_bound_in_result = -1L) {
     .Call('_malan_meioses_generation_distribution', PACKAGE = 'malan', individual, generation_upper_bound_in_result)
 }
 
+#' Size of population
+#' 
+#' Get the size of the population.
+#' Note the `generation_upper_bound_in_result` parameter.
+#' 
+#' @param population Population to get size of
+#' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
+#' 0 only include the final generation. 1 only second last generation etc.
+#' 
 #' @export
 population_size_generation <- function(population, generation_upper_bound_in_result = -1L) {
     .Call('_malan_population_size_generation', PACKAGE = 'malan', population, generation_upper_bound_in_result)
 }
 
+#' Size of pedigree
+#' 
+#' Get the size of the pedigree.
+#' Note the `generation_upper_bound_in_result` parameter.
+#' 
+#' @param pedigree Pedigree to get size of
+#' @param generation_upper_bound_in_result Limit on generation to include in count; -1 means no limit. 
+#' 0 only include the final generation. 1 only second last generation etc.
+#' 
 #' @export
 pedigree_size_generation <- function(pedigree, generation_upper_bound_in_result = -1L) {
     .Call('_malan_pedigree_size_generation', PACKAGE = 'malan', pedigree, generation_upper_bound_in_result)
@@ -477,12 +582,16 @@ mixture_info_by_individuals_3pers <- function(individuals, donor1, donor2, donor
 
 #' Get pedigree id
 #' 
+#' @param ped Pedigree
+#' 
 #' @export
 get_pedigree_id <- function(ped) {
     .Call('_malan_get_pedigree_id', PACKAGE = 'malan', ped)
 }
 
 #' Get number of pedigrees
+#' 
+#' @param pedigrees Pedigrees
 #' 
 #' @export
 pedigrees_count <- function(pedigrees) {
@@ -491,12 +600,16 @@ pedigrees_count <- function(pedigrees) {
 
 #' Get pedigree size
 #' 
+#' @param ped Pedigree
+#' 
 #' @export
 pedigree_size <- function(ped) {
     .Call('_malan_pedigree_size', PACKAGE = 'malan', ped)
 }
 
 #' Get distribution of pedigree sizes
+#' 
+#' @param pedigrees Pedigrees
 #' 
 #' @export
 pedigrees_table <- function(pedigrees) {
@@ -511,14 +624,20 @@ print_pedigree <- function(ped) {
     invisible(.Call('_malan_print_pedigree', PACKAGE = 'malan', ped))
 }
 
-#' get pids in pedigree
+#' Get pids in pedigree
+#' 
+#' @param ped Pedigree
 #' 
 #' @export
 get_pids_in_pedigree <- function(ped) {
     .Call('_malan_get_pids_in_pedigree', PACKAGE = 'malan', ped)
 }
 
-#' get pids in pedigree
+#' Get haplotypes in pedigree
+#' 
+#' @param ped Pedigree
+#' 
+#' @return List with haplotypes
 #' 
 #' @export
 get_haplotypes_in_pedigree <- function(ped) {
@@ -531,12 +650,16 @@ get_pedigree_edgelist <- function(ped) {
 
 #' Get pedigree information as graph (mainly intended for plotting)
 #' 
+#' @param ped Pedigree
+#' 
 #' @export
 get_pedigree_as_graph <- function(ped) {
     .Call('_malan_get_pedigree_as_graph', PACKAGE = 'malan', ped)
 }
 
-#' get pedigrees information in tidy format
+#' Get pedigrees information in tidy format
+#' 
+#' @param pedigrees Pedigrees
 #' 
 get_pedigrees_tidy <- function(pedigrees) {
     .Call('_malan_get_pedigrees_tidy', PACKAGE = 'malan', pedigrees)

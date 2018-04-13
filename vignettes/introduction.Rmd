@@ -411,7 +411,7 @@ get_number_children <- function(N) {
 }
 
 library(parallel)
-options(mc.cores = 3)
+options(mc.cores = 2)
 RNGkind("L'Ecuyer-CMRG") # for mclapply
 set.seed(1)
 x <- mclapply(1:100, function(i) get_number_children(100))

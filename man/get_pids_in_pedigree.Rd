@@ -2,10 +2,13 @@
 % Please edit documentation in R/RcppExports.R
 \name{get_pids_in_pedigree}
 \alias{get_pids_in_pedigree}
-\title{get pids in pedigree}
+\title{Get pids in pedigree}
 \usage{
 get_pids_in_pedigree(ped)
 }
+\arguments{
+\item{ped}{Pedigree}
+}
 \description{
-get pids in pedigree
+Get pids in pedigree
 }

@@ -32,7 +32,7 @@ Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid
 
 //' Get pid from individual
 //' 
-//' @param individual
+//' @param individual Individual to get pid of
 //' 
 //' @return pid
 //' 

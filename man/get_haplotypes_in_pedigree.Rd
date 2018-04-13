@@ -2,10 +2,16 @@
 % Please edit documentation in R/RcppExports.R
 \name{get_haplotypes_in_pedigree}
 \alias{get_haplotypes_in_pedigree}
-\title{get pids in pedigree}
+\title{Get haplotypes in pedigree}
 \usage{
 get_haplotypes_in_pedigree(ped)
 }
+\arguments{
+\item{ped}{Pedigree}
+}
+\value{
+List with haplotypes
+}
 \description{
-get pids in pedigree
+Get haplotypes in pedigree
 }

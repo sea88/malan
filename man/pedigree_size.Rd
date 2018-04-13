@@ -6,6 +6,9 @@
 \usage{
 pedigree_size(ped)
 }
+\arguments{
+\item{ped}{Pedigree}
+}
 \description{
 Get pedigree size
 }
