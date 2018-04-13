@@ -6,7 +6,7 @@ cache: packages
 
 r:
 - release
-- devel
+#- devel
 
 addons:
   apt:
@@ -23,8 +23,8 @@ before_install: |
   CXX1X=g++-4.9
   CXX1XSTD=-std=c++11
 
-r_packages:
-  - covr
-
-after_success:
-  - Rscript -e 'library(covr); codecov()'
+#r_packages:
+#  - covr
+#
+#after_success:
+#  - Rscript -e 'library(covr); codecov()'
