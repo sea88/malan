@@ -21,10 +21,9 @@ Imports:
     methods
 Depends:
   dplyr (>= 0.7.4),
-  tidygraph (>= 1.0.0.9999),
-  ggraph (>= 1.0.1)
+  tidygraph (>= 1.0.0.9999)
 LinkingTo: Rcpp, RcppArmadillo, RcppProgress
-Suggests: knitr, rmarkdown, testthat
+Suggests: knitr, rmarkdown, testthat, ggraph
 BugReports: https://github.com/mikldk/malan/issues
 VignetteBuilder: knitr
 SystemRequirements: C++11
