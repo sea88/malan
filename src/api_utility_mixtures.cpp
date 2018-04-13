@@ -13,8 +13,8 @@
 
 #include <string>
 
-#include "malan_types.hpp"
-#include "api_utility_individual.hpp"
+#include "malan_types.h"
+#include "api_utility_individual.h"
 
 //' Mixture information about 2 persons' mixture of donor1 and donor2.
 //' 

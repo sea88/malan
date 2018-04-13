@@ -6,7 +6,7 @@
  @author Mikkel Meyer Andersen
  */
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 #include <stdexcept>
 

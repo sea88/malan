@@ -13,8 +13,8 @@
 
 #include <progress.hpp>
 
-#include "malan_types.hpp"
-#include "api_simulate.hpp"
+#include "malan_types.h"
+#include "api_simulate.h"
 
 using namespace Rcpp;
 

@@ -6,8 +6,8 @@
  @author Mikkel Meyer Andersen
  */
  
-#include "malan_types.hpp"
-#include "api_utility_individual.hpp"
+#include "malan_types.h"
+#include "api_utility_individual.h"
 
 //' @export
 // [[Rcpp::export]]

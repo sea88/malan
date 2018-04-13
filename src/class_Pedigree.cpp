@@ -6,7 +6,7 @@
  @author Mikkel Meyer Andersen
  */
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 #include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
 

@@ -13,7 +13,7 @@
 
 #include <string>
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 //[[Rcpp::export]]
 void malan_test() {

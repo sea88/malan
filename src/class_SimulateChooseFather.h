@@ -1,5 +1,5 @@
 /**
- class_SimulateChooseFather.cpp
+ class_SimulateChooseFather.h
  Purpose: Header for C++ class SimulateChooseFather.
  Details: C++ header.
   

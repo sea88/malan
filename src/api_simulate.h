@@ -1,5 +1,5 @@
 /**
- api_simulate.hpp
+ api_simulate.h
  Purpose: Header file for population simulation.
  Details: API between R user and C++ logic.
   
@@ -13,7 +13,7 @@
 
 #include <progress.hpp>
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 using namespace Rcpp;
 

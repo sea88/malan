@@ -8,7 +8,7 @@
  
 #include <RcppArmadillo.h>
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 using namespace Rcpp;
 

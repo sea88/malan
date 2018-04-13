@@ -1,5 +1,5 @@
 /**
- helder_Individual.hpp
+ helder_Individual.h
  Purpose: Header for C++ helper functions for Individual class.
  Details: C++ header.
   
@@ -9,7 +9,7 @@
 #ifndef HELPER_INDIVIDUALS_H
 #define HELPER_INDIVIDUALS_H
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 #include <vector>
 

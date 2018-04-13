@@ -13,8 +13,8 @@
 
 #include <string>
 
-#include "malan_types.hpp"
-#include "api_utility_individual.hpp"
+#include "malan_types.h"
+#include "api_utility_individual.h"
 
 
 //' Populate haplotypes in pedigrees (0-founder/unbounded).

@@ -7,7 +7,7 @@
  */
 
 #include <RcppArmadillo.h>
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 // [[Rcpp::depends(RcppProgress)]]
 #include <progress.hpp>

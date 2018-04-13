@@ -1,5 +1,5 @@
 /**
- malan_types.hpp
+ malan_types.h
  Purpose: Header for C++ classes.
  Details: C++ header.
   
@@ -23,11 +23,11 @@ class Population;
 //class WFRandomFather;
 //class GammaVarianceRandomFather;
 
-#include "helper_Individual.hpp"
+#include "helper_Individual.h"
 
-#include "class_Individual.hpp"
-#include "class_Pedigree.hpp"
-#include "class_Population.hpp"
-#include "class_SimulateChooseFather.hpp"
+#include "class_Individual.h"
+#include "class_Pedigree.h"
+#include "class_Population.h"
+#include "class_SimulateChooseFather.h"
 
 #endif

@@ -88,7 +88,6 @@ print.malan_pedigree <-
 #' @importFrom igraph graph_from_data_frame plot.igraph union layout_as_tree layout.reingold.tilford vcount V
 #' @import tibble
 #' @importFrom graphics par
-#' @importFrom methods is
 #' @importFrom utils head
 #' @export
 pedigree_as_igraph <-

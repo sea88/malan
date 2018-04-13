@@ -13,7 +13,7 @@
 
 #include <string>
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 //' Get pedigree id
 //' 

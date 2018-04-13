@@ -1,5 +1,5 @@
 /**
- class_Pedigree.hpp
+ class_Pedigree.h
  Purpose: Header for C++ class Pedigree.
  Details: C++ header.
   
@@ -8,7 +8,7 @@
 
 #include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 #include <vector>
 

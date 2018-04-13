@@ -1,5 +1,5 @@
 /**
- api_utility_individual.hpp
+ api_utility_individual.h
  Purpose: Header file for logic related to individuals.
  Details: API between R user and C++ logic.
   
@@ -16,7 +16,7 @@
 
 #include <string>
 
-#include "malan_types.hpp"
+#include "malan_types.h"
 
 Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid);
 int get_pid(Rcpp::XPtr<Individual> individual);
