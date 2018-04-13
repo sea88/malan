@@ -214,6 +214,7 @@ plot.malan_pedigree <-
   
 
 
+globalVariables(c("from", "to", "name"))
 
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr mutate

@@ -9,6 +9,13 @@
 #include "malan_types.h"
 #include "api_utility_individual.h"
 
+//' Get individual by pid
+//' 
+//' @param population Population
+//' @param pid pid
+//' 
+//' @return Individual
+//' 
 //' @export
 // [[Rcpp::export]]
 Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid) {  
@@ -23,12 +30,22 @@ Rcpp::XPtr<Individual> get_individual(Rcpp::XPtr<Population> population, int pid
 }
 
 
+//' Get pid from individual
+//' 
+//' @param individual
+//' 
+//' @return pid
+//' 
 //' @export
 // [[Rcpp::export]]
 int get_pid(Rcpp::XPtr<Individual> individual) {  
   return individual->get_pid();
 }
 
+//' Print individual
+//' 
+//' @param individual Individual
+//' 
 //' @export
 // [[Rcpp::export]]
 void print_individual(Rcpp::XPtr<Individual> individual) {  
@@ -52,7 +69,14 @@ void print_individual(Rcpp::XPtr<Individual> individual) {
   }
 }
 
-//' Get individual's generations
+//' Get individual's generation number
+//' 
+//' Note that generation 0 is final, end generation. 
+//' 1 is second last generation etc.
+//' 
+//' @param individual Individual
+//' 
+//' @return generation
 //' 
 //' @export
 // [[Rcpp::export]]
@@ -61,6 +85,10 @@ int get_generation(Rcpp::XPtr<Individual> individual) {
 }
 
 //' Get pedigree from individual
+//' 
+//' @param individual Individual
+//' 
+//' @return pedigree
 //' 
 //' @export
 //[[Rcpp::export]]
@@ -72,11 +100,18 @@ Rcpp::XPtr<Pedigree> get_pedigree_from_individual(Rcpp::XPtr<Individual> individ
   return res;
 }
 
-//' Get pedigree id from pid
+//' Get pedigree ids from pids
+//'
+//' @param population Population
+//' @param pids Pids
+//' 
+//' @return Vector with pedigree ids
 //' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, Rcpp::IntegerVector pids) {  
+Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, 
+                                             Rcpp::IntegerVector pids) {  
+  
   std::unordered_map<int, Individual*> pop = *(population->get_population());
   
   int N = pids.size();
@@ -94,6 +129,12 @@ Rcpp::IntegerVector get_pedigree_id_from_pid(Rcpp::XPtr<Population> population, 
 
 //////////////////////////////////////
 
+//' Get individual's family information
+//'
+//' @param individual individual
+//' 
+//' @return List with family information
+//' 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List get_family_info(Rcpp::XPtr<Individual> individual) {  
@@ -106,6 +147,15 @@ Rcpp::List get_family_info(Rcpp::XPtr<Individual> individual) {
 
 }
 
+
+//' Number of brothes
+//' 
+//' Get individual's number of brothes
+//'
+//' @param individual individual
+//' 
+//' @return Number of brothers
+//' 
 //' @export
 // [[Rcpp::export]]
 int count_brothers(Rcpp::XPtr<Individual> individual) {  
@@ -120,6 +170,14 @@ int count_brothers(Rcpp::XPtr<Individual> individual) {
   return (fathers_boys - 1);
 }
 
+//' Number of brothes with matching haplotype
+//' 
+//' Get individual's number of brothes that matches `individual`'s haplotype
+//'
+//' @param individual individual
+//' 
+//' @return Number of brothers that matches `individual`'s haplotype
+//' 
 //' @export
 // [[Rcpp::export]]
 int brothers_matching(Rcpp::XPtr<Individual> individual) {  
@@ -166,6 +224,14 @@ int brothers_matching(Rcpp::XPtr<Individual> individual) {
   return matching;
 }
 
+//' Father matches
+//' 
+//' Does the father have the same profile as `individual`?
+//'
+//' @param individual individual
+//' 
+//' @return Whether father has the same profile as `individual` or not
+//' 
 //' @export
 // [[Rcpp::export]]
 bool father_matches(Rcpp::XPtr<Individual> individual) {  
@@ -191,6 +257,14 @@ bool father_matches(Rcpp::XPtr<Individual> individual) {
   return (h.size() == h_father.size() && h == h_father);
 }
 
+//' Grandfather matches
+//' 
+//' Does the frandfather have the same profile as `individual`?
+//'
+//' @param individual individual
+//' 
+//' @return Whether grandfather has the same profile as `individual` or not
+//' 
 //' @export
 // [[Rcpp::export]]
 bool grandfather_matches(Rcpp::XPtr<Individual> individual) {  
@@ -226,7 +300,14 @@ bool grandfather_matches(Rcpp::XPtr<Individual> individual) {
   return (h.size() == h_grandfather.size() && h == h_grandfather);
 }
 
-
+//' Number of uncles
+//' 
+//' Get individual's number of uncles
+//'
+//' @param individual individual
+//' 
+//' @return Number of uncles
+//' 
 //' @export
 // [[Rcpp::export]]
 int count_uncles(Rcpp::XPtr<Individual> individual) {  
@@ -247,6 +328,4 @@ int count_uncles(Rcpp::XPtr<Individual> individual) {
   // exclude father
   return (fathers_fathers_boys - 1);
 }
-
-
 
