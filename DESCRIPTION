@@ -3,6 +3,10 @@ Type: Package
 Title: MAle Lineage ANalysis
 Version: 0.0.2
 Date: 2017-09-29
+Authors@R: c(
+    person(given = "Mikkel Meyer", family = "Andersen", 
+        email = "mikl@math.aau.dk", role = c("aut", "cre"))
+  )
 Author: Mikkel Meyer Andersen <mikl@math.aau.dk>
 Maintainer: Mikkel Meyer Andersen <mikl@math.aau.dk>
 Description: Simulation and tools for analysing male lineages.

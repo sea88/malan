@@ -24,3 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Andersen MM, Balding DJ (2017) How convincing is a matching Y-chromosome profile?
 PLoS Genet 13(11): e1007028. \url{https://doi.org/10.1371/journal.pgen.1007028}.
 }
+\author{
+\strong{Maintainer}: Mikkel Meyer Andersen \email{mikl@math.aau.dk}
+
+}
