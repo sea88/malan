@@ -17,8 +17,6 @@ pedigrees_all_populate_haplotypes(pedigrees = pedigrees,
                                   mutation_rates = mutrts, progress = FALSE)
 live_individuals <- sim_res_growth$individuals_generations
 
-#haps <- individuals_get_haplotypes(individuals = live_individuals)
-
 U_indices <- sample.int(n = length(live_individuals), size = 2, replace = FALSE)
 U1 <- live_individuals[[U_indices[1]]]
 U2 <- live_individuals[[U_indices[2]]]
@@ -45,13 +43,12 @@ test_that("contributors differet", {
 
 
 mixres <- mixture_info_by_individuals(live_individuals, U1, U2)
-others_haps <- individual_pids_get_haplotypes(sim_res_growth$population, 
-                                              mixres$pids_others_included)
+others_haps <- get_haplotypes_pids(sim_res_growth$population, mixres$pids_others_included)
 
 others_indv <- lapply(mixres$pids_others_included, function(pid) {
   get_individual(sim_res_growth$population, pid)
 })
-others_haps_2 <- individuals_get_haplotypes(individuals = others_indv)
+others_haps_2 <- get_haplotypes_individuals(individuals = others_indv)
 
 test_that("mixture_info_by_individuals works", {
   expect_equal(mixres$donor1_profile, H1)

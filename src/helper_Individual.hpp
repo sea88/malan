@@ -1,3 +1,11 @@
+/**
+ helder_Individual.hpp
+ Purpose: Header for C++ helper functions for Individual class.
+ Details: C++ header.
+  
+ @author Mikkel Meyer Andersen
+ */
+ 
 #ifndef HELPER_INDIVIDUALS_H
 #define HELPER_INDIVIDUALS_H
 

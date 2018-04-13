@@ -6,8 +6,8 @@
 \title{Kit information about Y-STR markers}
 \format{A data frame with 53940 rows and 10 variables:
 \describe{
-  \item{Marker}{name of Y-STR marker}
-  \item{Kit}{name of Y-STR kit}
+\item{Marker}{name of Y-STR marker}
+\item{Kit}{name of Y-STR kit}
 }}
 \source{
 \url{http://www.yhrd.org}
@@ -16,7 +16,7 @@
 ystr_kits
 }
 \description{
-A dataset containing information about the 
+A dataset containing information about the
 Y chromosomal short tandem repeat (Y-STR) markers that are present in the kit.
 }
 \keyword{datasets}

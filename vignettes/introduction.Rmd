@@ -207,7 +207,7 @@ length(live_individuals)
 ```
 
 ```{r}
-haps <- individuals_get_haplotypes(individuals = live_individuals)
+haps <- get_haplotypes_individuals(individuals = live_individuals)
 ```
 
 ```{r}
@@ -317,15 +317,14 @@ length(mixres$pids_others_included)
 Inspect these (only unique ones):
 
 ```{r}
-others_haps <- individual_pids_get_haplotypes(sim_res$population, 
-                                              mixres$pids_others_included)
+others_haps <- get_haplotypes_pids(sim_res$population, mixres$pids_others_included)
 
 # or:
 if (FALSE) {
   others_indv <- lapply(mixres$pids_others_included, function(pid) {
       get_individual(sim_res$population, pid)
     })
-  others_haps <- individuals_get_haplotypes(individuals = others_indv)
+  others_haps <- get_haplotypes_individuals(individuals = others_indv)
 }
 
 others_haps <- others_haps[!duplicated(others_haps), ]

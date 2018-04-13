@@ -2,11 +2,26 @@
 % Please edit documentation in R/RcppExports.R
 \name{pedigrees_all_populate_haplotypes}
 \alias{pedigrees_all_populate_haplotypes}
-\title{Unbounded, founders all zero}
+\title{Populate haplotypes in pedigrees (0-founder/unbounded).}
 \usage{
 pedigrees_all_populate_haplotypes(pedigrees, loci, mutation_rates,
   progress = TRUE)
 }
+\arguments{
+\item{pedigrees}{Pedigree list in which to populate haplotypes}
+
+\item{loci}{Number of loci}
+
+\item{mutation_rates}{Vector with mutation rates, length \code{loci}}
+
+\item{progress}{Show progress}
+}
 \description{
-Unbounded, founders all zero
+Populate haplotypes from founder and down in all pedigrees.
+Note, that haplotypes are unbounded and
+that all founders get haplotype \code{rep(0L, loci)}.
+}
+\seealso{
+\code{\link[=pedigrees_all_populate_haplotypes_custom_founders]{pedigrees_all_populate_haplotypes_custom_founders()}} and
+\code{\link[=pedigrees_all_populate_haplotypes_ladder_bounded]{pedigrees_all_populate_haplotypes_ladder_bounded()}}.
 }

@@ -1,3 +1,11 @@
+/**
+ api_simulate_varying_size.cpp
+ Purpose: Logic to simulate population of varying size.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]
@@ -60,6 +68,8 @@ using namespace Rcpp;
 //'   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
 //'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
 //' }
+//'
+//' @seealso [sample_geneology()].
 //' 
 //' @import Rcpp
 //' @import RcppProgress
@@ -95,12 +105,10 @@ List sample_geneology_varying_size(
     }
   }
   
-  //Rcpp::Rcout << "vary 1" << std::endl;
-
-  
   Progress progress_bar(generations, progress);
   
-  std::unordered_map<int, Individual*>* population_map = new std::unordered_map<int, Individual*>(); // pid's are garanteed to be unique
+  // pid's are garanteed to be unique
+  std::unordered_map<int, Individual*>* population_map = new std::unordered_map<int, Individual*>(); 
   Population* population = new Population(population_map);
   Rcpp::XPtr<Population> population_xptr(population, RCPP_XPTR_2ND_ARG);
   population_xptr.attr("class") = CharacterVector::create("malan_population", "externalptr");
@@ -128,11 +136,7 @@ List sample_geneology_varying_size(
     progress_bar.increment();
   }
   
-  //Rcpp::Rcout << "vary 2" << std::endl;
-  //Rcpp::Rcout << "  population_sizes[generations-1] = population_sizes[" << (generations-1) << "]" << std::endl;
-  
   // Next generation  
-  //std::vector<Individual*>* children_generation = &end_generation;
   std::vector<Individual*> children_generation(population_sizes[generations-1]);
   for (size_t i = 0; i < population_sizes[generations-1]; ++i) {
     children_generation[i] = end_generation[i];
@@ -141,22 +145,12 @@ List sample_geneology_varying_size(
   
   int founders_left = population_sizes[generations-1];
   
-  //Rcpp::Rcout << "vary 3" << std::endl;
-  //Rcpp::Rcout << "  generations = " << generations << std::endl;
-  //Rcpp::Rcout << "  population_sizes.length() = " << population_sizes.length() << std::endl;
-  
   // now, find out who the fathers to the children are
   for (size_t generation = 1; generation < generations; ++generation) {
     // Init ->
-    //Rcpp::Rcout << "vary 4-" << generation << std::endl;
-
-    //Rcpp::Rcout << "  population_size          = population_sizes[generations-(generation+1)] = population_sizes[" << generations << "-" << (generation+1) << "] = population_sizes[" << (generations-(generation+1)) << "]" << std::endl;
-    //Rcpp::Rcout << "  children_population_size = population_sizes[generations-generation] = population_sizes[" << generations << "-" << generation << "] = population_sizes[" << (generations-generation) << "]" << std::endl;
-
     int population_size = population_sizes[generations-(generation+1)];    
     int children_population_size = population_sizes[generations-generation];
 
-    
     WFRandomFather wf_random_father(population_size);
     GammaVarianceRandomFather gamma_variance_father(population_size, gamma_parameter_shape, gamma_parameter_scale);  
     SimulateChooseFather* choose_father = &wf_random_father;
@@ -164,30 +158,18 @@ List sample_geneology_varying_size(
       choose_father = &gamma_variance_father;
     }
     
-    //Rcpp::Rcout << "vary 5-" << generation << std::endl;
-    
     fathers_generation.clear();
     fathers_generation.resize(population_size);
-    
     // <- Init
     
     int new_founders_left = 0;
-    //Rcpp::Rcerr << "Generation " << generation << std::endl;
-    
+
     // clear
-    for (size_t i = 0; i < population_size; ++i) { // necessary?
+    for (size_t i = 0; i < population_size; ++i) {
       fathers_generation[i] = nullptr;
     }
     
-    //Rcpp::Rcout << "vary 6-" << generation << std::endl;
-    
     choose_father->update_state_new_generation();
-    
-    //Rcpp::Rcout << "vary 7-" << generation << std::endl;
-    
-    /*
-    FIXME: New, more explicit logic? Maybe copy create_father_update_simulation_state_varying_size into here?
-    */
     
     // now, run through children to pick each child's father
     for (size_t i = 0; i < children_population_size; ++i) {
@@ -196,8 +178,6 @@ List sample_geneology_varying_size(
         continue;
       }
       
-      // child [i] in [generation-1]/children_generation has father [father_i] in [generation]/fathers_generation
-      //int father_i = sample_person_weighted(population_size, fathers_prob, fathers_prob_perm);
       int father_i = choose_father->get_father_i();
       
       // if this is the father's first child, create the father
@@ -208,18 +188,11 @@ List sample_geneology_varying_size(
       }
             
       fathers_generation[father_i]->add_child(children_generation[i]);
-      //children_generation[i]->set_father(fathers_generation[father_i]);
     }
-    
-    //Rcpp::Rcout << "vary 8-" << generation << std::endl;
-    
-    //Rcpp::Rcout << "generation = " << generation << "; extra_generations_full = " << extra_generations_full << std::endl;
     
     // create additional fathers (without children) if needed:
     if (generation <= extra_generations_full) {
       for (size_t father_i = 0; father_i < population_size; ++father_i) {
-        //Rcpp::Rcout << "vary 8-dong-" << father_i << std::endl;
-        
         if (fathers_generation[father_i] != nullptr) {
           continue;
         }        
@@ -230,19 +203,12 @@ List sample_geneology_varying_size(
               &new_founders_left, last_k_generations_individuals);
       }      
     }
-    
-    //Rcpp::Rcout << "vary 9-" << generation << std::endl;
-    
-    // children_generation = &fathers_generation;
-    // FIXME mikl 2017-06-26 19:09
-    //children_generation = fathers_generation;
-    //vs:
+
     children_generation.clear();
     children_generation.resize(population_size);
     for (size_t i = 0; i < population_size; ++i) {
       children_generation[i] = fathers_generation[i];
     }
-    //<-
     
     if (Progress::check_abort()) {
       stop("Aborted");

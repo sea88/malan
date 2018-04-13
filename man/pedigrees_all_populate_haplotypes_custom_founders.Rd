@@ -2,11 +2,27 @@
 % Please edit documentation in R/RcppExports.R
 \name{pedigrees_all_populate_haplotypes_custom_founders}
 \alias{pedigrees_all_populate_haplotypes_custom_founders}
-\title{Unbounded, custom founders}
+\title{Populate haplotypes in pedigrees (custom founder/unbounded).}
 \usage{
 pedigrees_all_populate_haplotypes_custom_founders(pedigrees, mutation_rates,
   get_founder_haplotype = NULL, progress = TRUE)
 }
+\arguments{
+\item{pedigrees}{Pedigree list in which to populate haplotypes}
+
+\item{mutation_rates}{Vector with mutation rates}
+
+\item{get_founder_haplotype}{Function taking no arguments returning a haplotype of \code{length(mutation_rates)}}
+
+\item{progress}{Show progress}
+}
 \description{
-Unbounded, custom founders
+Populate haplotypes from founder and down in all pedigrees.
+Note, that haplotypes are unbounded.
+All founders get a haplotype from calling the user
+provided function \code{get_founder_haplotype()}.
+}
+\seealso{
+\code{\link[=pedigrees_all_populate_haplotypes]{pedigrees_all_populate_haplotypes()}} and
+\code{\link[=pedigrees_all_populate_haplotypes_ladder_bounded]{pedigrees_all_populate_haplotypes_ladder_bounded()}}.
 }

@@ -6,10 +6,10 @@
 \title{Mutational information about Y-STR markers}
 \format{A data frame with 53940 rows and 10 variables:
 \describe{
-  \item{Marker}{name of Y-STR marker}
-  \item{Meioses}{number of meioses observed}
-  \item{Mutations}{number of mutations observed in the corresponding number of Meioses}
-  \item{MutProb}{point estimate of mutation probability, MutProb = Mutations/Meioses}
+\item{Marker}{name of Y-STR marker}
+\item{Meioses}{number of meioses observed}
+\item{Mutations}{number of mutations observed in the corresponding number of Meioses}
+\item{MutProb}{point estimate of mutation probability, MutProb = Mutations/Meioses}
 }}
 \source{
 \url{http://www.yhrd.org}
@@ -22,7 +22,7 @@ A dataset from yhrd.org (and their sources) containing mutational information ab
 Y chromosomal short tandem repeat (Y-STR) markers used in forensic genetics.
 }
 \details{
-Note, that loci with duplications (DYS385a/b as well as 
+Note, that loci with duplications (DYS385a/b as well as
 DYF387S1a/b have been split into two loci).
 }
 \keyword{datasets}

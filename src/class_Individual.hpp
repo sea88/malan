@@ -1,3 +1,11 @@
+/**
+ class_Individual.cpp
+ Purpose: Header for C++ class Individual.
+ Details: C++ header.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include "malan_types.hpp"
 
 #include <vector>

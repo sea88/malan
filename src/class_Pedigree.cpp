@@ -1,3 +1,11 @@
+/**
+ class_Pedigree.cpp
+ Purpose: C++ class Pedigree.
+ Details: C++ implementation.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include "malan_types.hpp"
 
 #include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?

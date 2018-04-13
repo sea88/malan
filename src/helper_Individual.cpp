@@ -1,6 +1,13 @@
+/**
+ helder_Individual.cpp
+ Purpose: C++ helper functions for Individual class.
+ Details: C++ implementation.
+  
+ @author Mikkel Meyer Andersen
+ */
+ 
 #include <RcppArmadillo.h>
 #include "malan_types.hpp"
-
 
 bool find_path_from_root_to_dest(Individual* root, std::vector<Individual*>& path, const Individual* dest) {
   if (root == NULL || root == nullptr) {

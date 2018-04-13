@@ -1,3 +1,11 @@
+/**
+ malan_types.hpp
+ Purpose: Header for C++ classes.
+ Details: C++ header.
+  
+ @author Mikkel Meyer Andersen
+ */
+ 
 #ifndef MALAN_TYPES_H
 #define MALAN_TYPES_H
 

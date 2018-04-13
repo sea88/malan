@@ -35,8 +35,8 @@ test_that("pedigrees_all_populate_haplotypes works", {
 })
 
 haps_from_ped <- get_haplotypes_in_pedigree(ped)
-haps_from_pids <- individual_pids_get_haplotypes(test_pop, pids)
-haps_from_indvs <- individuals_get_haplotypes(indvs)
+haps_from_pids <- get_haplotypes_pids(test_pop, pids)
+haps_from_indvs <- get_haplotypes_individuals(indvs)
 hap_from_indv <- lapply(pids, function(pid) get_haplotype(get_individual(test_pop, pid)))
 
 test_that("pedigrees_all_populate_haplotypes haplotypes works", {
@@ -82,8 +82,8 @@ pedigrees_all_populate_haplotypes_ladder_bounded(peds,
                                                  progress = FALSE)
 
 haps_from_ped <- get_haplotypes_in_pedigree(ped)
-haps_from_pids <- individual_pids_get_haplotypes(test_pop, pids)
-haps_from_indvs <- individuals_get_haplotypes(indvs)
+haps_from_pids <- get_haplotypes_pids(test_pop, pids)
+haps_from_indvs <- get_haplotypes_individuals(indvs)
 hap_from_indv <- lapply(pids, function(pid) get_haplotype(get_individual(test_pop, pid)))
 
 test_that("pedigrees_all_populate_haplotypes_ladder_bounded haplotypes works", {

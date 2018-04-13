@@ -1,3 +1,11 @@
+/**
+ class_SimulateChooseFather.cpp
+ Purpose: C++ class SimulateChooseFather.
+ Details: C++ implementation.
+  
+ @author Mikkel Meyer Andersen
+ */
+ 
 #include "malan_types.hpp"
 
 #include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?

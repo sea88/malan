@@ -1,3 +1,11 @@
+/**
+ api_simulate_helper.cpp
+ Purpose: Helper for functions related to simulating populations.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]
@@ -10,6 +18,8 @@
 
 using namespace Rcpp;
 
+// Create a new father and add him to population. 
+// Used in sample_geneology()
 void create_father_update_simulation_state(
   int father_i, 
   int* individual_id, 
@@ -40,6 +50,8 @@ void create_father_update_simulation_state(
   }  
 }
 
+// Create a new father and add him to population. 
+// Used in sample_geneology_varying_size()
 void create_father_update_simulation_state_varying_size(
   int father_i, 
   int* individual_id, 

@@ -10,8 +10,8 @@ sample_geneology_varying_size(population_sizes, extra_generations_full = 0L,
   individuals_generations_return = 2L)
 }
 \arguments{
-\item{population_sizes}{The size of the population at each generation, g. 
-population_sizes[g] is the population size at generation g.
+\item{population_sizes}{The size of the population at each generation, g.
+population_sizes\link{g} is the population size at generation g.
 The length of population_sizes is the number of generations being simulated.}
 
 \item{extra_generations_full}{Additional full generations to be simulated.}
@@ -29,13 +29,13 @@ The length of population_sizes is the number of generations being simulated.}
 \value{
 A malan_simulation / list with the following entries:
 \itemize{
-  \item \code{population}. An external pointer to the population.
-  \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
-  \item \code{founders}. Number of founders after the simulated \code{generations}.
-  \item \code{growth_type}. Growth type model.
-  \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
-  \item \code{end_generation_individuals}. Pointers to individuals in end generation.
-  \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
+\item \code{population}. An external pointer to the population.
+\item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
+\item \code{founders}. Number of founders after the simulated \code{generations}.
+\item \code{growth_type}. Growth type model.
+\item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
+\item \code{end_generation_individuals}. Pointers to individuals in end generation.
+\item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
 }
 }
 \description{
@@ -43,27 +43,30 @@ This function simulates a geneology with varying population size specified
 by a vector of population sizes, one for each generation.
 }
 \details{
-By the backwards simulating process of the Wright-Fisher model, 
-individuals with no descendants in the end population are not simulated 
-If for some reason additional full generations should be simulated, 
+By the backwards simulating process of the Wright-Fisher model,
+individuals with no descendants in the end population are not simulated
+If for some reason additional full generations should be simulated,
 the number can be specified via the \code{extra_generations_full} parameter.
-This can for example be useful if one wants to simulate the 
+This can for example be useful if one wants to simulate the
 final 3 generations although some of these may not get (male) children.
 
-Let \eqn{\alpha} be the parameter of a symmetric Dirichlet distribution 
-specifying each man's probability to be the father of an arbitrary 
-male in the next generation. When \eqn{\alpha = 5}, a man's relative probability 
-to be the father has 95\% probability to lie between 0.32 and 2.05, compared with a 
-constant 1 under the standard Wright-Fisher model and the standard deviation in 
+Let \eqn{\alpha} be the parameter of a symmetric Dirichlet distribution
+specifying each man's probability to be the father of an arbitrary
+male in the next generation. When \eqn{\alpha = 5}, a man's relative probability
+to be the father has 95\% probability to lie between 0.32 and 2.05, compared with a
+constant 1 under the standard Wright-Fisher model and the standard deviation in
 the number of male offspring per man is 1.10 (standard Wright-Fisher = 1).
 
-This symmetric Dirichlet distribution is implemented by drawing 
-father (unscaled) probabilities from a Gamma distribution with 
-parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale} 
-that are then normalised to sum to 1. 
-To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha}, 
+This symmetric Dirichlet distribution is implemented by drawing
+father (unscaled) probabilities from a Gamma distribution with
+parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale}
+that are then normalised to sum to 1.
+To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha},
 the following must be used:
 \eqn{\code{gamma_parameter_shape} = \alpha}
-and 
+and
 \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+}
+\seealso{
+\code{\link[=sample_geneology]{sample_geneology()}}.
 }

@@ -1,3 +1,11 @@
+/**
+ api_simulate.cpp
+ Purpose: Logic to simulate population of constant size.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]
@@ -10,14 +18,14 @@
 
 using namespace Rcpp;
 
-//' Simulate a geneology.
+//' Simulate a geneology with constant population size.
 //' 
-//' This function simulates a geneology where the last generation has \code{population_size} individuals. 
+//' This function simulates a geneology where the last generation has `population_size` individuals. 
 //' 
 //' By the backwards simulating process of the Wright-Fisher model, 
 //' individuals with no descendants in the end population are not simulated. 
 //' If for some reason additional full generations should be simulated, 
-//' the number can be specified via the \code{extra_generations_full} parameter.
+//' the number can be specified via the `extra_generations_full` parameter.
 //' This can for example be useful if one wants to simulate the 
 //' final 3 generations although some of these may not get (male) children.
 //' 
@@ -30,13 +38,13 @@ using namespace Rcpp;
 //' 
 //' This symmetric Dirichlet distribution is implemented by drawing 
 //' father (unscaled) probabilities from a Gamma distribution with 
-//' parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale} 
+//' parameters `gamma_parameter_shape` and `gamma_parameter_scale` 
 //' that are then normalised to sum to 1. 
 //' To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha}, 
 //' the following must be used:
-//' \eqn{\code{gamma_parameter_shape} = \alpha}
+//' \eqn{`gamma_parameter_shape` = \alpha}
 //' and 
-//' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+//' \eqn{`gamma_parameter_scale` = 1/\alpha}.
 //' 
 //' @param population_size The size of the population.
 //' @param generations The number of generations to simulate: 
@@ -54,20 +62,22 @@ using namespace Rcpp;
 //' 
 //' @return A list with the following entries:
 //' \itemize{
-//'   \item \code{population}. An external pointer to the population.
-//'   \item \code{generations}. Generations actually simulated, mostly useful when parameter \code{generations = -1}.
-//'   \item \code{founders}. Number of founders after the simulated \code{generations}.
-//'   \item \code{growth_type}. Growth type model.
-//'   \item \code{sdo_type}. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on \code{enable_gamma_variance_extension}.
-//'   \item \code{end_generation_individuals}. Pointers to individuals in end generation.
-//'   \item \code{individuals_generations}. Pointers to individuals in end generation in addition to the previous \code{individuals_generations_return}.
+//'   \item `population`. An external pointer to the population.
+//'   \item `generations`. Generations actually simulated, mostly useful when parameter `generations = -1`.
+//'   \item `founders`. Number of founders after the simulated `generations`.
+//'   \item `growth_type`. Growth type model.
+//'   \item `sdo_type`. Standard deviation in a man's number of male offspring. StandardWF or GammaVariation depending on `enable_gamma_variance_extension`.
+//'   \item `end_generation_individuals`. Pointers to individuals in end generation.
+//'   \item `individuals_generations`. Pointers to individuals in end generation in addition to the previous `individuals_generations_return`.
 //' }
-//' If \code{verbose_result} is true, then these additional components are also returned:
+//' If `verbose_result` is true, then these additional components are also returned:
 //' \itemize{
-//'   \item \code{individual_pids}. A matrix with pid (person id) for each individual.
-//'   \item \code{father_pids}. A matrix with pid (person id) for each individual's father.
-//'   \item \code{father_indices}. A matrix with indices for fathers.
+//'   \item `individual_pids`. A matrix with pid (person id) for each individual.
+//'   \item `father_pids`. A matrix with pid (person id) for each individual's father.
+//'   \item `father_indices`. A matrix with indices for fathers.
 //' }
+//' 
+//' @seealso [sample_geneology_varying_size()].
 //' 
 //' @import Rcpp
 //' @import RcppProgress
@@ -77,7 +87,7 @@ using namespace Rcpp;
 List sample_geneology(size_t population_size, 
   int generations,
   int extra_generations_full = 0,  
-  double gamma_parameter_shape = 7, double gamma_parameter_scale = 7, 
+  double gamma_parameter_shape = 5.0, double gamma_parameter_scale = 1.0/5.0, 
   bool enable_gamma_variance_extension = false,
   bool progress = true, 
   int individuals_generations_return = 2,   
@@ -108,8 +118,6 @@ List sample_geneology(size_t population_size,
   }
   
   bool simulate_fixed_number_generations = (generations == -1) ? false : true;
-  
-  //Rcpp::Rcout << simulate_fixed_number_generations << std::endl;
   
   Progress progress_bar((simulate_fixed_number_generations) ? generations : 1000, progress);
   
@@ -187,7 +195,6 @@ List sample_geneology(size_t population_size,
   }
   
   // Next generation  
-  //std::vector<Individual*>* children_generation = &end_generation;
   std::vector<Individual*> children_generation(population_size);
   for (size_t i = 0; i < population_size; ++i) children_generation[i] = end_generation[i];
   std::vector<Individual*> fathers_generation(population_size);
@@ -195,7 +202,6 @@ List sample_geneology(size_t population_size,
   int founders_left = population_size;
   
   // now, find out who the fathers to the children are
-  //for (size_t generation = 1; generation < generations; ++generation) {
   size_t generation = 1;
   while ((simulate_fixed_number_generations == true && generation < generations) || (simulate_fixed_number_generations == false && founders_left > 1)) {
     int new_founders_left = 0;
@@ -227,7 +233,6 @@ List sample_geneology(size_t population_size,
       }
       
       // child [i] in [generation-1]/children_generation has father [father_i] in [generation]/fathers_generation
-      //int father_i = sample_person_weighted(population_size, fathers_prob, fathers_prob_perm);
       int father_i = choose_father->get_father_i();
       
       // if this is the father's first child, create the father
@@ -260,7 +265,6 @@ List sample_geneology(size_t population_size,
       }      
     }
     
-    // verbose result
     if (verbose_result) {
       if (simulate_fixed_number_generations) {
         individual_pids(Rcpp::_, generation) = individual_pids_tmp_vec;
@@ -273,8 +277,9 @@ List sample_geneology(size_t population_size,
       }
     }
         
-    // children_generation = &fathers_generation;
-    for (size_t i = 0; i < population_size; ++i) children_generation[i] = fathers_generation[i];
+    for (size_t i = 0; i < population_size; ++i) {
+      children_generation[i] = fathers_generation[i];
+    }
     
     if (Progress::check_abort()) {
       stop("Aborted");

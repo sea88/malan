@@ -1,3 +1,11 @@
+/**
+ class_Population.hpp
+ Purpose: Header for C++ class Population.
+ Details: C++ header.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include "malan_types.hpp"
 
 #include <vector>

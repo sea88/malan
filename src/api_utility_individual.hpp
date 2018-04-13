@@ -1,3 +1,11 @@
+/**
+ api_utility_individual.hpp
+ Purpose: Header file for logic related to individuals.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #ifndef MALAN_UTILITY_INDV_H
 #define MALAN_UTILITY_INDV_H
 

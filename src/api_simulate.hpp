@@ -1,3 +1,11 @@
+/**
+ api_simulate.hpp
+ Purpose: Header file for population simulation.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]

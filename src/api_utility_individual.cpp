@@ -1,3 +1,11 @@
+/**
+ api_utility_individual.cpp
+ Purpose: Logic related to individuals.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+ 
 #include "malan_types.hpp"
 #include "api_utility_individual.hpp"
 

@@ -1,3 +1,11 @@
+/**
+ class_Individual.cpp
+ Purpose: C++ class Individual.
+ Details: C++ implementation.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include "malan_types.hpp"
 
 #include <stdexcept>

@@ -1,3 +1,11 @@
+/**
+ class_SimulateChooseFather.cpp
+ Purpose: Header for C++ class SimulateChooseFather.
+ Details: C++ header.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include <RcppArmadillo.h> // FIXME: Avoid Rcpp here? Only in api_* files?
 
 class SimulateChooseFather {

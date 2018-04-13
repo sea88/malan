@@ -1,3 +1,11 @@
+/**
+ api_utility_misc.cpp
+ Purpose: Miscellaneous logic.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+ 
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]

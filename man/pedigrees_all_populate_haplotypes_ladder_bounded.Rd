@@ -2,14 +2,31 @@
 % Please edit documentation in R/RcppExports.R
 \name{pedigrees_all_populate_haplotypes_ladder_bounded}
 \alias{pedigrees_all_populate_haplotypes_ladder_bounded}
-\title{Bounded, custom founders}
+\title{Populate haplotypes in pedigrees (custom founder/bounded).}
 \usage{
 pedigrees_all_populate_haplotypes_ladder_bounded(pedigrees, mutation_rates,
   ladder_min, ladder_max, get_founder_haplotype = NULL, progress = TRUE)
 }
 \arguments{
-\item{get_founder_haplotype}{has no default as it is not know in advance how many loci there are and what the ladder is; see \code{\link{generate_get_founder_haplotype}}}
+\item{pedigrees}{Pedigree list in which to populate haplotypes}
+
+\item{mutation_rates}{Vector with mutation rates}
+
+\item{ladder_min}{Lower bounds for haplotypes, same length as \code{mutation_rates}}
+
+\item{ladder_max}{Upper bounds for haplotypes, same length as \code{mutation_rates}; all entries must be strictly greater than \code{ladder_min}}
+
+\item{get_founder_haplotype}{Function taking no arguments returning a haplotype of \code{length(mutation_rates)}}
+
+\item{progress}{Show progress}
 }
 \description{
-Populate haplotypes such that they are all on-ladder
+Populate haplotypes from founder and down in all pedigrees.
+Note, that haplotypes are bounded by \code{ladder_min} and \code{ladder_max}.
+All founders get a haplotype from calling the user
+provided function \code{\link[=get_founder_haplotype]{get_founder_haplotype()}}.
+}
+\seealso{
+\code{\link[=pedigrees_all_populate_haplotypes]{pedigrees_all_populate_haplotypes()}} and
+\code{\link[=pedigrees_all_populate_haplotypes_custom_founders]{pedigrees_all_populate_haplotypes_custom_founders()}}.
 }

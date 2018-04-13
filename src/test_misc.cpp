@@ -1,3 +1,11 @@
+/**
+ test_misc.cpp
+ Purpose: Code used in testing package.
+ Details: C++ implementation.
+  
+ @author Mikkel Meyer Andersen
+ */
+ 
 #include <RcppArmadillo.h>
 
 #include "malan_types.hpp"

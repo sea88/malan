@@ -1,3 +1,11 @@
+/**
+ api_utility_pedigree.cpp
+ Purpose: Logic related to pedigrees.
+ Details: API between R user and C++ logic.
+  
+ @author Mikkel Meyer Andersen
+ */
+
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppProgress)]]
