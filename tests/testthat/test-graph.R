@@ -28,3 +28,29 @@ pid1_meiotic_dist_known <- as.matrix(read.csv(con, sep = " "))
 test_that("meioses_generation_distribution works", {
   expect_equal(pid1_meiotic_dist_calc, pid1_meiotic_dist_known)
 })
+
+
+library(igraph)
+g <- pedigree_as_igraph(ped)
+el <- igraph::as_edgelist(g)
+el2 <- as.matrix(get_nodes_edges(peds)$edges)
+dimnames(el2) <- NULL
+
+test_that("igraph interface works", {
+  expect_equal(sort(as.integer(V(g))), 1L:11L)
+  expect_equal(el, el2)
+  
+  expect_equal(0L, c(igraph::distances(g, v = "1", to = "1")))
+  
+  expect_equal(1L, c(igraph::distances(g, v = "1", to = "6")))
+  
+  expect_equal(4L, c(igraph::distances(g, v = "1", to = "10")))
+  
+  for (v1 in 1L:11L) {
+    for (v2 in v1:11L) {
+      expect_equal(c(igraph::distances(g, v = as.character(v1), to = as.character(v2))), 
+                   meiotic_dist(get_individual(test_pop, pid = v1), 
+                                get_individual(test_pop, pid = v2)))
+    }
+  }
+})

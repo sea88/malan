@@ -19,7 +19,7 @@ addons:
 install: 
   # R
   - sudo apt-get install r-base r-base-dev
-  - sudo Rscript -e 'install.packages("igraph", repos = "http://cran.r-project.org")'
+  - sudo Rscript -e 'install.packages(c("igraph", "knitr", "rmarkdown", "testthat", "ggraph"), repos = "http://cran.r-project.org")'
   
 before_install: |
   mkdir ~/.R
