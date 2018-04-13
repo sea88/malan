@@ -7,9 +7,9 @@
 generate_get_founder_haplotype_ladder(ladder_min, ladder_max)
 }
 \arguments{
-\item{ladder_min}{vector of minimum alleles; ladder_min\link{i} is the minimum allele at locus i}
+\item{ladder_min}{vector of minimum alleles; \code{ladder_min[i]} is the minimum allele at locus i}
 
-\item{ladder_max}{vector of minimum alleles; ladder_max\link{i} is the maximum allele at locus i}
+\item{ladder_max}{vector of minimum alleles; \code{ladder_max[i]} is the maximum allele at locus i}
 }
 \description{
 Generate a function to simulate pedigree founder haplotype based on ladder information

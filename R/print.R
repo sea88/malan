@@ -89,6 +89,7 @@ print.malan_pedigree <-
 #' @import tibble
 #' @importFrom graphics par
 #' @importFrom utils head
+#' @importFrom methods is
 #' @export
 pedigree_as_igraph <-
   function(x, ...) {

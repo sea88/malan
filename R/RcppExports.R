@@ -118,8 +118,8 @@ sample_geneology <- function(population_size, generations, extra_generations_ful
 #' and 
 #' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
 #' 
-#' @param population_sizes The size of the population at each generation, g. 
-#'        population_sizes[g] is the population size at generation g.
+#' @param population_sizes The size of the population at each generation, `g`. 
+#'        `population_sizes[g]` is the population size at generation `g`.
 #'        The length of population_sizes is the number of generations being simulated.
 #' @param extra_generations_full Additional full generations to be simulated.
 #' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.
@@ -197,7 +197,7 @@ pedigrees_all_populate_haplotypes_custom_founders <- function(pedigrees, mutatio
 #' Populate haplotypes from founder and down in all pedigrees.
 #' Note, that haplotypes are bounded by `ladder_min` and `ladder_max`.
 #' All founders get a haplotype from calling the user 
-#' provided function [get_founder_haplotype()].
+#' provided function `get_founder_haplotype()`.
 #' 
 #' Note, that pedigrees must first have been inferred by [build_pedigrees()].
 #' 

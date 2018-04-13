@@ -1,7 +1,7 @@
 #' Generate a function to simulate pedigree founder haplotype based on ladder information
 #' 
-#' @param ladder_min vector of minimum alleles; ladder_min[i] is the minimum allele at locus i
-#' @param ladder_max vector of minimum alleles; ladder_max[i] is the maximum allele at locus i
+#' @param ladder_min vector of minimum alleles; `ladder_min[i]` is the minimum allele at locus i
+#' @param ladder_max vector of minimum alleles; `ladder_max[i]` is the maximum allele at locus i
 #' @export
 generate_get_founder_haplotype_ladder <- function(ladder_min, ladder_max) {
   stopifnot(is.vector(ladder_min))

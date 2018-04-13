@@ -6,12 +6,13 @@
 #' Note, that loci with duplications (DYS385a/b as well as 
 #' DYF387S1a/b have been split into two loci).
 #' 
-#' @format A data frame with 53940 rows and 10 variables:
+#' @format A data frame with 53,940 rows and 10 variables:
 #' \describe{
 #'   \item{Marker}{name of Y-STR marker}
 #'   \item{Meioses}{number of meioses observed}
 #'   \item{Mutations}{number of mutations observed in the corresponding number of Meioses}
 #'   \item{MutProb}{point estimate of mutation probability, MutProb = Mutations/Meioses}
+#'   \item{Alleles}{observed alleles}
 #' }
 #' @source \url{http://www.yhrd.org}
 "ystr_markers"

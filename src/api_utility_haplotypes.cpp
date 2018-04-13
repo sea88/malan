@@ -117,7 +117,7 @@ void pedigrees_all_populate_haplotypes_custom_founders(Rcpp::XPtr< std::vector<P
 //' Populate haplotypes from founder and down in all pedigrees.
 //' Note, that haplotypes are bounded by `ladder_min` and `ladder_max`.
 //' All founders get a haplotype from calling the user 
-//' provided function [get_founder_haplotype()].
+//' provided function `get_founder_haplotype()`.
 //' 
 //' Note, that pedigrees must first have been inferred by [build_pedigrees()].
 //' 

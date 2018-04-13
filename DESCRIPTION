@@ -17,12 +17,13 @@ Imports:
     RcppArmadillo (>= 0.7.600.1.0),
     igraph (>= 1.0.1),
     tibble (>= 1.1),
-    magrittr (>= 1.5)
+    magrittr (>= 1.5),
+    methods
 Depends:
   dplyr (>= 0.7.4),
   tidygraph (>= 1.0.0.9999),
   ggraph (>= 1.0.1)
-LinkingTo: Rcpp, RcppArmadillo, RcppProgress, igraph
+LinkingTo: Rcpp, RcppArmadillo, RcppProgress
 Suggests: knitr, rmarkdown, testthat
 BugReports: https://github.com/mikldk/malan/issues
 VignetteBuilder: knitr

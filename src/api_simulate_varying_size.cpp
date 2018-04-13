@@ -48,8 +48,8 @@ using namespace Rcpp;
 //' and 
 //' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
 //' 
-//' @param population_sizes The size of the population at each generation, g. 
-//'        population_sizes[g] is the population size at generation g.
+//' @param population_sizes The size of the population at each generation, `g`. 
+//'        `population_sizes[g]` is the population size at generation `g`.
 //'        The length of population_sizes is the number of generations being simulated.
 //' @param extra_generations_full Additional full generations to be simulated.
 //' @param gamma_parameter_shape Parameter related to symmetric Dirichlet distribution for each man's probability to be father. Refer to details.

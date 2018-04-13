@@ -10,8 +10,8 @@ sample_geneology_varying_size(population_sizes, extra_generations_full = 0L,
   individuals_generations_return = 2L)
 }
 \arguments{
-\item{population_sizes}{The size of the population at each generation, g.
-population_sizes\link{g} is the population size at generation g.
+\item{population_sizes}{The size of the population at each generation, \code{g}.
+\code{population_sizes[g]} is the population size at generation \code{g}.
 The length of population_sizes is the number of generations being simulated.}
 
 \item{extra_generations_full}{Additional full generations to be simulated.}
