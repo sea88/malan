@@ -63,9 +63,9 @@ parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale}
 that are then normalised to sum to 1.
 To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha},
 the following must be used:
-\eqn{\code{gamma_parameter_shape} = \alpha}
+\eqn{`gamma_parameter_shape` = \alpha}
 and
-\eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+\eqn{`gamma_parameter_scale` = 1/\alpha}.
 }
 \seealso{
 \code{\link[=sample_geneology]{sample_geneology()}}.

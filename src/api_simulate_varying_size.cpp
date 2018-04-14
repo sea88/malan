@@ -40,13 +40,13 @@ using namespace Rcpp;
 //' 
 //' This symmetric Dirichlet distribution is implemented by drawing 
 //' father (unscaled) probabilities from a Gamma distribution with 
-//' parameters \code{gamma_parameter_shape} and \code{gamma_parameter_scale} 
+//' parameters `gamma_parameter_shape` and `gamma_parameter_scale` 
 //' that are then normalised to sum to 1. 
 //' To obtain a symmetric Dirichlet distribution with parameter \eqn{\alpha}, 
 //' the following must be used:
-//' \eqn{\code{gamma_parameter_shape} = \alpha}
+//' \eqn{`gamma_parameter_shape` = \alpha}
 //' and 
-//' \eqn{\code{gamma_parameter_scale} = 1/\alpha}.
+//' \eqn{`gamma_parameter_scale` = 1/\alpha}.
 //' 
 //' @param population_sizes The size of the population at each generation, `g`. 
 //'        `population_sizes[g]` is the population size at generation `g`.
