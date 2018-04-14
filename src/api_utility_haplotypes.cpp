@@ -371,6 +371,48 @@ int count_haplotype_occurrences_individuals(const Rcpp::List individuals, const 
   return count;
 }
 
+//' Get individuals matching from list of individuals
+//' 
+//' Get the indvididuals that matches `haplotype` in `individuals`.
+//' 
+//' @param individuals List of individuals to count occurrences in.
+//' @param haplotype Haplotype to count occurrences of.
+//' 
+//' @return List of individuals that matches `haplotype` amongst `individuals`.
+//' 
+//' @seealso [pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists()].
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::List haplotype_matches_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype) {
+  int n = individuals.size();
+  int loci = haplotype.size();
+  
+  Rcpp::List matches;
+  
+  std::vector<int> h = Rcpp::as< std::vector<int> >(haplotype);
+  
+  for (int i = 0; i < n; ++i) {
+    Rcpp::XPtr<Individual> indv = individuals[i];
+    
+    if (!(indv->is_haplotype_set())) {
+      Rcpp::stop("Haplotype not yet set.");
+    }
+    
+    std::vector<int> indv_h = indv->get_haplotype();
+    
+    if (indv_h.size() != loci) {
+      Rcpp::stop("haplotype and indv_h did not have same number of loci");
+    }
+    
+    if (indv_h == h) {
+      matches.push_back(indv);
+    }
+  }
+  
+  return matches;
+}
+
 
 //' Count haplotypes occurrences in pedigree
 //' 

@@ -382,3 +382,59 @@ std::vector<Individual*> Individual::calculate_path_to(Individual* dest) const {
 }
 
 
+int possible_mutate_index(const int index, const double mutation_rate, const int max) {
+  if (max <= 0) {
+    throw std::invalid_argument("max must be >= 1");
+  }
+  
+  if (R::runif(0.0, 1.0) >= mutation_rate) {
+    // No mutation happened
+    return index;
+  }  
+
+  // A mutation must happen:  
+  if (index == 0) {
+    return 1;
+  }
+  
+  if (index == max) {
+    return max - 1;
+  }
+
+  // Somewhere on non-boundary ladder, choose direction
+  if (R::runif(0.0, 1.0) < 0.5) {
+    return index - 1;
+  } else {
+    return index + 1;
+  }
+}
+
+void Individual::pass_autosomal_to_children(bool recursive, 
+    const std::vector<double>& allele_cumdist_theta,
+    const int alleles_count,
+    const double mutation_rate) {
+
+  
+  for (auto &child : (*m_children)) {
+    // Draw random mother from population
+    std::vector<int> geno_mother = draw_autosomal_genotype(allele_cumdist_theta, alleles_count);
+    std::vector<int> geno_father = m_haplotype;
+    
+    std::vector<int> geno(2);
+    geno[0] = (R::runif(0.0, 1.0) < 0.5) ? geno_mother[0] : geno_mother[1];
+    geno[1] = (R::runif(0.0, 1.0) < 0.5) ? geno_father[0] : geno_father[1];
+    
+    // mutate:
+    // m_haplotype has indices of alleles
+    int max = alleles_count - 1; // index
+    geno[0] = possible_mutate_index(geno[0], mutation_rate, max);
+    geno[1] = possible_mutate_index(geno[1], mutation_rate, max);
+    
+    child->set_haplotype(geno);
+    
+    if (recursive) {
+      child->pass_autosomal_to_children(recursive, allele_cumdist_theta, alleles_count, mutation_rate);
+    }
+  }
+}
+

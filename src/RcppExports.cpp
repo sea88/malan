@@ -55,6 +55,44 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// calc_autosomal_genotype_probs
+std::vector<double> calc_autosomal_genotype_probs(Rcpp::NumericVector allele_dist, double theta);
+RcppExport SEXP _malan_calc_autosomal_genotype_probs(SEXP allele_distSEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type allele_dist(allele_distSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(calc_autosomal_genotype_probs(allele_dist, theta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sample_autosomal_genotype
+std::vector<int> sample_autosomal_genotype(Rcpp::NumericVector allele_dist, double theta);
+RcppExport SEXP _malan_sample_autosomal_genotype(SEXP allele_distSEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type allele_dist(allele_distSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_autosomal_genotype(allele_dist, theta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pedigrees_all_populate_autosomal
+void pedigrees_all_populate_autosomal(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, Rcpp::NumericVector allele_dist, double theta, double mutation_rate, bool progress);
+RcppExport SEXP _malan_pedigrees_all_populate_autosomal(SEXP pedigreesSEXP, SEXP allele_distSEXP, SEXP thetaSEXP, SEXP mutation_rateSEXP, SEXP progressSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< std::vector<Pedigree*> > >::type pedigrees(pedigreesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type allele_dist(allele_distSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< double >::type mutation_rate(mutation_rateSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    pedigrees_all_populate_autosomal(pedigrees, allele_dist, theta, mutation_rate, progress);
+    return R_NilValue;
+END_RCPP
+}
 // pedigrees_all_populate_haplotypes
 void pedigrees_all_populate_haplotypes(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees, int loci, Rcpp::NumericVector mutation_rates, bool progress);
 RcppExport SEXP _malan_pedigrees_all_populate_haplotypes(SEXP pedigreesSEXP, SEXP lociSEXP, SEXP mutation_ratesSEXP, SEXP progressSEXP) {
@@ -139,6 +177,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
     rcpp_result_gen = Rcpp::wrap(count_haplotype_occurrences_individuals(individuals, haplotype));
+    return rcpp_result_gen;
+END_RCPP
+}
+// haplotype_matches_individuals
+Rcpp::List haplotype_matches_individuals(const Rcpp::List individuals, const Rcpp::IntegerVector haplotype);
+RcppExport SEXP _malan_haplotype_matches_individuals(SEXP individualsSEXP, SEXP haplotypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List >::type individuals(individualsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type haplotype(haplotypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(haplotype_matches_individuals(individuals, haplotype));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -533,6 +583,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_build_pedigrees", (DL_FUNC) &_malan_build_pedigrees, 2},
     {"_malan_sample_geneology", (DL_FUNC) &_malan_sample_geneology, 9},
     {"_malan_sample_geneology_varying_size", (DL_FUNC) &_malan_sample_geneology_varying_size, 7},
+    {"_malan_calc_autosomal_genotype_probs", (DL_FUNC) &_malan_calc_autosomal_genotype_probs, 2},
+    {"_malan_sample_autosomal_genotype", (DL_FUNC) &_malan_sample_autosomal_genotype, 2},
+    {"_malan_pedigrees_all_populate_autosomal", (DL_FUNC) &_malan_pedigrees_all_populate_autosomal, 5},
     {"_malan_pedigrees_all_populate_haplotypes", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes, 4},
     {"_malan_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_custom_founders, 4},
     {"_malan_pedigrees_all_populate_haplotypes_ladder_bounded", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_ladder_bounded, 6},
@@ -540,6 +593,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_get_haplotypes_individuals", (DL_FUNC) &_malan_get_haplotypes_individuals, 1},
     {"_malan_get_haplotypes_pids", (DL_FUNC) &_malan_get_haplotypes_pids, 2},
     {"_malan_count_haplotype_occurrences_individuals", (DL_FUNC) &_malan_count_haplotype_occurrences_individuals, 2},
+    {"_malan_haplotype_matches_individuals", (DL_FUNC) &_malan_haplotype_matches_individuals, 2},
     {"_malan_count_haplotype_occurrences_pedigree", (DL_FUNC) &_malan_count_haplotype_occurrences_pedigree, 3},
     {"_malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists", (DL_FUNC) &_malan_pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists, 2},
     {"_malan_meiotic_dist", (DL_FUNC) &_malan_meiotic_dist, 2},

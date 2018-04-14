@@ -149,6 +149,48 @@ sample_geneology_varying_size <- function(population_sizes, extra_generations_fu
     .Call('_malan_sample_geneology_varying_size', PACKAGE = 'malan', population_sizes, extra_generations_full, gamma_parameter_shape, gamma_parameter_scale, enable_gamma_variance_extension, progress, individuals_generations_return)
 }
 
+#' Calculate genotype probabilities with theta
+#' 
+#' @param allele_dist Allele distribution (probabilities) -- gets normalised
+#' @param theta Theta correction between 0 and 1 (both included)
+#'
+#' @export
+calc_autosomal_genotype_probs <- function(allele_dist, theta) {
+    .Call('_malan_calc_autosomal_genotype_probs', PACKAGE = 'malan', allele_dist, theta)
+}
+
+#' Sample genotype with theta
+#' 
+#' @param allele_dist Allele distribution (probabilities) -- gets normalised
+#' @param theta Theta correction between 0 and 1 (both included)
+#'
+#' @export
+sample_autosomal_genotype <- function(allele_dist, theta) {
+    .Call('_malan_sample_autosomal_genotype', PACKAGE = 'malan', allele_dist, theta)
+}
+
+#' Populate 1-locus autosomal DNA profile in pedigrees.
+#' 
+#' Populate 1-locus autosomal DNA profile from founder and down in all pedigrees.
+#' Note, that only alleles from ladder is assigned and 
+#' that all founders draw type randomly.
+#' 
+#' Note, that pedigrees must first have been inferred by [build_pedigrees()].
+#' 
+#' @param pedigrees Pedigree list in which to populate haplotypes
+#' @param allele_dist Allele distribution (probabilities) -- gets normalised
+#' @param theta Theta correction between 0 and 1 (both included)
+#' @param mutation_rate Mutation rate between 0 and 1 (both included)
+#' @param progress Show progress
+#'
+#' @seealso [pedigrees_all_populate_haplotypes_custom_founders()] and 
+#' [pedigrees_all_populate_haplotypes_ladder_bounded()].
+#' 
+#' @export
+pedigrees_all_populate_autosomal <- function(pedigrees, allele_dist, theta, mutation_rate, progress = TRUE) {
+    invisible(.Call('_malan_pedigrees_all_populate_autosomal', PACKAGE = 'malan', pedigrees, allele_dist, theta, mutation_rate, progress))
+}
+
 #' Populate haplotypes in pedigrees (0-founder/unbounded).
 #' 
 #' Populate haplotypes from founder and down in all pedigrees.
@@ -283,6 +325,22 @@ get_haplotypes_pids <- function(population, pids) {
 #' @export
 count_haplotype_occurrences_individuals <- function(individuals, haplotype) {
     .Call('_malan_count_haplotype_occurrences_individuals', PACKAGE = 'malan', individuals, haplotype)
+}
+
+#' Get individuals matching from list of individuals
+#' 
+#' Get the indvididuals that matches `haplotype` in `individuals`.
+#' 
+#' @param individuals List of individuals to count occurrences in.
+#' @param haplotype Haplotype to count occurrences of.
+#' 
+#' @return List of individuals that matches `haplotype` amongst `individuals`.
+#' 
+#' @seealso [pedigree_haplotype_matches_in_pedigree_meiosis_L1_dists()].
+#' 
+#' @export
+haplotype_matches_individuals <- function(individuals, haplotype) {
+    .Call('_malan_haplotype_matches_individuals', PACKAGE = 'malan', individuals, haplotype)
 }
 
 #' Count haplotypes occurrences in pedigree

@@ -230,7 +230,6 @@ Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {
       Individual* indv = inds->at(i);
       haps(i) = indv->get_haplotype();
       pids(i) = indv->get_pid();
-      //generation(i) = indv->get_generations_from_final();
       generation(i) = indv->get_generation();
     }
     
@@ -249,6 +248,4 @@ Rcpp::List get_pedigrees_tidy(Rcpp::XPtr< std::vector<Pedigree*> > pedigrees) {
   
   return ret;
 }
-
-
 

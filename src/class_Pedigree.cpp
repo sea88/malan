@@ -127,7 +127,7 @@ void Pedigree::populate_haplotypes_ladder_bounded(std::vector<double>& mutation_
     Rcpp::stop("mutation_rates and ladder_max must have same length");
   }
 
-  /* FIXME: Exploits tree */
+  /* Exploits tree */
   Individual* root = this->get_root();
   
   //std::vector<int> h(mutation_rates.size()); // initialises to 0, 0, ..., 0
@@ -148,5 +148,20 @@ void Pedigree::populate_haplotypes_ladder_bounded(std::vector<double>& mutation_
   root->pass_haplotype_to_children_ladder_bounded(true, mutation_rates, ladder_min, ladder_max);
 }
 
+
+void Pedigree::populate_autosomal(
+    const std::vector<double>& allele_cumdist_theta,
+    const int alleles_count,
+    const double mutation_rate) {
+  
+  /* Exploits tree */
+  Individual* root = this->get_root();
+
+
+  std::vector<int> h = draw_autosomal_genotype(allele_cumdist_theta, alleles_count);
+  
+  root->set_haplotype(h); // Not actually haplotype, but use this slot for lower memory footprint
+  root->pass_autosomal_to_children(true, allele_cumdist_theta, alleles_count, mutation_rate);
+}
 
 

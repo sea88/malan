@@ -30,5 +30,5 @@ int brothers_matching(Rcpp::XPtr<Individual> individual);
 bool father_matches(Rcpp::XPtr<Individual> individual);
 bool grandfather_matches(Rcpp::XPtr<Individual> individual);
 int count_uncles(Rcpp::XPtr<Individual> individual);
-
+  
 #endif

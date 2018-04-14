@@ -26,7 +26,7 @@ private:
   bool m_dijkstra_visited = false;
   int m_dijkstra_distance = 0;
 
-  std::vector<int> m_haplotype;
+  std::vector<int> m_haplotype; // called haplotype, but is used without order for autosomal (as index of alleles)
   bool m_haplotype_set = false;
   bool m_haplotype_mutated = false;
   void haplotype_mutate(std::vector<double>& mutation_rates);
@@ -66,5 +66,10 @@ public:
   void pass_haplotype_to_children_ladder_bounded(bool recursive, std::vector<double>& mutation_rates, std::vector<int>& ladder_min, std::vector<int>& ladder_max);
   
   int get_haplotype_L1(Individual* dest) const;
+  
+  void pass_autosomal_to_children(bool recursive, 
+    const std::vector<double>& allele_cumdist_theta,
+    const int alleles_count,
+    const double mutation_rate);
 };
 

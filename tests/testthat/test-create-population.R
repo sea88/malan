@@ -47,9 +47,14 @@ test_that("meiotic_dist works", {
 
 LOCI <- 5L
 
-pedigrees_all_populate_haplotypes(peds, loci = LOCI, mutation_rates = rep(0, LOCI), progress = FALSE)
+pedigrees_all_populate_haplotypes(peds, loci = LOCI, mutation_rates = rep(0L, LOCI), progress = FALSE)
 test_that("pedigrees_all_populate_haplotypes works", {
   expect_output(print(peds), regexp = "^List of 2 pedigrees \\(of size 11, 1\\)$")
+})
+
+test_that("haplotype_matches_individuals works", {
+  expect_equal(length(indvs), length(haplotype_matches_individuals(indvs, rep(0L, LOCI))))
+  expect_equal(lapply(indvs, get_pid), lapply(haplotype_matches_individuals(indvs, rep(0L, LOCI)), get_pid))
 })
 
 test_that("count_haplotype_occurrences_individuals works", {
