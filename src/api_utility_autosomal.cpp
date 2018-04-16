@@ -6,6 +6,7 @@
  @author Mikkel Meyer Andersen
  */
 
+//#define ARMA_DONT_PRINT_ERRORS
 #include <RcppArmadillo.h>
 
 // [[Rcpp::plugins(cpp11)]]
@@ -167,9 +168,87 @@ std::unordered_map<int, int> hash_colisions(int p) {
   return tab;
 }
 
-//' Estimate theta
+
+
+
+Rcpp::NumericVector estimate_theta_1subpop(const std::unordered_map<int, double>& allele_p,
+                                           const std::unordered_map<std::pair<int, int>, double, pairhash>& genotype_p,
+                                           const std::unordered_set<std::pair<int, int>, pairhash>& genotypes_unique) {
+  Rcpp::NumericVector theta(1);
+  
+  // Loop over unique genotypes
+  std::unordered_set<std::pair<int, int>, pairhash>::const_iterator it;
+  int K = genotypes_unique.size();
+  
+  if (K == 1) {
+    theta[0] = NA_REAL;
+    return theta;
+  }
+  
+  int k = 0;
+  arma::mat X(K, 1, arma::fill::none);
+  arma::vec y(K, arma::fill::none);
+  
+  for (it = genotypes_unique.begin(); it != genotypes_unique.end(); ++it) {
+    std::pair<int, int> geno = *it;
+    int a1 = geno.first;
+    int a2 = geno.second;
+    
+    // homozyg
+    if (a1 == a2) {
+      double p_i = allele_p.at(a1);
+      double p_ii = genotype_p.at(geno);
+      double p_i2 = p_i*p_i;
+      X(k, 0) = p_i - p_i2;
+      y(k) = p_ii - p_i2;
+    } else {
+      // heterozyg
+      double p_i = allele_p.at(a1);
+      double p_j = allele_p.at(a2);
+      double p_ij = genotype_p.at(geno);
+      double tmp = -2.0*p_i*p_j;
+      X(k, 0) = tmp;
+      y(k) = p_ij + tmp;
+    }
+    
+    ++k;
+  }
+  
+  // minimisze (Xb - y)^2 for b
+  arma::mat Q, R;
+  bool status = arma::qr_econ(Q, R, X);
+  
+  if (!status) {
+    theta[0] = NA_REAL;  
+  } else {
+    arma::vec coef = arma::solve(R, Q.t() * y, arma::solve_opts::no_approx);
+    
+    if (coef[0] >= 0 && coef[0] <= 1) {
+      theta[0] = coef[0];
+    }
+    
+    /*
+    try {
+      arma::vec coef = arma::solve(R, Q.t() * y, arma::solve_opts::no_approx);
+      
+      if (coef[0] >= 0 && coef[0] <= 1) {
+        theta[0] = coef[0];
+      }
+    } catch (...) {
+      Rcpp::print(Rcpp::wrap(X));
+      Rcpp::print(Rcpp::wrap(y));
+      Rcpp::stop("stop");
+      // e.g. rank deficient systems
+    }
+     */
+  }
+  
+  return theta;
+}
+
+//' Estimate theta from genetypes
 //' 
-//' Estimate theta for one subpopulation.
+//' Estimate theta for one subpopulation given a sample of genotypes.
 //' 
 //' @param x Matrix of genotypes: two columns (allele1 and allele2) and a row per individual
 //' 
@@ -177,7 +256,7 @@ std::unordered_map<int, int> hash_colisions(int p) {
 //' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector estimate_theta_1subpop(Rcpp::IntegerMatrix x) {
+Rcpp::NumericVector estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x) {
   int n = x.nrow();
   
   if (n <= 0) {
@@ -218,54 +297,74 @@ Rcpp::NumericVector estimate_theta_1subpop(Rcpp::IntegerMatrix x) {
     }
   }
   
-  // Loop over unique genotypes
-  std::unordered_set<std::pair<int, int>, pairhash>::iterator it;
-  int K = genotypes_unique.size();
-  int k = 0;
-  arma::mat X(K, 1, arma::fill::none);
-  arma::vec y(K, arma::fill::none);
-  
-  for (it = genotypes_unique.begin(); it != genotypes_unique.end(); ++it) {
-    std::pair<int, int> geno = *it;
-    int a1 = geno.first;
-    int a2 = geno.second;
-    
-    // homozyg
-    if (a1 == a2) {
-      double p_i = allele_p[a1];
-      double p_ii = genotype_p[geno];
-      double p_i2 = p_i*p_i;
-      X(k, 0) = p_i - p_i2;
-      y(k) = p_ii - p_i2;
-    } else {
-      // heterozyg
-      double p_i = allele_p[a1];
-      double p_j = allele_p[a2];
-      double p_ij = genotype_p[geno];
-      double tmp = -2.0*p_i*p_j;
-      X(k, 0) = tmp;
-      y(k) = p_ij + tmp;
-    }
-    
-    ++k;
-  }
+  Rcpp::NumericVector theta = estimate_theta_1subpop(allele_p, genotype_p, genotypes_unique);
+  return theta;
+}
 
-  Rcpp::NumericVector theta(1);
+
+
+//' Estimate theta from individuals
+//' 
+//' Estimate theta for one subpopulation given a sample of genotypes.
+//' 
+//' @param individuals Individuals to get haplotypes for.
+//' 
+//' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::NumericVector estimate_theta_1subpop_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {
+  size_t n = individuals.size();
   
-  // minimisze (Xb - y)^2 for b
-  arma::mat Q, R;
-  bool status = arma::qr_econ(Q, R, X);
+  if (n <= 0) {
+    Rcpp::NumericVector empty(1);
+    empty = NA_REAL;
+    return empty;
+  }
   
-  if (!status) {
-    theta = NA_REAL;  
-  } else {
-    arma::vec coef = arma::solve(R, Q.t() * y);
+  if (!(individuals[0]->is_haplotype_set())) {
+    Rcpp::stop("Haplotypes not yet set");
+  }
+  
+  size_t loci = individuals[0]->get_haplotype().size();
+  
+  if (loci != 2) {
+    Rcpp::stop("Expected exactly 2 autosomal loci");
+  }
+  
+  // Build count tables
+  std::unordered_map<int, double> allele_p;
+  std::unordered_map<std::pair<int, int>, double, pairhash> genotype_p;
+  std::unordered_set<std::pair<int, int>, pairhash> genotypes_unique;
+  
+  double one_over_n = 1.0 / (double)n;
+  double one_over_2n = 1.0 / (2.0 * (double)n);
+
+  for (size_t i = 0; i < n; ++i) {
+    Individual* individual = individuals[i];
+    std::vector<int> hap = individual->get_haplotype();
+    int a1 = hap[0];
+    int a2 = hap[1];
     
-    if (coef[0] >= 0 && coef[0] <= 1) {
-      theta[0] = coef[0];
+    if (a2 < a1) {
+      int tmp = a1;
+      a1 = a2;
+      a2 = tmp;
+    }
+    std::pair<int, int> geno = std::make_pair(a1, a2);
+    genotypes_unique.insert(geno);
+    
+    genotype_p[geno] += one_over_n;
+    
+    if (a1 == a2) {
+      allele_p[a1] += one_over_n; // 2*one_over_2n = one_over_n
+    } else {
+      allele_p[a1] += one_over_2n;
+      allele_p[a2] += one_over_2n;
     }
   }
   
+  Rcpp::NumericVector theta = estimate_theta_1subpop(allele_p, genotype_p, genotypes_unique);
   return theta;
 }
 

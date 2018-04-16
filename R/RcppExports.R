@@ -195,17 +195,30 @@ hash_colisions <- function(p) {
     .Call('_malan_hash_colisions', PACKAGE = 'malan', p)
 }
 
-#' Estimate theta
+#' Estimate theta from genetypes
 #' 
-#' Estimate theta for one subpopulation.
+#' Estimate theta for one subpopulation given a sample of genotypes.
 #' 
 #' @param x Matrix of genotypes: two columns (allele1 and allele2) and a row per individual
 #' 
 #' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
 #' 
 #' @export
-estimate_theta_1subpop <- function(x) {
-    .Call('_malan_estimate_theta_1subpop', PACKAGE = 'malan', x)
+estimate_theta_1subpop_sample <- function(x) {
+    .Call('_malan_estimate_theta_1subpop_sample', PACKAGE = 'malan', x)
+}
+
+#' Estimate theta from individuals
+#' 
+#' Estimate theta for one subpopulation given a sample of genotypes.
+#' 
+#' @param individuals Individuals to get haplotypes for.
+#' 
+#' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
+#' 
+#' @export
+estimate_theta_1subpop_individuals <- function(individuals) {
+    .Call('_malan_estimate_theta_1subpop_individuals', PACKAGE = 'malan', individuals)
 }
 
 #' Populate haplotypes in pedigrees (0-founder/unbounded).

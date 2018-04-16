@@ -104,14 +104,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// estimate_theta_1subpop
-Rcpp::NumericVector estimate_theta_1subpop(Rcpp::IntegerMatrix x);
-RcppExport SEXP _malan_estimate_theta_1subpop(SEXP xSEXP) {
+// estimate_theta_1subpop_sample
+Rcpp::NumericVector estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x);
+RcppExport SEXP _malan_estimate_theta_1subpop_sample(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(estimate_theta_1subpop(x));
+    rcpp_result_gen = Rcpp::wrap(estimate_theta_1subpop_sample(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// estimate_theta_1subpop_individuals
+Rcpp::NumericVector estimate_theta_1subpop_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
+RcppExport SEXP _malan_estimate_theta_1subpop_individuals(SEXP individualsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::ListOf< Rcpp::XPtr<Individual> > >::type individuals(individualsSEXP);
+    rcpp_result_gen = Rcpp::wrap(estimate_theta_1subpop_individuals(individuals));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -609,7 +620,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_sample_autosomal_genotype", (DL_FUNC) &_malan_sample_autosomal_genotype, 2},
     {"_malan_pedigrees_all_populate_autosomal", (DL_FUNC) &_malan_pedigrees_all_populate_autosomal, 5},
     {"_malan_hash_colisions", (DL_FUNC) &_malan_hash_colisions, 1},
-    {"_malan_estimate_theta_1subpop", (DL_FUNC) &_malan_estimate_theta_1subpop, 1},
+    {"_malan_estimate_theta_1subpop_sample", (DL_FUNC) &_malan_estimate_theta_1subpop_sample, 1},
+    {"_malan_estimate_theta_1subpop_individuals", (DL_FUNC) &_malan_estimate_theta_1subpop_individuals, 1},
     {"_malan_pedigrees_all_populate_haplotypes", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes, 4},
     {"_malan_pedigrees_all_populate_haplotypes_custom_founders", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_custom_founders, 4},
     {"_malan_pedigrees_all_populate_haplotypes_ladder_bounded", (DL_FUNC) &_malan_pedigrees_all_populate_haplotypes_ladder_bounded, 6},
