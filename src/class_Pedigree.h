@@ -39,6 +39,7 @@ public:
     Rcpp::Function get_founder_hap);
   
   void populate_autosomal(
+    const std::vector< std::vector<double> >& allele_conditional_cumdists_theta,
     const std::vector<double>& allele_cumdist_theta,
     const int alleles_count,
     const double mutation_rate);

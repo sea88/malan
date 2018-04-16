@@ -67,6 +67,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// calc_autosomal_genotype_conditional_cumdist
+Rcpp::NumericMatrix calc_autosomal_genotype_conditional_cumdist(Rcpp::NumericVector allele_dist, double theta);
+RcppExport SEXP _malan_calc_autosomal_genotype_conditional_cumdist(SEXP allele_distSEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type allele_dist(allele_distSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(calc_autosomal_genotype_conditional_cumdist(allele_dist, theta));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sample_autosomal_genotype
 std::vector<int> sample_autosomal_genotype(Rcpp::NumericVector allele_dist, double theta);
 RcppExport SEXP _malan_sample_autosomal_genotype(SEXP allele_distSEXP, SEXP thetaSEXP) {
@@ -617,6 +629,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_malan_sample_geneology", (DL_FUNC) &_malan_sample_geneology, 9},
     {"_malan_sample_geneology_varying_size", (DL_FUNC) &_malan_sample_geneology_varying_size, 7},
     {"_malan_calc_autosomal_genotype_probs", (DL_FUNC) &_malan_calc_autosomal_genotype_probs, 2},
+    {"_malan_calc_autosomal_genotype_conditional_cumdist", (DL_FUNC) &_malan_calc_autosomal_genotype_conditional_cumdist, 2},
     {"_malan_sample_autosomal_genotype", (DL_FUNC) &_malan_sample_autosomal_genotype, 2},
     {"_malan_pedigrees_all_populate_autosomal", (DL_FUNC) &_malan_pedigrees_all_populate_autosomal, 5},
     {"_malan_hash_colisions", (DL_FUNC) &_malan_hash_colisions, 1},

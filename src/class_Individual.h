@@ -68,8 +68,7 @@ public:
   int get_haplotype_L1(Individual* dest) const;
   
   void pass_autosomal_to_children(bool recursive, 
-    const std::vector<double>& allele_cumdist_theta,
-    const int alleles_count,
+    const std::vector< std::vector<double> >& allele_conditional_cumdists_theta,
     const double mutation_rate);
 };
 

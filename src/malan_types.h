@@ -9,7 +9,7 @@
 #ifndef MALAN_TYPES_H
 #define MALAN_TYPES_H
 
-#define CHECK_ABORT_EVERY 100000
+#define CHECK_ABORT_EVERY 10000
 
 
 //#define RCPP_XPTR_2ND_ARG true // ensures that finaliser is called

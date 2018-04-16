@@ -1,6 +1,6 @@
 context("Autosomal")
 
-ESTIMATION_TOL <- 0.01
+ESTIMATION_TOL_DUE_TO_SAMPLING <- 0.01
 
 set.seed(1)
 sim_res_fixed <- sample_geneology(population_size = 1e3, 
@@ -23,7 +23,7 @@ x_p_tab <- prop.table(table(c(x)))
 x_p <- as.numeric(x_p_tab)
 
 test_that("sample_autosomal_genotype works", {
-  expect_equal(x_p, allele_prob, tol = ESTIMATION_TOL)
+  expect_equal(x_p, allele_prob, tol = ESTIMATION_TOL_DUE_TO_SAMPLING)
 })
 
 
@@ -59,7 +59,7 @@ geno_vec <- c(geno_mat)
 geno_vec_p <- as.numeric(prop.table(table(geno_vec)))
 
 test_that("pedigrees_all_populate_autosomal works", {
-  expect_equal(geno_vec_p, allele_prob, tol = ESTIMATION_TOL)
+  expect_equal(geno_vec_p, allele_prob, tol = ESTIMATION_TOL_DUE_TO_SAMPLING)
 })
 
 
@@ -113,6 +113,18 @@ test_that("estimate_theta_1subpop_sample boot contains true", {
 })
 
 
+p_cumdists <- calc_autosomal_genotype_conditional_cumdist(allele_dist = allele_prob, 
+                                                          theta = theta)
+
+cumdist_r <- geno_probs_R_mat
+cumdist_r[lower.tri(cumdist_r)] <- cumdist_r[upper.tri(cumdist_r)] / 2
+cumdist_r[upper.tri(cumdist_r)] <- cumdist_r[upper.tri(cumdist_r)] / 2
+cumdist_r <- t(apply(cumdist_r / rowSums(cumdist_r), 1, cumsum))
+#cumdist_r
+
+test_that("calc_autosomal_genotype_conditional_cumdist works", {
+  expect_equal(p_cumdists, cumdist_r)
+})
 
 
 livepop <- sim_res_fixed$individuals_generations
@@ -122,18 +134,25 @@ ols_res_livepop <- get_ols_quantities(y_livepop)
 test_that("estimate_theta_1subpop_individuals works", {
   expect_equal(qr.solve(ols_res_livepop$x, ols_res_livepop$y),
                estimate_theta_1subpop_individuals(livepop)$estimate, 
-               tol = 10*ESTIMATION_TOL
+               tol = 10*ESTIMATION_TOL_DUE_TO_SAMPLING
                )
 })
 
-# Note that livepop and indepedent sampling (x above) does not necessarily have same theta...
-# But a using same livepop should...
-
-test_that("estimate_theta_1subpop_sample and estimate_theta_1subpop_individuals comparable", {
+test_that("livepop: haplotypes/individual same theta", {
   expect_equal(estimate_theta_1subpop_sample(y_livepop)$estimate,
                estimate_theta_1subpop_individuals(livepop)$estimate)
 })
 
+
+test_that("geneaology independent sample and population same theta", {
+  expect_equal(estimate_theta_1subpop_sample(y)$estimate,
+               estimate_theta_1subpop_sample(y_livepop)$estimate,
+               tol = ESTIMATION_TOL_DUE_TO_SAMPLING)
+  
+  expect_equal(estimate_theta_1subpop_sample(y)$estimate,
+               estimate_theta_1subpop_individuals(livepop)$estimate, 
+               tol = ESTIMATION_TOL_DUE_TO_SAMPLING)
+})
 
 
 if (FALSE) {
@@ -150,3 +169,4 @@ if (FALSE) {
   estimate_theta_1subpop_individuals(livepop)
   qr.solve(ols_res_livepop$x, ols_res_livepop$y)
 }
+

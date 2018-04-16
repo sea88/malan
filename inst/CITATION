@@ -1,0 +1,9 @@
+bibentry(bibtype = "article", 
+  title = "{How convincing is a matching Y-chromosome profile?}", 
+  journal = "PLOS Genetics", 
+  volume = "13",
+  number = "11",
+  author = c(person("MM", "Andersen"), person("DJ", "Balding")),          
+  year = "2017")
+
+citHeader("To cite the R package 'malan' in publications use:")

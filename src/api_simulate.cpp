@@ -183,6 +183,10 @@ List sample_geneology(size_t population_size,
     if (individuals_generations_return >= 0) {
       last_k_generations_individuals.push_back(indv_xptr);
     }
+    
+    if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
+      stop("Aborted");
+    }
   }
   if (verbose_result) {
     if (simulate_fixed_number_generations == false) {
@@ -227,6 +231,10 @@ List sample_geneology(size_t population_size,
     
     // now, run through children to pick each child's father
     for (size_t i = 0; i < population_size; ++i) {
+      if (i % CHECK_ABORT_EVERY == 0 && Progress::check_abort()) {
+        stop("Aborted");
+      }
+      
       // if a child did not have children himself, forget his ancestors
       if (children_generation[i] == nullptr) {
         continue;

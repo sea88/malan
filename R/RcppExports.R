@@ -159,6 +159,18 @@ calc_autosomal_genotype_probs <- function(allele_dist, theta) {
     .Call('_malan_calc_autosomal_genotype_probs', PACKAGE = 'malan', allele_dist, theta)
 }
 
+#' Calculate conditional genotype cumulative probabilities with theta
+#' 
+#' @param allele_dist Allele distribution (probabilities) -- gets normalised
+#' @param theta Theta correction between 0 and 1 (both included)
+#' 
+#' @return Matrix: row i: conditional cumulative distribution of alleles given allele i
+#'
+#' @export
+calc_autosomal_genotype_conditional_cumdist <- function(allele_dist, theta) {
+    .Call('_malan_calc_autosomal_genotype_conditional_cumdist', PACKAGE = 'malan', allele_dist, theta)
+}
+
 #' Sample genotype with theta
 #' 
 #' @param allele_dist Allele distribution (probabilities) -- gets normalised

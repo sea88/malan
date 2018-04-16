@@ -150,6 +150,7 @@ void Pedigree::populate_haplotypes_ladder_bounded(std::vector<double>& mutation_
 
 
 void Pedigree::populate_autosomal(
+    const std::vector< std::vector<double> >& allele_conditional_cumdists_theta,
     const std::vector<double>& allele_cumdist_theta,
     const int alleles_count,
     const double mutation_rate) {
@@ -157,11 +158,22 @@ void Pedigree::populate_autosomal(
   /* Exploits tree */
   Individual* root = this->get_root();
 
+  if (alleles_count <= 0) {
+    Rcpp::stop("alleles_count must have at least size 1");
+  }
+    
+  if (allele_cumdist_theta.size() <= 0) {
+    Rcpp::stop("allele_cumdist_theta must have at least size 1");
+  }
+    
+  if (allele_conditional_cumdists_theta.size() <= 0) {
+    Rcpp::stop("allele_conditional_cumdists_theta must have at least size 1");
+  }
 
   std::vector<int> h = draw_autosomal_genotype(allele_cumdist_theta, alleles_count);
   
   root->set_haplotype(h); // Not actually haplotype, but use this slot for lower memory footprint
-  root->pass_autosomal_to_children(true, allele_cumdist_theta, alleles_count, mutation_rate);
+  root->pass_autosomal_to_children(true, allele_conditional_cumdists_theta, mutation_rate);
 }
 
 

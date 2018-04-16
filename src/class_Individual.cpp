@@ -410,19 +410,57 @@ int possible_mutate_index(const int index, const double mutation_rate, const int
 }
 
 void Individual::pass_autosomal_to_children(bool recursive, 
-    const std::vector<double>& allele_cumdist_theta,
-    const int alleles_count,
+    const std::vector< std::vector<double> >& allele_conditional_cumdists_theta,
     const double mutation_rate) {
 
   
   for (auto &child : (*m_children)) {
-    // Draw random mother from population
-    std::vector<int> geno_mother = draw_autosomal_genotype(allele_cumdist_theta, alleles_count);
+    /*
+    We have theta, so the alleles in the child should be correlated.
+    */
+    
+    /*
+    
+    // FIXME: Slow, but easy to implement: rejection sampling, ensures theta
     std::vector<int> geno_father = m_haplotype;
+    int father_allele = (R::runif(0.0, 1.0) < 0.5) ? geno_father[0] : geno_father[1];
+    std::vector<int> geno = draw_autosomal_genotype(allele_cumdist_theta, alleles_count);
+    // randomly switch entries
+    if (R::runif(0.0, 1.0) < 0.5) {
+      int tmp = geno[0];
+      geno[0] = geno[1];
+      geno[1] = tmp;
+    }
+    //while (!(geno[0] == father_allele || geno[1] == father_allele)) {
+    while (geno[0] != father_allele) {
+      geno = draw_autosomal_genotype(allele_cumdist_theta, alleles_count);
+      if (R::runif(0.0, 1.0) < 0.5) {
+        int tmp = geno[0];
+        geno[0] = geno[1];
+        geno[1] = tmp;
+      }
+    }
+    */
+    
+    std::vector<int> geno_father = m_haplotype;
+    int father_allele = (R::runif(0.0, 1.0) < 0.5) ? geno_father[0] : geno_father[1];
+    std::vector<double> cumdist = allele_conditional_cumdists_theta[father_allele];
+    double u = R::runif(0.0, 1.0);
+    int alleles_count = cumdist.size();
+    int mother_allele = 0;
+    
+    if (u > cumdist[0]) {
+      for (int i = 1; i < alleles_count; ++i) {
+        if (u <= cumdist[i]) {
+          mother_allele = i;
+          break;
+        }
+      }
+    }
     
     std::vector<int> geno(2);
-    geno[0] = (R::runif(0.0, 1.0) < 0.5) ? geno_mother[0] : geno_mother[1];
-    geno[1] = (R::runif(0.0, 1.0) < 0.5) ? geno_father[0] : geno_father[1];
+    geno[0] = father_allele;
+    geno[1] = mother_allele;
     
     // mutate:
     // m_haplotype has indices of alleles
@@ -439,7 +477,7 @@ void Individual::pass_autosomal_to_children(bool recursive,
     child->set_haplotype(geno);
     
     if (recursive) {
-      child->pass_autosomal_to_children(recursive, allele_cumdist_theta, alleles_count, mutation_rate);
+      child->pass_autosomal_to_children(recursive, allele_conditional_cumdists_theta, mutation_rate);
     }
   }
 }
