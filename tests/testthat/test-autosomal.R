@@ -17,6 +17,8 @@ theta <- 0.1
 L <- length(allele_prob)
 
 x <- replicate(10000, sample_autosomal_genotype(allele_prob, theta))
+#prop.table(table(apply(x, 2, paste0, collapse = ";")))
+
 x_p_tab <- prop.table(table(c(x)))
 x_p <- as.numeric(x_p_tab)
 
@@ -62,46 +64,89 @@ test_that("pedigrees_all_populate_autosomal works", {
 
 
 
+get_ols_quantities <- function(y) {
+  x_unique_geno <- y[!duplicated(y), ]
+  ols_quantities <- apply(x_unique_geno, 1,
+                          function(as) {
+                            geno_prob <- mean(apply(y, 1, function(as2) all(as == as2)))
+                            
+                            if (length(unique(as)) == 1L) {
+                              p <- x_p_tab[as.character(as[1])]
+                              
+                              x <- p - p^2
+                              y <- geno_prob - p^2
+                              return(c(x, y))
+                            } else {
+                              p <- x_p_tab[as.character(as[1])]
+                              q <- x_p_tab[as.character(as[2])]
+                              
+                              x <- -2*p*q
+                              y <- geno_prob - 2*p*q
+                              return(c(x, y))
+                            }
+                          })
+  ols_x <- as.matrix(ols_quantities[1L, ])
+  ols_y <- ols_quantities[2L, ]
+  return(list(x = ols_x, y = ols_y))
+}
+
 y <- t(x)
-x_unique_geno <- y[!duplicated(y), ]
-ols_quantities <- apply(x_unique_geno, 1,
-                        function(as) {
-                          geno_prob <- mean(apply(y, 1, function(as2) all(as == as2)))
-                          
-                          if (length(unique(as)) == 1L) {
-                            p <- x_p_tab[as.character(as[1])]
-                            
-                            x <- p - p^2
-                            y <- geno_prob - p^2
-                            return(c(x, y))
-                          } else {
-                            p <- x_p_tab[as.character(as[1])]
-                            q <- x_p_tab[as.character(as[2])]
-                            
-                            x <- -2*p*q
-                            y <- geno_prob - 2*p*q
-                            return(c(x, y))
-                          }
-                        })
-ols_x <- as.matrix(ols_quantities[1L, ])
-ols_y <- ols_quantities[2L, ]
-
-test_that("estimate_theta_1subpop works", {
-  expect_equal(qr.solve(ols_x, ols_y), estimate_theta_1subpop(y))
+ols_res_sample <- get_ols_quantities(y)
+theta_res <- estimate_theta_1subpop_sample(y)
+test_that("estimate_theta_1subpop_sample works", {
+  expect_true(theta_res$error == FALSE)
+  expect_equal(qr.solve(ols_res_sample$x, ols_res_sample$y), 
+               theta_res$estimate)
 })
-
 
 # bootstrap:
 theta_boot <- replicate(100, {
   yboot <- y[sample(nrow(y), replace = TRUE), ]
-  estimate_theta_1subpop(yboot)
+  estimate_theta_1subpop_sample(yboot)$estimate
 })
 # Expanding a bit...
 theta_boot_rng <- c(0.9, 1.1) * range(theta_boot)
-theta_boot_rng
-
-test_that("estimate_theta_1subpop boot contains true", {
+#theta_boot_rng
+test_that("estimate_theta_1subpop_sample boot contains true", {
   expect_true(all(theta_boot >= 0 & theta_boot <= 1))
   expect_true(theta >= theta_boot_rng[1L] & theta <= theta_boot_rng[2L])
 })
 
+
+
+
+livepop <- sim_res_fixed$individuals_generations
+y_livepop <- get_haplotypes_individuals(livepop)
+ols_res_livepop <- get_ols_quantities(y_livepop)
+
+test_that("estimate_theta_1subpop_individuals works", {
+  expect_equal(qr.solve(ols_res_livepop$x, ols_res_livepop$y),
+               estimate_theta_1subpop_individuals(livepop)$estimate, 
+               tol = 10*ESTIMATION_TOL
+               )
+})
+
+# Note that livepop and indepedent sampling (x above) does not necessarily have same theta...
+# But a using same livepop should...
+
+test_that("estimate_theta_1subpop_sample and estimate_theta_1subpop_individuals comparable", {
+  expect_equal(estimate_theta_1subpop_sample(y_livepop)$estimate,
+               estimate_theta_1subpop_individuals(livepop)$estimate)
+})
+
+
+
+if (FALSE) {
+  prop.table(table(c(x)))
+  prop.table(table(c(y_livepop)))
+  
+  prop.table(table(apply(x, 2, paste0, collapse = ";")))
+  prop.table(table(apply(y_livepop, 1, paste0, collapse = ";")))
+  
+  estimate_theta_1subpop_sample(y)
+  qr.solve(ols_res_sample$x, ols_res_sample$y)
+  
+  estimate_theta_1subpop_sample(y_livepop)
+  estimate_theta_1subpop_individuals(livepop)
+  qr.solve(ols_res_livepop$x, ols_res_livepop$y)
+}

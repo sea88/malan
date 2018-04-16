@@ -430,6 +430,12 @@ void Individual::pass_autosomal_to_children(bool recursive,
     geno[0] = possible_mutate_index(geno[0], mutation_rate, max);
     geno[1] = possible_mutate_index(geno[1], mutation_rate, max);
     
+    if (geno[1] <= geno[0]) {
+      int tmp = geno[0];
+      geno[0] = geno[1];
+      geno[1] = tmp;
+    }
+    
     child->set_haplotype(geno);
     
     if (recursive) {

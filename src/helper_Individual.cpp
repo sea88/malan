@@ -55,8 +55,11 @@ std::vector<int> draw_autosomal_genotype(
   for (int i = 0; i < alleles_count; ++i) {
     for (int j = 0; j <= i; ++j) {   
       if (u <= allele_cumdist_theta[k]) {
-        geno[0] = i;
-        geno[1] = j;          
+      
+        // note that j <= i so get index0
+        geno[0] = j;
+        geno[1] = i;
+        
         stop = true;
         break;
       }

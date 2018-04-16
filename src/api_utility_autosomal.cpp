@@ -171,17 +171,19 @@ std::unordered_map<int, int> hash_colisions(int p) {
 
 
 
-Rcpp::NumericVector estimate_theta_1subpop(const std::unordered_map<int, double>& allele_p,
-                                           const std::unordered_map<std::pair<int, int>, double, pairhash>& genotype_p,
-                                           const std::unordered_set<std::pair<int, int>, pairhash>& genotypes_unique) {
-  Rcpp::NumericVector theta(1);
+Rcpp::List estimate_theta_1subpop(const std::unordered_map<int, double>& allele_p,
+                                  const std::unordered_map<std::pair<int, int>, double, pairhash>& genotype_p,
+                                  const std::unordered_set<std::pair<int, int>, pairhash>& genotypes_unique) {
+  Rcpp::List theta;
   
   // Loop over unique genotypes
   std::unordered_set<std::pair<int, int>, pairhash>::const_iterator it;
   int K = genotypes_unique.size();
   
   if (K == 1) {
-    theta[0] = NA_REAL;
+    theta["estimate"] = NA_REAL;
+    theta["error"] = true;
+    theta["details"] = "Only one genotype observed";
     return theta;
   }
   
@@ -219,31 +221,52 @@ Rcpp::NumericVector estimate_theta_1subpop(const std::unordered_map<int, double>
   bool status = arma::qr_econ(Q, R, X);
   
   if (!status) {
-    theta[0] = NA_REAL;  
+    theta["estimate"] = NA_REAL;
+    theta["error"] = true;
+    theta["details"] = "Could not make QR decomposition";
   } else {
     arma::vec coef = arma::solve(R, Q.t() * y, arma::solve_opts::no_approx);
     
     if (coef[0] >= 0 && coef[0] <= 1) {
-      theta[0] = coef[0];
+      theta["estimate"] = coef[0];
+      theta["error"] = false;
+      theta["details"] = "OK";
+    } else {
+      theta["estimate"] = coef[0];
+      theta["error"] = true;
+      theta["details"] = "Estimate outside range of (0, 1)";
     }
-    
-    /*
-    try {
-      arma::vec coef = arma::solve(R, Q.t() * y, arma::solve_opts::no_approx);
-      
-      if (coef[0] >= 0 && coef[0] <= 1) {
-        theta[0] = coef[0];
-      }
-    } catch (...) {
-      Rcpp::print(Rcpp::wrap(X));
-      Rcpp::print(Rcpp::wrap(y));
-      Rcpp::stop("stop");
-      // e.g. rank deficient systems
-    }
-     */
   }
   
   return theta;
+}
+
+
+void estimate_theta_1subpop_fill_containers(int a1,
+                                            int a2,
+                                            const double one_over_n,
+                                            const double one_over_2n,
+                                            std::unordered_map<int, double>& allele_p,
+                                            std::unordered_map<std::pair<int, int>, double, pairhash>& genotype_p,
+                                            std::unordered_set<std::pair<int, int>, pairhash>& genotypes_unique) {
+  
+  if (a2 < a1) {
+    int tmp = a1;
+    a1 = a2;
+    a2 = tmp;
+  }
+  
+  std::pair<int, int> geno = std::make_pair(a1, a2);
+  genotypes_unique.insert(geno);
+  
+  genotype_p[geno] += one_over_n;
+  
+  if (a1 == a2) {
+    allele_p[a1] += one_over_n; // 2*one_over_2n = one_over_n
+  } else {
+    allele_p[a1] += one_over_2n;
+    allele_p[a2] += one_over_2n;
+  }
 }
 
 //' Estimate theta from genetypes
@@ -252,11 +275,14 @@ Rcpp::NumericVector estimate_theta_1subpop(const std::unordered_map<int, double>
 //' 
 //' @param x Matrix of genotypes: two columns (allele1 and allele2) and a row per individual
 //' 
-//' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
+//' @return List:
+//' * estimate: Vector of length 1 containing estimate of theta or NA if it could not be estimated
+//' * error: true if an error happened, false otherwise
+//' * details: contains description if an error happened
 //' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x) {
+Rcpp::List estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x) {
   int n = x.nrow();
   
   if (n <= 0) {
@@ -279,28 +305,13 @@ Rcpp::NumericVector estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x) {
     int a1 = x(i, 0);
     int a2 = x(i, 1);
     
-    if (a2 < a1) {
-      int tmp = a1;
-      a1 = a2;
-      a2 = tmp;
-    }
-    std::pair<int, int> geno = std::make_pair(a1, a2);
-    genotypes_unique.insert(geno);
-    
-    genotype_p[geno] += one_over_n;
-    
-    if (a1 == a2) {
-      allele_p[a1] += one_over_n; // 2*one_over_2n = one_over_n
-    } else {
-      allele_p[a1] += one_over_2n;
-      allele_p[a2] += one_over_2n;
-    }
+    estimate_theta_1subpop_fill_containers(a1, a2, one_over_n, one_over_2n, 
+                                           allele_p, genotype_p, genotypes_unique);
   }
   
-  Rcpp::NumericVector theta = estimate_theta_1subpop(allele_p, genotype_p, genotypes_unique);
+  Rcpp::List theta = estimate_theta_1subpop(allele_p, genotype_p, genotypes_unique);
   return theta;
 }
-
 
 
 //' Estimate theta from individuals
@@ -309,24 +320,25 @@ Rcpp::NumericVector estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x) {
 //' 
 //' @param individuals Individuals to get haplotypes for.
 //' 
-//' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
+//' @return List:
+//' * estimate: Vector of length 1 containing estimate of theta or NA if it could not be estimated
+//' * error: true if an error happened, false otherwise
+//' * details: contains description if an error happened
 //' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector estimate_theta_1subpop_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {
-  size_t n = individuals.size();
+Rcpp::List estimate_theta_1subpop_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals) {
+  int n = individuals.size();
   
   if (n <= 0) {
-    Rcpp::NumericVector empty(1);
-    empty = NA_REAL;
-    return empty;
+    Rcpp::stop("No individuals given");
   }
   
   if (!(individuals[0]->is_haplotype_set())) {
     Rcpp::stop("Haplotypes not yet set");
   }
   
-  size_t loci = individuals[0]->get_haplotype().size();
+  int loci = individuals[0]->get_haplotype().size();
   
   if (loci != 2) {
     Rcpp::stop("Expected exactly 2 autosomal loci");
@@ -340,31 +352,16 @@ Rcpp::NumericVector estimate_theta_1subpop_individuals(Rcpp::ListOf< Rcpp::XPtr<
   double one_over_n = 1.0 / (double)n;
   double one_over_2n = 1.0 / (2.0 * (double)n);
 
-  for (size_t i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     Individual* individual = individuals[i];
     std::vector<int> hap = individual->get_haplotype();
-    int a1 = hap[0];
-    int a2 = hap[1];
     
-    if (a2 < a1) {
-      int tmp = a1;
-      a1 = a2;
-      a2 = tmp;
-    }
-    std::pair<int, int> geno = std::make_pair(a1, a2);
-    genotypes_unique.insert(geno);
-    
-    genotype_p[geno] += one_over_n;
-    
-    if (a1 == a2) {
-      allele_p[a1] += one_over_n; // 2*one_over_2n = one_over_n
-    } else {
-      allele_p[a1] += one_over_2n;
-      allele_p[a2] += one_over_2n;
-    }
+    estimate_theta_1subpop_fill_containers(hap[0], hap[1], one_over_n, one_over_2n, 
+                                           allele_p, genotype_p, genotypes_unique);
   }
   
-  Rcpp::NumericVector theta = estimate_theta_1subpop(allele_p, genotype_p, genotypes_unique);
+  Rcpp::List theta = estimate_theta_1subpop(allele_p, genotype_p, genotypes_unique);
+  
   return theta;
 }
 

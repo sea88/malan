@@ -105,7 +105,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // estimate_theta_1subpop_sample
-Rcpp::NumericVector estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x);
+Rcpp::List estimate_theta_1subpop_sample(Rcpp::IntegerMatrix x);
 RcppExport SEXP _malan_estimate_theta_1subpop_sample(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -116,7 +116,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // estimate_theta_1subpop_individuals
-Rcpp::NumericVector estimate_theta_1subpop_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
+Rcpp::List estimate_theta_1subpop_individuals(Rcpp::ListOf< Rcpp::XPtr<Individual> > individuals);
 RcppExport SEXP _malan_estimate_theta_1subpop_individuals(SEXP individualsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

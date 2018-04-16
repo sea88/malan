@@ -201,7 +201,10 @@ hash_colisions <- function(p) {
 #' 
 #' @param x Matrix of genotypes: two columns (allele1 and allele2) and a row per individual
 #' 
-#' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
+#' @return List:
+#' * estimate: Vector of length 1 containing estimate of theta or NA if it could not be estimated
+#' * error: true if an error happened, false otherwise
+#' * details: contains description if an error happened
 #' 
 #' @export
 estimate_theta_1subpop_sample <- function(x) {
@@ -214,7 +217,10 @@ estimate_theta_1subpop_sample <- function(x) {
 #' 
 #' @param individuals Individuals to get haplotypes for.
 #' 
-#' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
+#' @return List:
+#' * estimate: Vector of length 1 containing estimate of theta or NA if it could not be estimated
+#' * error: true if an error happened, false otherwise
+#' * details: contains description if an error happened
 #' 
 #' @export
 estimate_theta_1subpop_individuals <- function(individuals) {

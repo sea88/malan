@@ -10,7 +10,12 @@ estimate_theta_1subpop_individuals(individuals)
 \item{individuals}{Individuals to get haplotypes for.}
 }
 \value{
-Vector of length 1 containing estimate of theta or NA if it could not be estimated
+List:
+\itemize{
+\item estimate: Vector of length 1 containing estimate of theta or NA if it could not be estimated
+\item error: true if an error happened, false otherwise
+\item details: contains description if an error happened
+}
 }
 \description{
 Estimate theta for one subpopulation given a sample of genotypes.
