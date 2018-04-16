@@ -10,7 +10,7 @@ Authors@R: c(
 Author: Mikkel Meyer Andersen <mikl@math.aau.dk>
 Maintainer: Mikkel Meyer Andersen <mikl@math.aau.dk>
 Description: Simulation and tools for analysing male lineages.
-License: GPL (>= 2)
+License: GPL (>= 2) | file LICENSE
 Imports:
     Rcpp (>= 0.12.7),
     RcppProgress (>= 0.2.1),
