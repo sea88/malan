@@ -3,3 +3,8 @@
 ^\.travis\.yml$
 ^docs
 ^codemeta\.json$
+#paper:
+paper.html
+paper.bib
+paper.md
+paper-fig-simulation.png
