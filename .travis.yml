@@ -6,8 +6,20 @@ cache: packages
 
 r:
 - release
-#- devel
+- devel
 
+r_packages:
+  - devtools
+  - igraph
+  - knitr
+  - rmarkdown
+  - testthat
+  - tidygraph
+  - RcppProgress
+  - RcppArmadillo
+  - ggraph
+  - covr
+  
 before_install:
   # C++14
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -20,10 +32,10 @@ install:
   # R
   - sudo apt-get install r-base r-base-dev gfortran
   - sudo apt-get install libudunits2-dev
-  - sudo Rscript -e 'install.packages(c("igraph", "knitr", "rmarkdown", "testthat", "tidygraph", "RcppProgress", "RcppArmadillo", "ggraph", "covr"), repos = "http://cran.r-project.org")'
   # C++14
   - sudo apt-get install -qq g++-5
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
+
