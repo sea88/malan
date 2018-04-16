@@ -191,6 +191,23 @@ pedigrees_all_populate_autosomal <- function(pedigrees, allele_dist, theta, muta
     invisible(.Call('_malan_pedigrees_all_populate_autosomal', PACKAGE = 'malan', pedigrees, allele_dist, theta, mutation_rate, progress))
 }
 
+hash_colisions <- function(p) {
+    .Call('_malan_hash_colisions', PACKAGE = 'malan', p)
+}
+
+#' Estimate theta
+#' 
+#' Estimate theta for one subpopulation.
+#' 
+#' @param x Matrix of genotypes: two columns (allele1 and allele2) and a row per individual
+#' 
+#' @return Vector of length 1 containing estimate of theta or NA if it could not be estimated
+#' 
+#' @export
+estimate_theta_1subpop <- function(x) {
+    .Call('_malan_estimate_theta_1subpop', PACKAGE = 'malan', x)
+}
+
 #' Populate haplotypes in pedigrees (0-founder/unbounded).
 #' 
 #' Populate haplotypes from founder and down in all pedigrees.
