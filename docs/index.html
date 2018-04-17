@@ -10,7 +10,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><meta property="og:title" content="MAle Lineage ANalysis">
-<meta property="og:description" content="Simulation and tools for analysing male lineages.">
+<meta property="og:description" content="MAle Lineage ANlysis by simulating genealogies backwards and imposing short tandem repeats (STR) mutations forwards. Intended for forensic Y chromosomal STR (Y-STR) haplotype analyses. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -74,12 +74,19 @@
     <div id="malan-male-lineage-anlysis" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#malan-male-lineage-anlysis" class="anchor"></a>malan: MAle Lineage ANlysis</h1></div>
-<p>MAle Lineage ANlysis by simulating genealogies backwards and imposing short tandem repeats (STR) mutations forwards. Intended for forensic Y chromosomal STR (Y-STR) haplotype analyses. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.</p>
-<p>See vignettes and manual at <a href="https://mikldk.github.io/malan/" class="uri">https://mikldk.github.io/malan/</a> for documentation.</p>
+<p>An R package (<a href="https://www.r-project.org/">https://www.r-project.org/</a>) to perform <strong>MA</strong>le <strong>L</strong>ineage <strong>AN</strong>lysis by simulating genealogies backwards and imposing short tandem repeats (STR) mutations forwards. Intended for forensic Y chromosomal STR (Y-STR) haplotype analyses. Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.</p>
+<p>See documentation included in package (vignettes and manual) at <a href="https://mikldk.github.io/malan/">https://mikldk.github.io/malan/</a>.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>You first need <code>R</code> (<a href="https://www.r-project.org/">https://www.r-project.org/</a>). Then you can install <code>malan</code> from GitHub by using the <code>remotes</code> package (<a href="https://CRAN.R-project.org/package=remotes">https://CRAN.R-project.org/package=remotes</a>):</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("remotes")</span>
+remotes::<span class="kw">install_github</span>(<span class="st">"mikldk/malan"</span>)</code></pre>
+</div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<p>Andersen MM, Balding DJ (2017). <em>How convincing is a matching Y-chromosome profile?</em> PLoS Genet 13(11): e1007028. <a href="https://doi.org/10.1371/journal.pgen.1007028" class="uri">https://doi.org/10.1371/journal.pgen.1007028</a>.</p>
+<p>Andersen MM, Balding DJ (2017). <em>How convincing is a matching Y-chromosome profile?</em> PLoS Genet 13(11): e1007028. <a href="https://doi.org/10.1371/journal.pgen.1007028">https://doi.org/10.1371/journal.pgen.1007028</a>.</p>
 </div>
 <div id="disclaimer" class="section level2">
 <h2 class="hasAnchor">
@@ -95,7 +102,7 @@
 <h2 class="hasAnchor">
 <a href="#build-status" class="anchor"></a>Build status</h2>
 <p>Travis CI:</p>
-<p><a href="https://travis-ci.org/mikldk/malan"><img src="https://travis-ci.org/mikldk/malan.svg?branch=master" alt="Travis-CI Build Status"></a></p>
+<p><a href="https://travis-ci.org/mikldk/malan"><embed src="https://travis-ci.org/mikldk/malan.svg?branch=master"></embed></a></p>
 </div>
 </div>
   </div>
@@ -111,7 +118,8 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>GPL (&gt;= 2)</li>
+<li>GPL (&gt;= 2) | file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 <div class="citation">

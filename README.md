@@ -1,11 +1,22 @@
 # malan: MAle Lineage ANlysis
 
-MAle Lineage ANlysis by simulating genealogies backwards and 
+An R package (<https://www.r-project.org/>) to perform **MA**le **L**ineage **AN**lysis 
+by simulating genealogies backwards and 
 imposing short tandem repeats (STR) mutations forwards. 
 Intended for forensic Y chromosomal STR (Y-STR) haplotype analyses. 
 Numerous analyses are possible, e.g. number of matches and meiotic distance to matches.
 
-See vignettes and manual at <https://mikldk.github.io/malan/> for documentation.
+See documentation included in package (vignettes and manual) at <https://mikldk.github.io/malan/>.
+
+## Installation
+
+You first need `R` (<https://www.r-project.org/>). 
+Then you can install `malan` from GitHub by using the `remotes` package (<https://CRAN.R-project.org/package=remotes>):
+
+``` r
+# install.packages("remotes")
+remotes::install_github("mikldk/malan")
+```
 
 ## References
 
